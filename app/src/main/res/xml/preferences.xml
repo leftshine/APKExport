@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:title="Settings">
+    <SwitchPreference
+        android:id="@+id/pref_auto_clean"
+        android:defaultValue="false"
+        android:key="@string/key_is_auto_clean"
+        android:summaryOff="@string/setting_autoClean_summaryOff"
+        android:summaryOn="@string/setting_autoClean_summaryOn"
+        android:title="@string/setting_autoClean_title" />
+    <EditTextPreference
+        android:defaultValue="Default value"
+        android:dialogLayout="@layout/custom_file_name_dialog_layout"
+        android:key="@string/key_custom_filename_format"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/custom_file_name_summary"
+        android:title="@string/custom_file_name" />
+</PreferenceScreen>
