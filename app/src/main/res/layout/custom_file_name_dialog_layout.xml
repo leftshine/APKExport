@@ -15,7 +15,15 @@
         android:singleLine="false"
         android:text="@string/custom_file_name_description" />
 
-    <EditText
+    <!--<EditText
+        android:id="@+id/txt_custom_filename_format"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="#N-#P-#V" />-->
+
+    <com.echooit.apkexport.view.ClearEditText
         android:id="@+id/txt_custom_filename_format"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

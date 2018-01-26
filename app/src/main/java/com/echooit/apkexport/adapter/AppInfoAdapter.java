@@ -113,6 +113,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable {
 		holder.mPackageName.setText(info.getPackageName());
 		holder.mAppName.setText(info.getAppName());
 		holder.mAppSize.setText(ToolUtils.getDataSize(info.getAppSize()));
+		holder.mAppVersionName.setText(info.getVersionName());
 		/*holder.mAppData.setText(ToolUtils.getDataSize(info.getAppCache()));
 		holder.mMemSize.setText(ToolUtils.getDataSize(info.getMemSize()));*/
 		return convertView;
@@ -124,15 +125,17 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable {
 		private TextView mPackageName;
 		private TextView mAppName;
 		private TextView mAppSize;
-		private TextView mAppData;
-		private TextView mMemSize;
+		private TextView mAppVersionName;
+		/*private TextView mAppData;
+		private TextView mMemSize;*/
 
 		public ViewHolder(View view) {
 			mAppIcon = (ImageView) view.findViewById(R.id.appInfo_icon);
 			mPackageName = (TextView) view.findViewById(R.id.appInfo_packageName);
 			mAppName = (TextView) view.findViewById(R.id.appInfo_appName);
 			mAppSize = (TextView) view.findViewById(R.id.appInfo_appSize);
-			/*mAppData = (TextView) view.findViewById(R.id.appInfo_dataSize);
+			mAppVersionName = (TextView) view.findViewById(R.id.appInfo_appVersionName);
+            /*mAppData = (TextView) view.findViewById(R.id.appInfo_dataSize);
 			mMemSize = (TextView) view.findViewById(R.id.appInfo_memSize);*/
 		}
 	}

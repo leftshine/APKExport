@@ -14,10 +14,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.echooit.apkexport.R;
 import com.echooit.apkexport.utils.AppUtils;
 import com.echooit.apkexport.utils.Settings;
+import com.echooit.apkexport.view.ClearEditText;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -27,7 +27,8 @@ public class SettingActivityFragment extends PreferenceFragment {
     private SwitchPreference prefIsAutoClean;
     private EditTextPreference prefCustomFileNameformat ;
     private static Dialog dialogCustomFileNameformat;
-    private EditText txt_custom_filename_format;
+    //private EditText txt_custom_filename_format;
+    private ClearEditText txt_custom_filename_format;
     private Button btn_insert_N;
     private Button btn_insert_P;
     private Button btn_insert_V;
@@ -66,7 +67,8 @@ public class SettingActivityFragment extends PreferenceFragment {
             if(preference.getKey().equals(getResources().getString(R.string.key_custom_filename_format)))
             {
                 dialogCustomFileNameformat = prefCustomFileNameformat.getDialog();
-                txt_custom_filename_format = (EditText)dialogCustomFileNameformat.findViewById(R.id.txt_custom_filename_format);
+                /*txt_custom_filename_format = (EditText)dialogCustomFileNameformat.findViewById(R.id.txt_custom_filename_format);*/
+                txt_custom_filename_format = (ClearEditText) dialogCustomFileNameformat.findViewById(R.id.txt_custom_filename_format);
                 btn_insert_N = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_N);
                 btn_insert_P = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_P);
                 btn_insert_V = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_V);

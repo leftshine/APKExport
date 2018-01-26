@@ -19,7 +19,7 @@ public class Settings {
     }
 
     public static boolean isAutoClean() {
-        return sharedPreferences.getBoolean(mContext.getString(R.string.key_is_auto_clean), true);
+        return sharedPreferences.getBoolean(mContext.getString(R.string.key_is_auto_clean), false);
     }
 
     public static void setAutoClean(boolean autoClean) {
