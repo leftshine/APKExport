@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="copy_actions">
+        <item>Only Export</item>
+        <item>Share after Export</item>
+        <item>Share after Export&amp;Rename</item>
+    </string-array>
+
+    <string-array name="copy_info_actions">
+        <item>Copy App Name</item>
+        <item>Copy Package Name</item>
+        <item>Copy Version Code</item>
+    </string-array>
+
+    <string-array name="long_press_actions_name">
+        <item>Only Export</item>
+        <item>Share after Export</item>
+        <item>Share after Export and&amp;Rename</item>
+        <item>Copy App Info</item>
+    </string-array>
+    <string-array name="long_press_actions_value">
+        <item>100</item>
+        <item>101</item>
+        <item>102</item>
+        <item>103</item>
+    </string-array>
+
+
+</resources>

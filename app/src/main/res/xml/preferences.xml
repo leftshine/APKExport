@@ -11,11 +11,17 @@
         android:summaryOn="@string/setting_autoClean_summaryOn"
         android:title="@string/setting_autoClean_title" />
     <EditTextPreference
-        android:defaultValue="Default value"
+        android:defaultValue="#N-#P-#V"
         android:dialogLayout="@layout/custom_file_name_dialog_layout"
         android:key="@string/key_custom_filename_format"
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:summary="@string/custom_file_name_summary"
         android:title="@string/custom_file_name" />
+    <ListPreference
+        android:defaultValue="103"
+        android:entries="@array/long_press_actions_name"
+        android:entryValues="@array/long_press_actions_value"
+        android:key="@string/key_long_press_action"
+        android:title="@string/setting_long_press_action_title" />
 </PreferenceScreen>

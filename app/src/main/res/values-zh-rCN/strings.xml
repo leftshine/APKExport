@@ -37,4 +37,11 @@
     <string name="custom_file_name_insert">插入：</string>
     <string name="custom_file_name_default">默认</string>
     <string name="custom_filename_preview">预览：</string>
+
+
+    <string name="choose_next_action">选择下一步操作…</string>
+    <string name="input_new_name">输入新的文件名</string>
+    <string name="confirm">确认</string>
+    <string name="cancel">取消</string>
+    <string name="setting_long_press_action_title">选择长按操作</string>
 </resources>

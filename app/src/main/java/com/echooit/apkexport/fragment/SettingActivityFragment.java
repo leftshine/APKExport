@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
@@ -26,6 +27,7 @@ public class SettingActivityFragment extends PreferenceFragment {
 
     private SwitchPreference prefIsAutoClean;
     private EditTextPreference prefCustomFileNameformat ;
+    private ListPreference prefLongPressAction;
     private static Dialog dialogCustomFileNameformat;
     //private EditText txt_custom_filename_format;
     private ClearEditText txt_custom_filename_format;
@@ -36,6 +38,8 @@ public class SettingActivityFragment extends PreferenceFragment {
     private TextView txt_custom_filename_preview;
     private String str_custom_filename_format;
     private Context context;
+
+
     public SettingActivityFragment() {
 
     }
@@ -45,7 +49,8 @@ public class SettingActivityFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
         context = this.getActivity();
         addPreferencesFromResource(R.xml.preferences);
-        getPreferenceManager().setSharedPreferencesName(Settings.SETTING_PREF_NAME);
+        //getPreferenceManager().setSharedPreferencesName(Settings.SETTING_PREF_NAME);
+
         initViews();
     }
 
@@ -55,6 +60,10 @@ public class SettingActivityFragment extends PreferenceFragment {
         prefCustomFileNameformat.setOnPreferenceClickListener(preferenceclickListener);
         prefCustomFileNameformat.setOnPreferenceChangeListener(preferenceChangeListener);
         prefCustomFileNameformat.setSummary(Settings.getCustomFileNameFormat());
+
+        prefLongPressAction = (ListPreference)findPreference(getString(R.string.key_long_press_action));
+        prefLongPressAction.setOnPreferenceChangeListener(preferenceChangeListener);
+        prefLongPressAction.setSummary(prefLongPressAction.getEntry());
     }
     Preference.OnPreferenceClickListener preferenceclickListener=new Preference.OnPreferenceClickListener() {
 
@@ -131,11 +140,17 @@ public class SettingActivityFragment extends PreferenceFragment {
     Preference.OnPreferenceChangeListener preferenceChangeListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object o) {
-           String otr=  o.toString();
-           str_custom_filename_format = txt_custom_filename_format.getText().toString();
-           Settings.setCustomFileNameFormat(str_custom_filename_format);
-           prefCustomFileNameformat.setSummary(Settings.getCustomFileNameFormat());
-           return false;
+           if(getString(R.string.key_custom_filename_format).equals(preference.getKey())){
+               String otr=  o.toString();
+               str_custom_filename_format = txt_custom_filename_format.getText().toString();
+               Settings.setCustomFileNameFormat(str_custom_filename_format);
+               prefCustomFileNameformat.setSummary(Settings.getCustomFileNameFormat());
+               return false;
+           }else /*if(getString(R.string.key_long_press_action).equals(preference.getKey()))*/ {
+               prefLongPressAction.setValue(o.toString());
+               prefLongPressAction.setSummary(prefLongPressAction.getEntry());
+               return true;
+           }
         }
     };
 

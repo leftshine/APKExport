@@ -33,11 +33,11 @@
                         android:id="@+id/searchbox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/search_selector"
-                        android:queryHint="@string/search"
-                        android:layout_marginStart="2dp"
                         android:layout_marginEnd="2dp"
-                        android:layout_marginTop="2dp"/>
+                        android:layout_marginStart="2dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@drawable/search_selector"
+                        android:queryHint="@string/search" />
 
                     <!--<AutoCompleteTextView
                         android:id="@+id/autoCompleteTextView"
@@ -66,8 +66,8 @@
                     android:layout_below="@id/ly_search_box"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:visibility="visible"
-                    android:background="#ffff">
+                    android:background="#ffff"
+                    android:visibility="visible">
 
                     <ProgressBar
                         android:id="@+id/progressBar"

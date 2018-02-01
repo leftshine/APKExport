@@ -47,7 +47,15 @@
     <string name="custom_file_name_default">#N-#P-#V</string>
     <string name="custom_filename_preview">Preview: </string>
 
+    <string name="setting_long_press_action_title">Choose the action of long press</string>
+
     <string name="key_is_auto_clean" translatable="false">is_auto_clean</string>
     <string name="key_custom_filename_format" translatable="false">custom_filename_format</string>
+    <string name="key_long_press_action" translatable="false">long_press_action</string>
+
+    <string name="choose_next_action">Then…</string>
+    <string name="input_new_name">Input the new file name</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

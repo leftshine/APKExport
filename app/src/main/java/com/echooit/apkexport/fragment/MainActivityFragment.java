@@ -2,7 +2,6 @@ package com.echooit.apkexport.fragment;
 
 import android.app.ActivityManager;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,19 +17,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.echooit.apkexport.utils.AppInfo;
 import com.echooit.apkexport.R;
 import com.echooit.apkexport.adapter.AppInfoAdapter;
-import com.echooit.apkexport.utils.FileUtils;
+import com.echooit.apkexport.utils.AppInfo;
 import com.echooit.apkexport.utils.MessageCode;
-import com.echooit.apkexport.utils.Settings;
 import com.echooit.apkexport.utils.ToolUtils;
 
 import java.util.ArrayList;
@@ -41,7 +37,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class MainActivityFragment extends Fragment{
     private static final String TAG = "MainActivityFragment";
     private View root = null;
     private Toast mToast = null;
@@ -53,20 +49,11 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
     private ActivityManager mActivityManager = null;
     private AppInfoAdapter mAdapter;
     private static List<AppInfo> mLists = new ArrayList<AppInfo>();
-
     private HandlerThread mThread;
     private Handler mThreadHanlder;
-
-    private String mCurrentPkgName;
-    private String mCurrentAppName;
-    private String mCurrentAppPath;
-    private String mCurrentVersionName;
-    private String mCopyFileName;
     private AppReceiver mAppReceiver;
-    private ProgressDialog progressDialog;
     private SearchView searchBox;
     private RelativeLayout cloud;
-
 
     private Handler mHandler = new Handler() {
 
@@ -94,17 +81,6 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
                         mLists.clear();
                         ToolUtils.getApp(MainActivityFragment.this,mHandler);
                     }
-                    break;
-                case MessageCode.MSG_COPY_COMPLETE:
-                    progressDialog.dismiss();
-                    String shareFilePath = msg.obj.toString();
-                    showToast("文件保存在:"+shareFilePath);
-                    FileUtils.startShare(MainActivityFragment.this,shareFilePath);
-                    break;
-                case MessageCode.MSG_COPY_PROGRESS:
-                    Long lprogress = (Long) msg.obj;
-                    Log.i(TAG, "MSG_COPY_PROGRESS: "+lprogress.intValue());
-                    progressDialog.setProgress(lprogress.intValue());
                     break;
                 case MessageCode.MSG_GET_APP_COMPLETED:
                     Log.i(TAG, "MSG_GET_APP_COMPLETED ");
@@ -144,7 +120,6 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        progressDialog = new ProgressDialog(getActivity());
         packageManager = getActivity().getPackageManager();
         mActivityManager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
 
@@ -184,7 +159,7 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
                 return true;
             }
         });
-        mAppListView.setOnItemClickListener(this);
+        //mAppListView.setOnItemClickListener(this);
     }
 
     private void initData() {
@@ -252,59 +227,6 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
         cloud.startAnimation(alphaAnimation);
         cloud.setVisibility(View.GONE);
         mAppListView.setEnabled(false);
-    }
-
-    private void showToast(String toastText) {
-        // TODO Auto-generated method stub
-        if (mToast == null) {
-            mToast = Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT);
-        }
-        mToast.setText(toastText);
-       /* if (code == 1) {
-            mToast.setText(getActivity().getResources().getString(R.string.app_uninstall_success));
-        } else {
-            mToast.setText(getActivity().getResources().getString(R.string.app_uninstall_failed));
-        }*/
-        mToast.show();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        AppInfo appInfo;
-        if (parent.getCount() > 0) {
-            //appInfo = mLists.get(position);
-            appInfo = (AppInfo) parent.getItemAtPosition(position);
-            mCurrentPkgName = appInfo.packageName;
-            mCurrentAppName = appInfo.appName;
-            mCurrentAppPath = appInfo.appSourcDir;
-            mCurrentVersionName = appInfo.getVersionName();
-            //mCopyAppPath =getActivity().getFilesDir()+File.separator+mCurrentAppName+"-"+mCurrentPkgName+".apk";
-            //Environment.getExternalStorageDirectory().getAbsolutePath()
-            String customFileNameFormat  = Settings.getCustomFileNameFormat();
-            String customFileName = customFileNameFormat.replace("#N",mCurrentAppName).replace("#P",mCurrentPkgName).replace("#V",mCurrentVersionName);
-            mCopyFileName = customFileName + ".apk";
-            //mCopyFileName =mCurrentAppName+"-"+mCurrentPkgName+"-"+mCurrentVersionName+".apk";
-            showProgressDialog(mCopyFileName);
-            //开启子线程
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    //copyFile(mCurrentAppPath,mCopyFileName);
-                    FileUtils.copyFile(mHandler,mCurrentAppPath,mCopyFileName);
-                }
-            }).start();
-            //starShare(mCurrentPkgName);
-            //startApplicationDetailsActivity();
-//            SettingsManager.getService(getActivity()).uninstallApk(appInfo.packageName);
-        }
-    }
-
-    private void showProgressDialog(String mCopyFileName) {
-        progressDialog.setTitle(R.string.exporting);
-        progressDialog.setMessage(mCopyFileName);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条
-        progressDialog.setCancelable(false);
-        progressDialog.show();
     }
 
     class AppReceiver extends BroadcastReceiver {
