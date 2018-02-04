@@ -25,5 +25,30 @@
         <item>103</item>
     </string-array>
 
+    <string-array name="sort_type_name">
+        <item>By App Name</item>
+        <item>By Package Name</item>
+        <item>By App Size</item>
+        <item>By Install Time</item>
+        <item>By Update Time</item>
+        <!--<item>Recent Use</item>-->
+    </string-array>
+    <string-array name="sort_type_value">
+        <item>200</item>
+        <item>201</item>
+        <item>202</item>
+        <item>203</item>
+        <item>204</item>
+        <!--<item>205</item>-->
+    </string-array>
+
+    <string-array name="sort_order_name">
+        <item>ASC</item>
+        <item>DES</item>
+    </string-array>
+    <string-array name="sort_order_value">
+        <item>300</item>
+        <item>301</item>
+    </string-array>
 
 </resources>

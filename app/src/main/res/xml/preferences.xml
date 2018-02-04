@@ -3,25 +3,43 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:title="Settings">
-    <SwitchPreference
-        android:id="@+id/pref_auto_clean"
-        android:defaultValue="false"
-        android:key="@string/key_is_auto_clean"
-        android:summaryOff="@string/setting_autoClean_summaryOff"
-        android:summaryOn="@string/setting_autoClean_summaryOn"
-        android:title="@string/setting_autoClean_title" />
-    <EditTextPreference
-        android:defaultValue="#N-#P-#V"
-        android:dialogLayout="@layout/custom_file_name_dialog_layout"
-        android:key="@string/key_custom_filename_format"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:summary="@string/custom_file_name_summary"
-        android:title="@string/custom_file_name" />
-    <ListPreference
-        android:defaultValue="103"
-        android:entries="@array/long_press_actions_name"
-        android:entryValues="@array/long_press_actions_value"
-        android:key="@string/key_long_press_action"
-        android:title="@string/setting_long_press_action_title" />
+    <PreferenceCategory android:title="@string/setting_General_title">
+
+        <SwitchPreference
+            android:id="@+id/pref_auto_clean"
+            android:defaultValue="false"
+            android:key="@string/key_is_auto_clean"
+            android:summaryOff="@string/setting_autoClean_summaryOff"
+            android:summaryOn="@string/setting_autoClean_summaryOn"
+            android:title="@string/setting_autoClean_title" />
+        <EditTextPreference
+            android:defaultValue="#N-#P-#V"
+            android:dialogLayout="@layout/custom_file_name_dialog_layout"
+            android:key="@string/key_custom_filename_format"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/custom_file_name_summary"
+            android:title="@string/custom_file_name" />
+        <ListPreference
+            android:defaultValue="103"
+            android:entries="@array/long_press_actions_name"
+            android:entryValues="@array/long_press_actions_value"
+            android:key="@string/key_long_press_action"
+            android:title="@string/setting_long_press_action_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/setting_sort_group_title">
+
+        <ListPreference
+            android:defaultValue="200"
+            android:entries="@array/sort_type_name"
+            android:entryValues="@array/sort_type_value"
+            android:key="@string/key_sort_type"
+            android:title="@string/setting_sort_type_title" />
+        <ListPreference
+            android:defaultValue="300"
+            android:entries="@array/sort_order_name"
+            android:entryValues="@array/sort_order_value"
+            android:key="@string/key_sort_order"
+            android:title="@string/setting_sort_order_title" />
+    </PreferenceCategory>
 </PreferenceScreen>

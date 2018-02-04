@@ -80,6 +80,17 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable {
 		}
 		return mFilter;
 	}
+	 public void doSearch(String queryText){
+		 if (TextUtils.isEmpty(queryText)) {
+			 //mAppListView.clearTextFilter();//搜索文本为空时，清除ListView的过滤
+			 Log.i(TAG, "onQueryTextChange: isEmpty");
+			 getFilter().filter(null);
+		 } else {
+			 //mAppListView.setFilterText(queryText);//设置过滤关键字
+			 //通过Adapter设置可以避免弹出提示区域
+			 getFilter().filter(queryText);
+		 }
+	 }
 
 	public class SortComparator implements Comparator<Object> {
 		public SortComparator() {
@@ -278,4 +289,5 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable {
 			}
 		}
 	}
+
 }

@@ -17,6 +17,24 @@ public class AppInfo {
 	private int uid; // 
 	private int memSize;
 	private String processName;
+	private long firstInstallTime;
+	private long lastUpdateTime;
+
+	public long getFirstInstallTime() {
+		return firstInstallTime;
+	}
+
+	public void setFirstInstallTime(long firstInstallTime) {
+		this.firstInstallTime = firstInstallTime;
+	}
+
+	public long getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+
+	public void setLastUpdateTime(long lastUpdateTime) {
+		this.lastUpdateTime = lastUpdateTime;
+	}
 	
 	public long getAppCache() {
 		return appCache;

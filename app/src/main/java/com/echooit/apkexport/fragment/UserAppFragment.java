@@ -1,7 +1,6 @@
 package com.echooit.apkexport.fragment;
 
 import android.app.ActivityManager;
-import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,8 +36,9 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment{
-    private static final String TAG = "MainActivityFragment";
+public class UserAppFragment extends Fragment {
+    private static final String TAG = "UserAppFragment";
+
     private View root = null;
     private Toast mToast = null;
     private TextView mAppStatus;
@@ -52,8 +52,10 @@ public class MainActivityFragment extends Fragment{
     private HandlerThread mThread;
     private Handler mThreadHanlder;
     private AppReceiver mAppReceiver;
-    private SearchView searchBox;
+    //private SearchView searchBox;
     private RelativeLayout cloud;
+    private int type = ToolUtils.TYPE_USER;
+    boolean isReady = false;
 
     private Handler mHandler = new Handler() {
 
@@ -61,8 +63,12 @@ public class MainActivityFragment extends Fragment{
         public void dispatchMessage(Message msg) {
             // TODO Auto-generated method stub
             switch (msg.what) {
+                case MessageCode.MSG_LOAD_START:
+                    showLoadUI();
+                    ToolUtils.getApp(UserAppFragment.this,mHandler, type);
+                    break;
                 case MessageCode.MSG_GET_APP:
-                    if (View.GONE == mAppListView.getVisibility()) {
+                    /*if (View.GONE == mAppListView.getVisibility()) {
                         mAppStatus.setVisibility(View.GONE);
                         mAppListView.setVisibility(View.VISIBLE);
                     }
@@ -70,7 +76,7 @@ public class MainActivityFragment extends Fragment{
                     //mLists.add(info);
                     mAdapter.setDataList(mLists);
                     mAdapter.add(info);
-                    mAdapter.notifyDataSetChanged();
+                    mAdapter.notifyDataSetChanged();*/
                     break;
                 case MessageCode.MSG_INSTALLED_APP_DETAILS:
                     mAppListView.setVisibility(View.GONE);
@@ -79,33 +85,45 @@ public class MainActivityFragment extends Fragment{
                 case MessageCode.MSG_PACKAGE_ADDED:
                     if (isAdded() && isResumed()) {
                         mLists.clear();
-                        ToolUtils.getApp(MainActivityFragment.this,mHandler);
+                        ToolUtils.getApp(UserAppFragment.this,mHandler,type);
                     }
                     break;
                 case MessageCode.MSG_GET_APP_COMPLETED:
                     Log.i(TAG, "MSG_GET_APP_COMPLETED ");
+                    if (View.GONE == mAppListView.getVisibility()) {
+                        mAppStatus.setVisibility(View.GONE);
+                        mAppListView.setVisibility(View.VISIBLE);
+                    }
                     hideLoadUI();
                     if(!mAppListView.isEnabled())
-                    mAppListView.setEnabled(true);
+                        mAppListView.setEnabled(true);
+                    List<AppInfo> appInfoList = (List<AppInfo>)msg.obj;
+                    mLists.clear();
+                    mLists.addAll(appInfoList);
+                    mAdapter.notifyDataSetChanged();
                     break;
                 default:
                     break;
             }
         }
     };
-    private Runnable mRunnable = new Runnable() {
+/*    private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
             // TODO Auto-generated method stub
-            List<AppInfo> list = ToolUtils.getApp(MainActivityFragment.this,mHandler);
+            List<AppInfo> list = ToolUtils.getApp(UserAppFragment.this,mHandler, type);
             if (list.size() <= 0) {
-                mHandler.sendEmptyMessage(1);
+                mHandler.sendEmptyMessage(MessageCode.MSG_INSTALLED_APP_DETAILS);
             }
         }
-    };
+    };*/
 
-    public MainActivityFragment() {
-
+    public static UserAppFragment newInstance(int type){
+        Bundle arguments = new Bundle();
+        arguments.putInt(ToolUtils.TYPE, type);
+        UserAppFragment userAppFragment = new UserAppFragment();
+        userAppFragment.setArguments(arguments);
+        return userAppFragment;
     }
 
     @Override
@@ -113,7 +131,8 @@ public class MainActivityFragment extends Fragment{
         root = inflater.inflate(R.layout.fragment_main, container, false);
         initView(root);
         initData();
-        refresh();
+        //refresh();
+        isReady = true;
         return root;
     }
 
@@ -122,50 +141,27 @@ public class MainActivityFragment extends Fragment{
         super.onCreate(arg0);
         packageManager = getActivity().getPackageManager();
         mActivityManager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
-
-        mThread = new HandlerThread("scan_app");
+        type = getArguments().getInt(ToolUtils.TYPE);
+        Log.i(TAG, "onCreate: type="+type);
+       /* mThread = new HandlerThread("scan_app");
         mThread.start();
-        mThreadHanlder = new Handler(mThread.getLooper());
+        mThreadHanlder = new Handler(mThread.getLooper());*/
 
         registerAppChangedReceiver();
 
     }
     private void initView(View root) {
         cloud = root.findViewById(R.id.cloud);
-        searchBox = (SearchView)root.findViewById(R.id.searchbox);
         mAppStatus = (TextView) root.findViewById(R.id.have_app);
         mAppListView = (ListView) root.findViewById(R.id.app_listView);
         mAppListView.setTextFilterEnabled(true);
-        searchBox.setIconifiedByDefault(false);
-        searchBox.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextSubmit(String arg0) {
-                // TODO Auto-generated method stub
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String queryText) {
-                if (TextUtils.isEmpty(queryText)) {
-                    //mAppListView.clearTextFilter();//搜索文本为空时，清除ListView的过滤
-                    Log.i(TAG, "onQueryTextChange: isEmpty");
-                    mAdapter.getFilter().filter(null);
-                } else {
-                    //mAppListView.setFilterText(queryText);//设置过滤关键字
-                    //通过Adapter设置可以避免弹出提示区域
-                    mAdapter.getFilter().filter(queryText);
-                }
-                return true;
-            }
-        });
-        //mAppListView.setOnItemClickListener(this);
     }
+
 
     private void initData() {
         mAdapter = new AppInfoAdapter(getActivity(), mLists);
         mAppListView.setAdapter(mAdapter);
-        mAppListView.requestFocus();
+        //mAppListView.requestFocus();
     }
 
     private void registerAppChangedReceiver() {
@@ -205,10 +201,33 @@ public class MainActivityFragment extends Fragment{
     }
 
     public void refresh(){
-        showLoadUI();
-        mLists.clear();
-        mThreadHanlder.removeCallbacks(mRunnable);
-        mThreadHanlder.postDelayed(mRunnable, 500);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                while (true) {
+                    if (isReady)
+                        break;
+                    Log.i(TAG, "refresh: 等待界面初始化");
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Message msg = mHandler.obtainMessage();
+                msg.what = MessageCode.MSG_LOAD_START;
+                mHandler.sendMessage(msg);
+            }
+        }).start();
+
+    }
+    public void doSearch(String queryText) {
+        mAdapter.doSearch(queryText);
     }
 
     private void showLoadUI() {

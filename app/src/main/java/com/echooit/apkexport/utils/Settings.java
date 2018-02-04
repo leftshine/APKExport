@@ -14,6 +14,16 @@ public class Settings {
     //public String SETTING_PREF_NAME="pref_settings";
     private static Context mContext;
     private static SharedPreferences sharedPreferences;
+
+    public static boolean isIsNeedRefresh() {
+        return isNeedRefresh;
+    }
+
+    public static void setIsNeedRefresh(boolean isNeedRefresh) {
+        Settings.isNeedRefresh = isNeedRefresh;
+    }
+
+    private static boolean isNeedRefresh = false;
     public static void init(Context context) {
         mContext = context;
         //context.getPreferenceManager().getSharedPreferencesName();
@@ -40,4 +50,21 @@ public class Settings {
     public static String getLongPressAction() {
         return sharedPreferences.getString(mContext.getString(R.string.key_long_press_action),"103");
     }
+
+    public static String getSortType() {
+        return sharedPreferences.getString(mContext.getString(R.string.key_sort_type),"200");
+    }
+    public static void setSortType(String sortType) {
+        //return sharedPreferences.getString(mContext.getString(R.string.key_sort_type),"200");
+        sharedPreferences.edit().putString(mContext.getString(R.string.key_sort_type),sortType).apply();
+    }
+    public static String getSortOrder() {
+        return sharedPreferences.getString(mContext.getString(R.string.key_sort_order),"300");
+    }
+    public static void setSortOrder(String sortOrder) {
+        //return sharedPreferences.getString(mContext.getString(R.string.key_sort_order),"300");
+        sharedPreferences.edit().putString(mContext.getString(R.string.key_sort_order),sortOrder).apply();
+
+    }
+
 }

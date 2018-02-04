@@ -2,13 +2,40 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/cloud"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:background="#ffff"
+                android:visibility="visible">
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/txt_loading"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="20dp" />
+
+                <TextView
+                    android:id="@+id/txt_loading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/loading" />
+
+            </RelativeLayout>
+
             <TextView
                 android:id="@+id/have_app"
                 android:layout_height="wrap_content"
@@ -18,77 +45,15 @@
                 android:visibility="gone"
                 android:layout_gravity="center" />
 
-            <RelativeLayout
+           <ListView
+                android:id="@+id/app_listView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <RelativeLayout
-                    android:id="@+id/ly_search_box"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true">
-
-                    <SearchView
-                        android:id="@+id/searchbox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="2dp"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginTop="2dp"
-                        android:background="@drawable/search_selector"
-                        android:queryHint="@string/search" />
-
-                    <!--<AutoCompleteTextView
-                        android:id="@+id/autoCompleteTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:hint="@string/search" />-->
-                </RelativeLayout>
-
-                <ListView
-                    android:id="@+id/app_listView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/ly_search_box"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginRight="1dp"
-                    android:divider="@color/gray"
-                    android:dividerHeight="1dp" />
-
-                <RelativeLayout
-                    android:id="@+id/cloud"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_below="@id/ly_search_box"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginRight="1dp"
-                    android:background="#ffff"
-                    android:visibility="visible">
-
-                    <ProgressBar
-                        android:id="@+id/progressBar"
-                        style="?android:attr/progressBarStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@id/txt_loading"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="20dp" />
-
-                    <TextView
-                        android:id="@+id/txt_loading"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:text="@string/loading" />
-
-                </RelativeLayout>
-            </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:divider="@color/gray"
+                android:dividerHeight="1dp" />
 
         </FrameLayout>
-    </LinearLayout>
+
 </LinearLayout>

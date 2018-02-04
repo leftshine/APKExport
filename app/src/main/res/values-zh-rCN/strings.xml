@@ -44,4 +44,13 @@
     <string name="confirm">确认</string>
     <string name="cancel">取消</string>
     <string name="setting_long_press_action_title">选择长按操作</string>
+    <string name="setting_sort_group_title">排序</string>
+    <string name="setting_sort_type_title">排序方式</string>
+    <string name="setting_sort_order_title">顺序</string>
+    <string name="choose_sort_type">选择排序方式</string>
+    <string name="ASC">升序</string>
+    <string name="DES">降序</string>
+    <string name="action_search">搜索</string>
+    <string name="action_sort">排序</string>
+    <string name="setting_General_title">通用</string>
 </resources>

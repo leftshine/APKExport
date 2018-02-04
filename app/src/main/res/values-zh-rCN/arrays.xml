@@ -25,5 +25,31 @@
         <item>103</item>
     </string-array>
 
+    <string-array name="sort_type_name">
+        <item>按应用名称</item>
+        <item>按包名</item>
+        <item>按大小</item>
+        <item>最近安装</item>
+        <item>最近更新</item>
+        <!--<item>最近使用</item>-->
+    </string-array>
+    <string-array name="sort_type_value">
+        <item>200</item>
+        <item>201</item>
+        <item>202</item>
+        <item>203</item>
+        <item>204</item>
+        <!--<item>205</item>-->
+    </string-array>
+
+    <string-array name="sort_order_name">
+        <item>升序</item>
+        <item>降序</item>
+    </string-array>
+    <string-array name="sort_order_value">
+        <item>300</item>
+        <item>301</item>
+    </string-array>
+
 
 </resources>

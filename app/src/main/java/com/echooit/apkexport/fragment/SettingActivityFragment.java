@@ -28,6 +28,8 @@ public class SettingActivityFragment extends PreferenceFragment {
     private SwitchPreference prefIsAutoClean;
     private EditTextPreference prefCustomFileNameformat ;
     private ListPreference prefLongPressAction;
+    private ListPreference sortType;
+    private ListPreference sortOrder;
     private static Dialog dialogCustomFileNameformat;
     //private EditText txt_custom_filename_format;
     private ClearEditText txt_custom_filename_format;
@@ -50,7 +52,7 @@ public class SettingActivityFragment extends PreferenceFragment {
         context = this.getActivity();
         addPreferencesFromResource(R.xml.preferences);
         //getPreferenceManager().setSharedPreferencesName(Settings.SETTING_PREF_NAME);
-
+        Settings.setIsNeedRefresh(false);
         initViews();
     }
 
@@ -64,6 +66,15 @@ public class SettingActivityFragment extends PreferenceFragment {
         prefLongPressAction = (ListPreference)findPreference(getString(R.string.key_long_press_action));
         prefLongPressAction.setOnPreferenceChangeListener(preferenceChangeListener);
         prefLongPressAction.setSummary(prefLongPressAction.getEntry());
+
+        sortType = (ListPreference)findPreference(getString(R.string.key_sort_type));
+        sortType.setOnPreferenceChangeListener(preferenceChangeListener);
+        sortType.setSummary(sortType.getEntry());
+
+        sortOrder = (ListPreference)findPreference(getString(R.string.key_sort_order));
+        sortOrder.setOnPreferenceChangeListener(preferenceChangeListener);
+        sortOrder.setSummary(sortOrder.getEntry());
+
     }
     Preference.OnPreferenceClickListener preferenceclickListener=new Preference.OnPreferenceClickListener() {
 
@@ -146,9 +157,21 @@ public class SettingActivityFragment extends PreferenceFragment {
                Settings.setCustomFileNameFormat(str_custom_filename_format);
                prefCustomFileNameformat.setSummary(Settings.getCustomFileNameFormat());
                return false;
-           }else /*if(getString(R.string.key_long_press_action).equals(preference.getKey()))*/ {
+           }else if(getString(R.string.key_long_press_action).equals(preference.getKey())){
                prefLongPressAction.setValue(o.toString());
                prefLongPressAction.setSummary(prefLongPressAction.getEntry());
+               return true;
+           }else if(getString(R.string.key_sort_type).equals(preference.getKey())){
+               sortType.setValue(o.toString());
+               sortType.setSummary(sortType.getEntry());
+               Settings.setIsNeedRefresh(true);
+               return true;
+           }else if(getString(R.string.key_sort_order).equals(preference.getKey())){
+               sortOrder.setValue(o.toString());
+               sortOrder.setSummary(sortOrder.getEntry());
+               Settings.setIsNeedRefresh(true);
+               return true;
+           }else {
                return true;
            }
         }
