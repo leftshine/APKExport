@@ -3,11 +3,16 @@ package cn.leftshine.apkexport.utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import cn.leftshine.apkexport.R;
 
 /**
  * 获取手机上apk文件信息类，主要是判断是否安装再手机上了，安装的版本比较现有apk版本信息
@@ -58,32 +63,40 @@ public class LocalApkSearchUtils {
                 PackageInfo localPackageInfo = pm.getPackageArchiveInfo(apk_path, PackageManager.GET_ACTIVITIES);
 
                 //ApplicationInfo appInfo = packageInfo.applicationInfo;
-                    final AppInfo localAppInfo = new AppInfo();
-                    //localAppInfo.appName = localPackageInfo.applicationInfo.loadLabel(context.getPackageManager()).toString();
-                    //localAppInfo.appSourcDir = localPackageInfo.applicationInfo.publicSourceDir;
-                    localAppInfo.appName = name_s;
-                    localAppInfo.appSourcDir = apk_path;
-                    localAppInfo.appSize = 0;
-                    File localFile1 = new File(localAppInfo.appSourcDir);
-                    if (localFile1 != null)
-                        localAppInfo.appSize = (int) (localFile1.length());
-                    localAppInfo.appCache = 0;
-                    //String packageName = localPackageInfo.packageName;
-                    localAppInfo.isSelected = Boolean.valueOf(false);
+                final AppInfo localAppInfo = new AppInfo();
+                //localAppInfo.appName = localPackageInfo.applicationInfo.loadLabel(context.getPackageManager()).toString();
+                //localAppInfo.appSourcDir = localPackageInfo.applicationInfo.publicSourceDir;
+                localAppInfo.appName = name_s;
+                localAppInfo.appSourcDir = apk_path;
+                localAppInfo.appSize = 0;
+                File localFile1 = new File(localAppInfo.appSourcDir);
+                if (localFile1 != null)
+                    localAppInfo.appSize = (int) (localFile1.length());
+                localAppInfo.appCache = 0;
+                //String packageName = localPackageInfo.packageName;
+                localAppInfo.isSelected = Boolean.valueOf(false);
 
-                    /*localAppInfo.packageName = localPackageInfo.packageName;
-                    localAppInfo.versionName = localPackageInfo.versionName;
-                    localAppInfo.versionCode = localPackageInfo.versionCode;*/
-                    localAppInfo.packageName="";
-                    localAppInfo.versionName="";
-                    //localAppInfo.versionCode=00;
+                /*localAppInfo.packageName = localPackageInfo.packageName;
+                localAppInfo.versionName = localPackageInfo.versionName;
+                localAppInfo.versionCode = localPackageInfo.versionCode;*/
+                localAppInfo.packageName="";
+                localAppInfo.versionName="";
+                //localAppInfo.versionCode=00;
+                //获取最近修改时间
+                long time = localFile1.lastModified();//返回文件最后修改时间，是一个long型毫秒数
+                localAppInfo.setLastUpdateTime(time);
                 try {
                     localAppInfo.appIcon = localPackageInfo.applicationInfo.loadIcon(context.getPackageManager());
-                }catch(Exception e){
-                    Log.e(TAG, "FindAllAPKFile: 图标获取失败" );
+                } catch (Exception e) {
+                    Log.e(TAG, "FindAllAPKFile: 图标获取失败，设为默认图标");
+                    Drawable defaultAppIcon = context.getResources().getDrawable(R.mipmap.default_app_icon);
+                    localAppInfo.appIcon = defaultAppIcon;
                 }
-                    //getRunningAppProcessInfo(localAppInfo);
-                    Log.i(TAG, "getAppOf TYPE_LOCAL " + localAppInfo.getAppName());
+
+                //getRunningAppProcessInfo(localAppInfo);
+               /* int type = doType(pm, packageName, versionCode);
+                localAppInfo.setInstalled(type);
+                Log.i(TAG, "getAppOf TYPE_LOCAL " + localAppInfo.getAppName());*/
                     appInfoList.add(localAppInfo);
 
                     /**获取apk的图标 *//*

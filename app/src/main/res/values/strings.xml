@@ -66,10 +66,7 @@
     <string name="choose_next_action">Then…</string>
     <string name="input_new_name">Input the new file name</string>
     <string name="confirm">Confirm</string>
+    <string name="confirm_delete">Confirm to delete?</string>
     <string name="cancel">Cancel</string>
-
-
-
-
 
 </resources>

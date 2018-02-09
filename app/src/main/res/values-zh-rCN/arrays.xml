@@ -6,6 +6,13 @@
         <item>提取并重命名后分享</item>
     </string-array>
 
+    <string-array name="localAPK_actions">
+        <item>分享</item>
+        <item>安装</item>
+        <item>重命名</item>
+        <item>删除</item>
+    </string-array>
+
     <string-array name="copy_info_actions">
         <item>复制应用名称</item>
         <item>复制包名</item>
@@ -27,10 +34,10 @@
 
     <string-array name="sort_type_name">
         <item>按应用名称</item>
-        <item>按包名</item>
+        <item>按包名(本地APK不适用)</item>
         <item>按大小</item>
-        <item>最近安装</item>
-        <item>最近更新</item>
+        <item>最近安装(本地APK不适用)</item>
+        <item>最近更新/修改</item>
         <!--<item>最近使用</item>-->
     </string-array>
     <string-array name="sort_type_value">

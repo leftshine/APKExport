@@ -20,6 +20,7 @@ public class FileHandler extends Handler {
     private Context context;
     private static ProgressDialog progressDialog;
     private static Toast mToast;
+    private FileUtils fileUtils;
 
     public FileHandler(Context context) {
         this.context = context;
@@ -29,6 +30,7 @@ public class FileHandler extends Handler {
         if (mToast == null) {
             mToast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
         }
+        fileUtils = new FileUtils(context);
     }
 
     @Override
@@ -44,7 +46,7 @@ public class FileHandler extends Handler {
                 showToast("导出完成，文件保存在:"+shareFilePath);
                 int mode = msg.arg1;
                 if(mode == FileUtils.MODE_EXPORT_SHARE||mode == FileUtils.MODE_EXPORT_RENAME_SHARE) {
-                    FileUtils.startShare(shareFilePath);
+                    fileUtils.startShare(shareFilePath);
                 }
                 break;
             case MessageCode.MSG_COPY_PROGRESS:

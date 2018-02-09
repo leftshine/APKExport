@@ -1,14 +1,11 @@
 package cn.leftshine.apkexport.fragment;
 
-import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -20,14 +17,12 @@ import android.view.animation.AlphaAnimation;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.adapter.AppInfoAdapter;
-import cn.leftshine.apkexport.adapter.LocalApkInfoAdapter;
 import cn.leftshine.apkexport.utils.AppInfo;
 import cn.leftshine.apkexport.utils.MessageCode;
 import cn.leftshine.apkexport.utils.ToolUtils;
@@ -41,17 +36,16 @@ public class AppFragment extends Fragment {
     private static final String TAG = "AppFragment";
 
     private View root = null;
-    private Toast mToast = null;
+    //private Toast mToast = null;
     private TextView mAppStatus;
 
     private ListView mAppListView;
 
-    private PackageManager packageManager;
-    private ActivityManager mActivityManager = null;
-    private AppInfoAdapter mAdapter;
+    //private PackageManager packageManager;
+    //private ActivityManager mActivityManager = null;
     private static List<AppInfo> mLists = new ArrayList<AppInfo>();
-    private HandlerThread mThread;
-    private Handler mThreadHanlder;
+    //private HandlerThread mThread;
+    //private Handler mThreadHanlder;
     private AppReceiver mAppReceiver;
     //private SearchView searchBox;
     private RelativeLayout cloud,ly_list_show;
@@ -60,13 +54,14 @@ public class AppFragment extends Fragment {
     //boolean isLoading = false;
     //public boolean isFirstLoad = true;
     ToolUtils toolUtils;
-
+    private AppInfoAdapter mAdapter;
     private Handler mHandler = new Handler() {
 
         @Override
         public void dispatchMessage(Message msg) {
             // TODO Auto-generated method stub
             switch (msg.what) {
+                //region
                 /*case MessageCode.MSG_LOAD_START:
                     Log.i(TAG, "MSG_LOAD_START");
                     //if(!isLoading) {
@@ -104,6 +99,7 @@ public class AppFragment extends Fragment {
                     mAdapter.add(info);
                     mAdapter.notifyDataSetChanged();*//*
                     break;*/
+                //endregion
                 case MessageCode.MSG_INSTALLED_APP_DETAILS:
                     mAppListView.setVisibility(View.GONE);
                     mAppStatus.setVisibility(View.VISIBLE);
@@ -144,6 +140,7 @@ public class AppFragment extends Fragment {
             }
         }
     };
+       //region
 /*    private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
@@ -154,7 +151,7 @@ public class AppFragment extends Fragment {
             }
         }
     };*/
-
+//endregion
     public static AppFragment newInstance(int type){
         Bundle arguments = new Bundle();
         arguments.putInt(ToolUtils.TYPE, type);
@@ -168,8 +165,6 @@ public class AppFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_main, container, false);
         initView(root);
         initData();
-        //refresh();
-        //isReady = true;
         load();
         return root;
     }
@@ -177,8 +172,6 @@ public class AppFragment extends Fragment {
     @Override
     public void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        packageManager = getActivity().getPackageManager();
-        mActivityManager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
         toolUtils = new ToolUtils();
         type = getArguments().getInt(ToolUtils.TYPE);
         Log.i(TAG, "onCreate: type="+type);
@@ -192,12 +185,9 @@ public class AppFragment extends Fragment {
         mAppListView.setTextFilterEnabled(true);
     }
     private void initData() {
-        if(ToolUtils.TYPE_LOCAL == type){
-            mAdapter = new LocalApkInfoAdapter(getActivity(), mLists);
-        }else {
-            mAdapter = new AppInfoAdapter(getActivity(), mLists);
-        }
+        mAdapter = new AppInfoAdapter(getActivity(), mLists,type);
         mAppListView.setAdapter(mAdapter);
+
     }
 
     private void registerAppChangedReceiver() {
@@ -218,23 +208,21 @@ public class AppFragment extends Fragment {
     public void onResume() {
         super.onResume();
     }
-
     @Override
     public void onPause() {
         super.onPause();
     }
-
     @Override
     public void onStop() {
         super.onStop();
     }
-
     @Override
     public void onDestroy() {
         getActivity().unregisterReceiver(mAppReceiver);
-        mThread.quit();
+        //mThread.quit();
         super.onDestroy();
     }
+
     public void load() {
         showLoadUI();
         new Thread(new Runnable() {
@@ -253,7 +241,7 @@ public class AppFragment extends Fragment {
             }
         }).start();
     }
-
+//region
     /*public void load() {
         new Thread(new Runnable() {
             @Override
@@ -295,6 +283,7 @@ public class AppFragment extends Fragment {
         }).start();
 
     }*/
+    //endregion
     public void doSearch(String queryText) {
         mAdapter.doSearch(queryText);
     }
@@ -308,7 +297,6 @@ public class AppFragment extends Fragment {
         cloud.startAnimation(alphaAnimation);
         mAppListView.setEnabled(false);
     }
-
     private void hideLoadUI() {
         ly_list_show.setVisibility(View.VISIBLE);
         AlphaAnimation alphaAnimation = new AlphaAnimation(1f,0);
@@ -318,6 +306,7 @@ public class AppFragment extends Fragment {
         cloud.setVisibility(View.INVISIBLE);
         mAppListView.setEnabled(true);
     }
+
     class AppReceiver extends BroadcastReceiver {
 
         @Override

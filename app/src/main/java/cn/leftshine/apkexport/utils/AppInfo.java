@@ -19,6 +19,18 @@ public class AppInfo {
 	private String processName;
 	private long firstInstallTime;
 	private long lastUpdateTime;
+	private int installed =1;
+	//private String fileLastModifyTime;
+/*
+
+	public String getFileLastModifyTime() {
+		return fileLastModifyTime;
+	}
+
+	public void setFileLastModifyTime(String fileLastModifyTime) {
+		this.fileLastModifyTime = fileLastModifyTime;
+	}
+*/
 
 	public long getFirstInstallTime() {
 		return firstInstallTime;
@@ -107,5 +119,9 @@ public class AppInfo {
 	}
 	public void setProcessName(String processName) {
 		this.processName = processName;
+	}
+
+	public void setInstalled(int installed) {
+		this.installed = installed;
 	}
 }

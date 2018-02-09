@@ -18,9 +18,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import cn.leftshine.apkexport.R;
@@ -31,7 +34,11 @@ import cn.leftshine.apkexport.utils.FileUtils;
 import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.utils.ToolUtils;
 
-public class AppInfoAdapter extends BaseAdapter implements Filterable {
+import static cn.leftshine.apkexport.utils.FileUtils.MODE_EXPORT_RENAME_SHARE;
+import static cn.leftshine.apkexport.utils.FileUtils.MODE_EXPORT_SHARE;
+import static cn.leftshine.apkexport.utils.FileUtils.MODE_ONLY_EXPORT;
+
+public class AppInfoAdapter extends BaseAdapter implements Filterable{
 
 	private static final String TAG = "AppInfoAdapter";
 	LayoutInflater mInflater;
@@ -40,21 +47,24 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable {
 	private List<AppInfo> backLists = new ArrayList<AppInfo>();
 	private CharacterParser characterParser;
 	MyFilter mFilter;
-	Context context;
+	Context mContext;
 	Handler mHandler;
+	FileUtils fileUtils;
+	int mType;
 
-	public AppInfoAdapter(Context context, List<AppInfo> list) {
+	public AppInfoAdapter(Context context, List<AppInfo> list, int type) {
 		// TODO Auto-generated constructor stub
-		mInflater = LayoutInflater.from(context);
+		mContext=context;
+		mInflater = LayoutInflater.from(mContext);
 		localSortComparator = new SortComparator();
 		mLists = list;
 		backLists = mLists;
 		characterParser = CharacterParser.getInstance();
-		this.context=context;
-		mHandler =new FileHandler(context);
 
+		mType = type;
+		mHandler =new FileHandler(mContext);
+		fileUtils =new FileUtils(mContext);
 	}
-
 	public void setDataList(List<AppInfo> list) {
 		mLists = list;
 		notifyDataSetChanged();
@@ -87,6 +97,8 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable {
 			 getFilter().filter(queryText);
 		 }
 	 }
+
+
 
 	public class SortComparator implements Comparator<Object> {
 		public SortComparator() {
@@ -122,111 +134,246 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		ViewHolder holder = null;
-		if (convertView == null || convertView.getTag() == null) {
-			convertView = mInflater.inflate(R.layout.app_infolist_item, null);
-			holder = new ViewHolder(convertView);
-			convertView.setTag(holder);
-		} else {
-			holder = (ViewHolder) convertView.getTag();
-		}
-		final AppInfo info = (AppInfo) getItem(position);
-		holder.mAppIcon.setImageDrawable(info.getAppIcon());
-		holder.mPackageName.setText(info.getPackageName());
-		holder.mAppName.setText(info.getAppName());
-		holder.mAppSize.setText(ToolUtils.getDataSize(info.getAppSize()));
-		holder.mAppVersionName.setText(info.getVersionName());
+		if(ToolUtils.TYPE_USER == mType || ToolUtils.TYPE_SYSTEM == mType) {
+			AppViewHolder holder = null;
+			if (convertView == null || convertView.getTag() == null) {
+				convertView = mInflater.inflate(R.layout.app_infolist_item, null);
+				holder = new AppViewHolder(convertView);
+				convertView.setTag(holder);
+			} else {
+				holder = (AppViewHolder) convertView.getTag();
+			}
+			final AppInfo info = (AppInfo) getItem(position);
+
+			holder.mAppIcon.setImageDrawable(info.getAppIcon());
+			holder.mPackageName.setText(info.getPackageName());
+			holder.mAppName.setText(info.getAppName());
+			holder.mAppSize.setText(ToolUtils.getDataSize(info.getAppSize()));
+			holder.mAppVersionName.setText(info.getVersionName());
 		/*holder.mAppData.setText(ToolUtils.getDataSize(info.getAppCache()));
 		holder.mMemSize.setText(ToolUtils.getDataSize(info.getMemSize()));*/
-		holder.mAppitem.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Log.i(TAG, "mAppitem onClick: ");
-				new AlertDialog.Builder(context)
-						.setTitle(R.string.choose_next_action)
-						.setItems(R.array.copy_actions, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialogInterface, int i) {
-								int mode = i;
-								switch (i){
-									case 0:
-										mode = FileUtils.MODE_ONLY_EXPORT;
-										break;
-									case 1:
-										mode = FileUtils.MODE_EXPORT_SHARE;
-										break;
-									case 2:
-										mode = FileUtils.MODE_EXPORT_RENAME_SHARE;
-										break;
-								}
-								FileUtils.doExport(context,mHandler,mode,info);
-
-							}
-						})
-						.show();
-			}
-		});
-		holder.mAppitem.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View view) {
-				String long_click_action = Settings.getLongPressAction();
-				Log.i(TAG, "onLongClick: long_click_action="+long_click_action);
-				if (long_click_action.equals("103")) {
-					//复制应用信息
-					new AlertDialog.Builder(context)
+			holder.mAppitem.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					Log.i(TAG, "mAppitem onClick: ");
+					new AlertDialog.Builder(mContext)
 							.setTitle(R.string.choose_next_action)
-							.setItems(R.array.copy_info_actions, new DialogInterface.OnClickListener() {
+							.setItems(R.array.copy_actions, new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialogInterface, int i) {
+									int mode = i;
+									switch (i) {
+										case 0:
+											mode = FileUtils.MODE_ONLY_EXPORT;
+											break;
+										case 1:
+											mode = FileUtils.MODE_EXPORT_SHARE;
+											break;
+										case 2:
+											mode = FileUtils.MODE_EXPORT_RENAME_SHARE;
+											break;
+									}
+									fileUtils.doExport(mHandler, mode, info);
+
+								}
+							})
+							.show();
+				}
+			});
+			holder.mAppitem.setOnLongClickListener(new View.OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View view) {
+					String long_click_action = Settings.getLongPressAction();
+					Log.i(TAG, "onLongClick: long_click_action=" + long_click_action);
+					if (long_click_action.equals("103")) {
+						//复制应用信息
+						new AlertDialog.Builder(mContext)
+								.setTitle(R.string.choose_next_action)
+								.setItems(R.array.copy_info_actions, new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialogInterface, int i) {
 								/*
 								<item>复制应用名称</item>
         						<item>复制包名</item>
         						<item>复制版本号</item>
 								 */
-									ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-									ClipData clipData = ClipData.newPlainText(null, "");
-									switch (i) {
+										ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+										ClipData clipData = ClipData.newPlainText(null, "");
+										switch (i) {
+											case 0:
+												clipData = ClipData.newPlainText(null, info.getAppName());
+												break;
+											case 1:
+												clipData = ClipData.newPlainText(null, info.getPackageName());
+												break;
+											case 2:
+												clipData = ClipData.newPlainText(null, info.getVersionName());
+												break;
+										}
+										cm.setPrimaryClip(clipData);
+									}
+								})
+								.show();
+					} else {
+						//导出操作
+						int mode = FileUtils.MODE_ONLY_EXPORT;
+						switch (long_click_action) {
+							case "100":
+								mode = FileUtils.MODE_ONLY_EXPORT;
+								break;
+							case "101":
+								mode = FileUtils.MODE_EXPORT_SHARE;
+								break;
+							case "102":
+								mode = FileUtils.MODE_EXPORT_RENAME_SHARE;
+								break;
+						}
+						fileUtils.doExport(mHandler, mode, info);
+					}
+					//FileUtils.copyInfo(mContext,mHandler,info);
+					return true;
+				}
+			});
+		}else{
+			ApkViewHolder holder = null;
+			if (convertView == null || convertView.getTag() == null) {
+				convertView = mInflater.inflate(R.layout.local_apk_infolist_item, null);
+				holder = new ApkViewHolder(convertView);
+				convertView.setTag(holder);
+			} else {
+				holder = (ApkViewHolder) convertView.getTag();
+			}
+			final AppInfo info = (AppInfo) getItem(position);
+			//final AppInfo info = (AppInfo) mLists.get(position);
+			//Log.i(TAG, "getItem:"+info1.getAppName()+"mLists.get(position):"+info.getAppName());
+			holder.LocalApkIcon.setImageDrawable(info.getAppIcon());
+			holder.LocalApkName.setText(info.getAppName());
+			holder.LocalApkSize.setText(ToolUtils.getDataSize(info.getAppSize()));
+			String timeFormat = new SimpleDateFormat("MM-dd hh:mm").format(new Date(info.getLastUpdateTime()));
+			holder.LocalApkdate.setText(timeFormat);
+			holder.LocalApkitem.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					Log.i(TAG, "LocalApkitem onClick: ");
+					new AlertDialog.Builder(mContext)
+							.setTitle(R.string.choose_next_action)
+							.setItems(R.array.localAPK_actions, new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialogInterface, int i) {
+                                /*<item>Share</item>
+                                <item>Install</item>
+                                <item>Rename</item>
+                                <item>Delete</item>*/
+									//int mode = i + MODE_LOCAL_SHARE;
+									switch (i){
 										case 0:
-											clipData = ClipData.newPlainText(null, info.getAppName());
+											//mode = MODE_LOCAL_SHARE;
+											fileUtils.startShare(info.appSourcDir);
 											break;
 										case 1:
-											clipData = ClipData.newPlainText(null, info.getPackageName());
+											//mode = MODE_LOCAL_INSTALL;
+											fileUtils.install(info.appSourcDir,mContext);
 											break;
 										case 2:
-											clipData = ClipData.newPlainText(null, info.getVersionName());
+											//mode = MODE_LOCAL_RENAME;
+											final String oldName = info.appName;
+											fileUtils.rename(info.appSourcDir, new FileUtils.OnListDataChangedListener() {
+												@Override
+												public void OnListDataChanged(String newPath) {
+													File newFile = new File(newPath);
+													String newName= newFile.getName();
+													if(oldName!=newName) {
+														AppInfo newInfo = info;
+														newInfo.appName = newName;
+														info.setAppName(newName);
+														info.setAppSourcDir(newPath);
+														mLists.remove(position);
+														mLists.add(position, newInfo);
+														notifyDataSetChanged();
+													}
+												}
+											});
+
+											break;
+										case 3:
+											//mode = MODE_LOCAL_DELETE;
+
+											fileUtils.delete(info.appSourcDir, new FileUtils.OnListDataChangedListener() {
+												@Override
+												public void OnListDataChanged(String newPath) {
+													mLists.remove(position);
+													notifyDataSetChanged();
+												}
+											});
 											break;
 									}
-									cm.setPrimaryClip(clipData);
+									//FileUtils.doLocalApk(context,mHandler,mode,info);
 								}
 							})
 							.show();
-				}else{
-					//导出操作
-					int mode = FileUtils.MODE_ONLY_EXPORT;
-					switch (long_click_action){
-						case "100":
-							mode = FileUtils.MODE_ONLY_EXPORT;
-							break;
-						case "101":
-							mode = FileUtils.MODE_EXPORT_SHARE;
-							break;
-						case "102":
-							mode = FileUtils.MODE_EXPORT_RENAME_SHARE;
-							break;
-					}
-					FileUtils.doExport(context,mHandler,mode,info);
 				}
-				//FileUtils.copyInfo(context,mHandler,info);
-				return true;
-			}
-		});
+			});
+			holder.LocalApkitem.setOnLongClickListener(new View.OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View view) {
+					String long_click_action = Settings.getLongPressAction();
+					Log.i(TAG, "onLongClick: long_click_action="+long_click_action);
+					if (long_click_action.equals("103")) {
+						//复制应用信息
+						new AlertDialog.Builder(mContext)
+								.setTitle(R.string.choose_next_action)
+								.setItems(R.array.copy_info_actions, new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialogInterface, int i) {
+								/*
+								<item>复制应用名称</item>
+        						<item>复制包名</item>
+        						<item>复制版本号</item>
+								 */
+										ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+										ClipData clipData = ClipData.newPlainText(null, "");
+										switch (i) {
+											case 0:
+												clipData = ClipData.newPlainText(null, info.getAppName());
+												break;
+											case 1:
+												clipData = ClipData.newPlainText(null, info.getPackageName());
+												break;
+											case 2:
+												clipData = ClipData.newPlainText(null, info.getVersionName());
+												break;
+										}
+										cm.setPrimaryClip(clipData);
+									}
+								})
+								.show();
+					}else{
+						//导出操作
+						int mode = MODE_ONLY_EXPORT;
+						switch (long_click_action){
+							case "100":
+								mode = MODE_ONLY_EXPORT;
+								break;
+							case "101":
+								mode = MODE_EXPORT_SHARE;
+								break;
+							case "102":
+								mode = MODE_EXPORT_RENAME_SHARE;
+								break;
+						}
+						fileUtils.doExport(mHandler,mode,info);
+					}
+					//FileUtils.copyInfo(context,mHandler,info);
+					return true;
+				}
+			});
+		}
 		return convertView;
 	}
-
-
-	private class ViewHolder {
+	
+	private class AppViewHolder {
 		private LinearLayout mAppitem;
 		private ImageView mAppIcon;
 		private TextView mPackageName;
@@ -236,7 +383,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable {
 		/*private TextView mAppData;
 		private TextView mMemSize;*/
 
-		private ViewHolder(View view) {
+		private AppViewHolder(View view) {
 			mAppitem = (LinearLayout)view.findViewById(R.id.appInfo_item);
 			mAppIcon = (ImageView) view.findViewById(R.id.appInfo_icon);
 			mPackageName = (TextView) view.findViewById(R.id.appInfo_packageName);
@@ -247,6 +394,21 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable {
 			mMemSize = (TextView) view.findViewById(R.id.appInfo_memSize);*/
 		}
 	}
+
+	private class ApkViewHolder {
+		private LinearLayout LocalApkitem;
+		private ImageView LocalApkIcon;
+		private TextView LocalApkName,LocalApkSize,LocalApkdate;
+
+		public ApkViewHolder(View view) {
+			LocalApkitem = (LinearLayout)view.findViewById(R.id.LocalApkInfo_item);
+			LocalApkIcon = (ImageView) view.findViewById(R.id.LocalApkInfo_icon);
+			LocalApkName = (TextView) view.findViewById(R.id.LocalApkInfo_appName);
+			LocalApkSize = (TextView) view.findViewById(R.id.LocalApkInfo_appSize);
+			LocalApkdate = (TextView)view.findViewById(R.id.LocalApkInfo_date);
+		}
+	}
+	
 	class MyFilter extends Filter {
 		//我们在performFiltering(CharSequence charSequence)这个方法中定义过滤规则
 		@Override
@@ -285,5 +447,6 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable {
 			}
 		}
 	}
+
 
 }

@@ -134,8 +134,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 AppFragment fragment = (AppFragment)contentAdapter.getItem(position);
-                //if(fragment.isFirstLoad)
-                //fragment.load();
                 currentFragment = fragment;
             }
 
