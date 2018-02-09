@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.echooit.apkexport.fragment.SettingActivityFragment"
+    tools:context="com.leftshine.apkexport.cn.leftshine.apkexport.fragment.SettingActivityFragment"
     tools:showIn="@layout/activity_setting">
 
 </android.support.constraint.ConstraintLayout>

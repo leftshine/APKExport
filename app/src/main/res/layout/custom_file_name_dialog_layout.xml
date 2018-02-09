@@ -23,7 +23,7 @@
         android:inputType="textPersonName"
         android:text="#N-#P-#V" />-->
 
-    <com.echooit.apkexport.view.ClearEditText
+    <cn.leftshine.apkexport.view.ClearEditText
         android:id="@+id/txt_custom_filename_format"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

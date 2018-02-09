@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.echooit.apkexport.view.ClearEditText
+    <cn.leftshine.apkexport.view.ClearEditText
         android:id="@+id/txt_filename"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

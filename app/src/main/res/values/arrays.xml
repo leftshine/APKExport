@@ -6,6 +6,13 @@
         <item>Share after Export&amp;Rename</item>
     </string-array>
 
+    <string-array name="localAPK_actions">
+        <item>Share</item>
+        <item>Install</item>
+        <item>Rename</item>
+        <item>Delete</item>
+    </string-array>
+
     <string-array name="copy_info_actions">
         <item>Copy App Name</item>
         <item>Copy Package Name</item>
