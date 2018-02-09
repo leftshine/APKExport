@@ -3,6 +3,7 @@ package cn.leftshine.apkexport.utils;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -57,14 +58,56 @@ public class ToolUtils {
             return "0 KB";
         }
     }
+    List<AppInfo> userAppInfoList = new ArrayList<AppInfo>();
+    List<AppInfo> systemAppInfoList = new ArrayList<AppInfo>();
+    List<AppInfo> localAppInfoList = new ArrayList<AppInfo>();
 
-    public static List<AppInfo> getApp(Fragment fragment, Handler mHandler, int type) {
+    public void loadApp(Fragment fragment, Handler mHandler, int type) {
+        switch (type) {
+            case TYPE_USER:
+                if(userAppInfoList==null||userAppInfoList.isEmpty()) {
+                    getApp(fragment, mHandler, type);
+                }else {
+                    Message msg1 = Message.obtain();
+                    Log.i(TAG, "TYPE_USER getApp:"+"completed");
+                    msg1.what =MessageCode.MSG_GET_APP_COMPLETED;
+                    msg1.obj = userAppInfoList;
+                    mHandler.sendMessage(msg1);
+                }
+                break;
+            case TYPE_SYSTEM:
+                if(systemAppInfoList==null||systemAppInfoList.isEmpty()) {
+                    getApp(fragment, mHandler, type);
+                }else{
+
+                    Message msg2 = Message.obtain();
+                    Log.i(TAG, "TYPE_SYSTEM getApp:"+"completed");
+                    msg2.what =MessageCode.MSG_GET_APP_COMPLETED;
+                    msg2.obj = systemAppInfoList;
+                    mHandler.sendMessage(msg2);
+                }
+                break;
+            case TYPE_LOCAL:
+                if(localAppInfoList==null||localAppInfoList.isEmpty()) {
+                    getApp(fragment, mHandler, type);
+                }else{
+                    Message msg3 = Message.obtain();
+                    Log.i(TAG, "TYPE_LOCAL getApp:"+"completed");
+                    msg3.what =MessageCode.MSG_GET_APP_COMPLETED;
+                    msg3.obj = localAppInfoList;
+                    mHandler.sendMessage(msg3);
+                }
+                break;
+        }
+
+    }
+    public  void getApp(Fragment fragment, Handler mHandler, int type) {
 
         List<?> localList = fragment.getActivity().getPackageManager().getInstalledPackages(0);
-        List<AppInfo> appInfoList = new ArrayList<AppInfo>();
         Log.i(TAG, "getApp: type="+type);
         switch (type){
             case TYPE_USER:
+                userAppInfoList.clear();
                 for (int i = 0; i < localList.size(); i++) {
                     PackageInfo localPackageInfo = (PackageInfo) localList.get(i);
                     if ((ApplicationInfo.FLAG_SYSTEM &
@@ -89,14 +132,21 @@ public class ToolUtils {
                         localAppInfo.setLastUpdateTime(localPackageInfo.lastUpdateTime);
                         //getRunningAppProcessInfo(localAppInfo);
                         Log.i(TAG, "getAppOf TYPE_USER "+localAppInfo.getAppName());
-                        appInfoList.add(localAppInfo);
+                        userAppInfoList.add(localAppInfo);
                         /*Message msg = mHandler.obtainMessage(MessageCode.MSG_GET_APP, localAppInfo);
                         // mHandler.sendEmptyMessage(0);
                         msg.sendToTarget();*/
                     }
                 }
+                userAppInfoList = sort(userAppInfoList);
+                Message msg1 = Message.obtain();
+                Log.i(TAG, "TYPE_USER getApp:"+"completed");
+                msg1.what =MessageCode.MSG_GET_APP_COMPLETED;
+                msg1.obj = userAppInfoList;
+                mHandler.sendMessage(msg1);
                 break;
             case TYPE_SYSTEM:
+                systemAppInfoList.clear();
                 for (int i = 0; i < localList.size(); i++) {
                     PackageInfo localPackageInfo = (PackageInfo) localList.get(i);
                     if ((ApplicationInfo.FLAG_SYSTEM &
@@ -119,23 +169,41 @@ public class ToolUtils {
                         localAppInfo.appIcon = localPackageInfo.applicationInfo.loadIcon(fragment.getActivity().getPackageManager());
                         //getRunningAppProcessInfo(localAppInfo);
                         Log.i(TAG, "getAppOf TYPE_SYSTEM "+localAppInfo.getAppName());
-                        appInfoList.add(localAppInfo);
+                        systemAppInfoList.add(localAppInfo);
                         /*Message msg = mHandler.obtainMessage(MessageCode.MSG_GET_APP, localAppInfo);
                         // mHandler.sendEmptyMessage(0);
                         msg.sendToTarget();*/
                     }
                 }
+                systemAppInfoList = sort(systemAppInfoList);
+                Message msg2 = Message.obtain();
+                Log.i(TAG, "TYPE_SYSTEM getApp:"+"completed");
+                msg2.what =MessageCode.MSG_GET_APP_COMPLETED;
+                msg2.obj = systemAppInfoList;
+                mHandler.sendMessage(msg2);
+                break;
+            case TYPE_LOCAL:
+                localAppInfoList.clear();
+                Log.i(TAG, "getApp:TYPE_LOCAL ");
+                LocalApkSearchUtils localApkSearchUtils = new LocalApkSearchUtils(fragment.getActivity());
+                //localApkSearchUtils.FindAllAPKFile(Environment.getDataDirectory());
+                localApkSearchUtils.FindAllAPKFile(Environment.getExternalStorageDirectory());
+                localAppInfoList = localApkSearchUtils.getAppInfo();
+                localAppInfoList = sort(localAppInfoList);
+                Message msg3 = Message.obtain();
+                Log.i(TAG, "TYPE_LOCAL getApp:"+"completed");
+                msg3.what =MessageCode.MSG_GET_APP_COMPLETED;
+                msg3.obj = localAppInfoList;
+                mHandler.sendMessage(msg3);
                 break;
         }
-        Message msg = Message.obtain();
-        Log.i(TAG, "getApp:"+"completed");
-        msg.what =MessageCode.MSG_GET_APP_COMPLETED;
-        msg.obj = sort(appInfoList);
-        mHandler.sendMessage(msg);
-        return appInfoList;
+
+        //return appInfoList;
     }
 
-    public static List<AppInfo> sort(List<AppInfo> list) {
+    public  List<AppInfo> sort(List<AppInfo> list) {
+        System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
+
         //修改为从设置读取排序方式
         String sortType = Settings.getSortType();
         String sortOrder = Settings.getSortOrder();
@@ -197,8 +265,11 @@ public class ToolUtils {
             CharacterParser characterParser = CharacterParser.getInstance();
             String compare1 = characterParser.getSelling(appInfo1.appName).toUpperCase();
             String compare2 = characterParser.getSelling(appInfo2.appName).toUpperCase();
-            Log.i(TAG, "compare: " + compare1);
-            return (compare1.compareTo(compare2));
+            Log.i(TAG, "compare: " + compare1+":"+compare2);
+            if(compare1==compare2)
+                return 0;
+            else
+                return (compare1.compareTo(compare2));
         }
     };
     public static final Comparator<AppInfo> SORT_BY_PACKAGENAME = new Comparator<AppInfo>() {
@@ -207,8 +278,11 @@ public class ToolUtils {
             CharacterParser characterParser = CharacterParser.getInstance();
             String compare1 = characterParser.getSelling(appInfo1.packageName).toUpperCase();
             String compare2 = characterParser.getSelling(appInfo2.packageName).toUpperCase();
-            Log.i(TAG, "compare: " + compare1);
-            return (compare1.compareTo(compare2));
+            Log.i(TAG, "compare: " + compare1+":"+compare2);
+            if(compare1==compare2)
+                return 0;
+            else
+                return (compare1.compareTo(compare2));
         }
     };
     public static final Comparator<AppInfo> SORT_BY_SIZE = new Comparator<AppInfo>() {
@@ -219,6 +293,8 @@ public class ToolUtils {
             Log.i(TAG, "compare: " + compare1);
           if(compare2<compare1)
               return 1;
+          if(compare2==compare1)
+              return 0;
           else
               return -1;
         }
@@ -231,6 +307,8 @@ public class ToolUtils {
             Log.i(TAG, "compare: " + compare1);
             if(compare2<compare1)
                 return 1;
+            if(compare2==compare1)
+                return 0;
             else
                 return -1;
         }
@@ -243,6 +321,8 @@ public class ToolUtils {
             Log.i(TAG, "compare: " + compare1);
             if(compare2<compare1)
                 return 1;
+            if(compare2==compare1)
+                return 0;
             else
                 return -1;
         }
@@ -255,8 +335,11 @@ public class ToolUtils {
             CharacterParser characterParser = CharacterParser.getInstance();
             String compare1 = characterParser.getSelling(appInfo1.appName).toUpperCase();
             String compare2 = characterParser.getSelling(appInfo2.appName).toUpperCase();
-            Log.i(TAG, "compare: " + compare1);
-            return (compare2.compareTo(compare1));
+            Log.i(TAG, "compare: " + compare1+":"+compare2);
+            if(compare1==compare2)
+                return 0;
+            else
+                return (compare2.compareTo(compare1));
         }
     };
     public static final Comparator<AppInfo> SORT_BY_PACKAGENAME_DES = new Comparator<AppInfo>() {
@@ -265,8 +348,11 @@ public class ToolUtils {
             CharacterParser characterParser = CharacterParser.getInstance();
             String compare1 = characterParser.getSelling(appInfo1.packageName).toUpperCase();
             String compare2 = characterParser.getSelling(appInfo2.packageName).toUpperCase();
-            Log.i(TAG, "compare: " + compare1);
-            return (compare2.compareTo(compare1));
+            Log.i(TAG, "compare: " + compare1+":"+compare2);
+            if(compare1==compare2)
+                return 0;
+            else
+                return (compare2.compareTo(compare1));
         }
     };
     public static final Comparator<AppInfo> SORT_BY_SIZE_DES = new Comparator<AppInfo>() {
@@ -277,6 +363,8 @@ public class ToolUtils {
             Log.i(TAG, "compare: " + compare1);
             if(compare2>compare1)
                 return 1;
+            if(compare2==compare1)
+                return 0;
             else
                 return -1;
         }
@@ -289,6 +377,8 @@ public class ToolUtils {
             Log.i(TAG, "compare: " + compare1);
             if(compare2>compare1)
                 return 1;
+            if(compare2==compare1)
+                return 0;
             else
                 return -1;
         }
@@ -301,9 +391,12 @@ public class ToolUtils {
             Log.i(TAG, "compare: " + compare1);
             if(compare2>compare1)
                 return 1;
+            if(compare2==compare1)
+                return 0;
             else
                 return -1;
         }
     };
+
 
 }

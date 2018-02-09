@@ -4,6 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cn.leftshine.apkexport.activity.AboutActivity">
+<<<<<<< HEAD
+    tools:context="com.leftshine.apkexport.cn.echooit.apkexport.activity.AboutActivity">
+=======
+    tools:context="com.leftshine.apkexport.cn.leftshine.apkexport.activity.AboutActivity">
+>>>>>>> dev
 
 </android.support.constraint.ConstraintLayout>

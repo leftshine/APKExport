@@ -1,59 +1,61 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-        <FrameLayout
+
+    <RelativeLayout
+        android:id="@+id/ly_list_show"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/have_app"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/app_installed_not"
+            android:textColor="@color/gray"
+            android:visibility="gone" />
+
+        <ListView
+            android:id="@+id/app_listView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:divider="@color/gray"
+            android:dividerHeight="1dp" />
 
-            <RelativeLayout
-                android:id="@+id/cloud"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
+    </RelativeLayout>
 
-                android:layout_marginLeft="1dp"
-                android:layout_marginRight="1dp"
-                android:background="#ffff"
-                android:visibility="visible">
+    <RelativeLayout
+        android:id="@+id/cloud"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
 
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@id/txt_loading"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="20dp" />
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+        android:background="@color/white"
+        android:visibility="invisible">
 
-                <TextView
-                    android:id="@+id/txt_loading"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/loading" />
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/txt_loading"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp" />
 
-            </RelativeLayout>
+        <TextView
+            android:id="@+id/txt_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/loading" />
 
-            <TextView
-                android:id="@+id/have_app"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/app_installed_not"
-                android:textColor="@color/gray"
-                android:visibility="gone"
-                android:layout_gravity="center" />
+    </RelativeLayout>
 
-           <ListView
-                android:id="@+id/app_listView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="1dp"
-                android:layout_marginRight="1dp"
-                android:divider="@color/gray"
-                android:dividerHeight="1dp" />
-
-        </FrameLayout>
-
-</LinearLayout>
+</RelativeLayout>

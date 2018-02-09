@@ -4,15 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cn.leftshine.apkexport.activity.MainActivity">
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_popup_sync" />
+<<<<<<< HEAD
+    tools:context="com.leftshine.apkexport.cn.echooit.apkexport.activity.SettingActivity">
+=======
+    tools:context="com.leftshine.apkexport.cn.leftshine.apkexport.activity.SettingActivity">
+>>>>>>> dev
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -22,23 +18,21 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tl_tab"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
+    <!--<include layout="@layout/content_setting" />-->
+
+    <FrameLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:id="@+id/vp_content"
+        android:id="@+id/layout_setting_fragment"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v4.view.ViewPager>
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

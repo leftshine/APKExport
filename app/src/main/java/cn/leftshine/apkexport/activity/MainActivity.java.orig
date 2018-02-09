@@ -23,13 +23,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+<<<<<<< HEAD:app/src/main/java/cn/leftshine/apkexport/activity/MainActivity.java
+import cn.leftshine.apkexport.R;
+
+=======
+>>>>>>> dev:app/src/main/java/cn/leftshine/apkexport/activity/MainActivity.java
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+<<<<<<< HEAD:app/src/main/java/cn/leftshine/apkexport/activity/MainActivity.java
+import cn.leftshine.apkexport.adapter.ContentPagerAdapter;
+import cn.leftshine.apkexport.fragment.UserAppFragment;
+=======
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.adapter.ContentPagerAdapter;
 import cn.leftshine.apkexport.fragment.AppFragment;
+>>>>>>> dev:app/src/main/java/cn/leftshine/apkexport/activity/MainActivity.java
 import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.utils.ToolUtils;
 

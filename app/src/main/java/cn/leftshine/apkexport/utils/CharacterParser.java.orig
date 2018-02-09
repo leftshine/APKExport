@@ -1,6 +1,9 @@
 package cn.leftshine.apkexport.utils;
+<<<<<<< HEAD:app/src/main/java/cn/leftshine/apkexport/utils/CharacterParser.java
+=======
 
 import android.util.Log;
+>>>>>>> dev:app/src/main/java/cn/leftshine/apkexport/utils/CharacterParser.java
 
 /**
  * Java汉字转换为拼音

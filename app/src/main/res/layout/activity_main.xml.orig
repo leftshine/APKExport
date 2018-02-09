@@ -4,7 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cn.leftshine.apkexport.activity.MainActivity">
+<<<<<<< HEAD
+    tools:context="com.leftshine.apkexport.cn.echooit.apkexport.activity.MainActivity">
+=======
+    tools:context="com.leftshine.apkexport.cn.leftshine.apkexport.activity.MainActivity">
+>>>>>>> dev
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

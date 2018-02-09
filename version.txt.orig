@@ -45,7 +45,14 @@ v1.06
 v1.07
 图标修改，上架酷安
 
--本地Apk管理
+<<<<<<< HEAD
 -toolbar添加返回按钮
 -8.0分享问题
 -滚动时隐藏 floatactionbar
+
+=======
+
+-本地Apk管理
+-8.0分享问题
+-滚动时隐藏 floatactionbar
+>>>>>>> dev

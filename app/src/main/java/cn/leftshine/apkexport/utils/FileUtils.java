@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 
@@ -26,6 +28,13 @@ public class FileUtils {
     public static final int MODE_ONLY_EXPORT = 0;
     public static final int MODE_EXPORT_SHARE = 1;
     public static final int MODE_EXPORT_RENAME_SHARE = 2;
+
+    public static final int MODE_LOCAL_SHARE = 10;
+    public static final int MODE_LOCAL_INSTALL = 11;
+    public static final int MODE_LOCAL_RENAME = 12;
+    public static final int MODE_LOCAL_DELETE = 13;
+
+
 
     private final static String TAG = "FileUtils";
     private static String mCopyFileName ="Unknown.apk";
@@ -164,5 +173,60 @@ public class FileUtils {
         }catch (Exception e){
             Log.e(TAG, "share failed: "+e);
         }
+    }
+
+    public static void doLocalApk(Context context, Handler mHandler, int mode, AppInfo appInfo) {
+
+        mContext=context;
+        //String mCurrentPkgName = appInfo.packageName;
+        String mCurrentAppName = appInfo.appName;
+        final String mCurrentAppPath = appInfo.appSourcDir;
+        //String mCurrentVersionName = appInfo.getVersionName();
+        /*String customFileNameFormat  = Settings.getCustomFileNameFormat();
+        String customFileName = customFileNameFormat.replace("#N",mCurrentAppName).replace("#P",mCurrentPkgName).replace("#V",mCurrentVersionName);*/
+        switch (mode){
+            case MODE_LOCAL_SHARE:
+                //分享
+                startShare(mCurrentAppPath);
+                break;
+            case MODE_LOCAL_INSTALL:
+                //安装
+                install(mCurrentAppPath,context);
+                break;
+            case MODE_LOCAL_RENAME:
+                //重命名
+                rename(mCurrentAppPath);
+                break;
+            case MODE_LOCAL_DELETE:
+                //删除
+
+                break;
+        }
+
+    }
+
+    private static void rename(String mCurrentAppPath) {
+        File file = new File(mCurrentAppPath);
+        //file.renameTo()
+    }
+
+    private static void install(String filePath, Context context) {
+        Log.i(TAG, "开始执行安装: " + filePath);
+        File apkFile = new File(filePath);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Log.i(TAG, "版本大于 N ，开始使用 fileProvider 进行安装");
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            Uri contentUri = FileProvider.getUriForFile(
+                    mContext
+                    , "com.leftshine.apkexport.fileprovider"
+                    , apkFile);
+            intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+        } else {
+            Log.i(TAG, "普通安装");
+            intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
+        }
+        context.startActivity(intent);
     }
 }

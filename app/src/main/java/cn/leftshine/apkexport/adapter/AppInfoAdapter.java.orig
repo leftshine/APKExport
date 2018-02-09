@@ -18,11 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
+<<<<<<< HEAD:app/src/main/java/cn/leftshine/apkexport/adapter/AppInfoAdapter.java
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.handler.FileHandler;
 import cn.leftshine.apkexport.utils.AppInfo;
@@ -30,6 +26,27 @@ import cn.leftshine.apkexport.utils.CharacterParser;
 import cn.leftshine.apkexport.utils.FileUtils;
 import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.utils.ToolUtils;
+
+=======
+>>>>>>> dev:app/src/main/java/cn/leftshine/apkexport/adapter/AppInfoAdapter.java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+<<<<<<< HEAD:app/src/main/java/cn/leftshine/apkexport/adapter/AppInfoAdapter.java
+import static cn.leftshine.apkexport.utils.FileUtils.MODE_EXPORT_RENAME_SHARE;
+import static cn.leftshine.apkexport.utils.FileUtils.MODE_EXPORT_SHARE;
+import static cn.leftshine.apkexport.utils.FileUtils.MODE_ONLY_EXPORT;
+=======
+import cn.leftshine.apkexport.R;
+import cn.leftshine.apkexport.handler.FileHandler;
+import cn.leftshine.apkexport.utils.AppInfo;
+import cn.leftshine.apkexport.utils.CharacterParser;
+import cn.leftshine.apkexport.utils.FileUtils;
+import cn.leftshine.apkexport.utils.Settings;
+import cn.leftshine.apkexport.utils.ToolUtils;
+>>>>>>> dev:app/src/main/java/cn/leftshine/apkexport/adapter/AppInfoAdapter.java
 
 public class AppInfoAdapter extends BaseAdapter implements Filterable {
 

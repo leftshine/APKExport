@@ -1,7 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="cn.leftshine.apkexport.activity.MainActivity">
+<<<<<<< HEAD
+    tools:context="com.leftshine.apkexport.cn.echooit.apkexport.activity.MainActivity">
+=======
+    tools:context="com.leftshine.apkexport.cn.leftshine.apkexport.activity.MainActivity">
+>>>>>>> dev
     <item
         android:id="@+id/action_search"
         android:icon="@android:drawable/ic_menu_search"
