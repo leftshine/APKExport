@@ -45,9 +45,11 @@ v1.06
 v1.07
 图标修改，上架酷安
 
-v1.08
-本地Apk管理
+v2.00
+增加本地Apk管理
+优化滑动切换tab时的一个小卡顿
+解决8.0分享问题
 
+-使用mediascanner优化本地apk扫描速度
 -toolbar添加返回按钮
--8.0分享问题
--滚动时隐藏 floatactionbar
+-滚动时隐藏 floatactionbar和toolbar
