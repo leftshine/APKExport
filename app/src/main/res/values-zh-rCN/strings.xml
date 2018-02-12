@@ -26,11 +26,21 @@
     <string name="auto_clean_fail">临时文件清理失败</string>
     <string name="one_more_click_to_exit">再按一次返回键退出</string>
 
+    <string name="user_app">用户软件</string>
+    <string name="system_app">系统软件</string>
+    <string name="local_apk">本地APK</string>
+
     <!--设置页面-->
     <string name="title_activity_setting">设置</string>
+
     <string name="setting_autoClean_title">自动清理</string>
     <string name="setting_autoClean_summaryOff">已关闭，将保留导出的APK文件</string>
     <string name="setting_autoClean_summaryOn">已启用，将在每次启动时清理临时文件</string>
+
+    <string name="setting_show_local_apk_title">显示本地APK页(重启生效)</string>
+    <string name="setting_show_local_apk_summaryOff">本地APK页已被隐藏</string>
+    <string name="setting_show_local_apk_summaryOn">"本地APK"页已显示</string>
+
     <string name="custom_file_name">自定义文件名格式</string>
     <string name="custom_file_name_summary">点击设置自定义文件名</string>
     <string name="custom_file_name_description">#N 代表应用名称\n#P 代表包名\n#V 代表版本号</string>

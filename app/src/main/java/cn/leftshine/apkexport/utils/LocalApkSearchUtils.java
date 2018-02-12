@@ -3,16 +3,15 @@ package cn.leftshine.apkexport.utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import cn.leftshine.apkexport.R;
 
 /**
  * 获取手机上apk文件信息类，主要是判断是否安装再手机上了，安装的版本比较现有apk版本信息
@@ -43,7 +42,7 @@ public class LocalApkSearchUtils {
      * @param args
      *            运用递归的思想，递归去找每个目录下面的apk文件
      */
-    public void FindAllAPKFile(File file) {
+    /*public void FindAllAPKFile(File file) {
 
         // 手机上的文件,目前只判断SD卡上的APK文件
         // file = Environment.getDataDirectory();
@@ -76,9 +75,9 @@ public class LocalApkSearchUtils {
                 //String packageName = localPackageInfo.packageName;
                 localAppInfo.isSelected = Boolean.valueOf(false);
 
-                /*localAppInfo.packageName = localPackageInfo.packageName;
+                *//*localAppInfo.packageName = localPackageInfo.packageName;
                 localAppInfo.versionName = localPackageInfo.versionName;
-                localAppInfo.versionCode = localPackageInfo.versionCode;*/
+                localAppInfo.versionCode = localPackageInfo.versionCode;*//*
                 localAppInfo.packageName="";
                 localAppInfo.versionName="";
                 //localAppInfo.versionCode=00;
@@ -94,33 +93,33 @@ public class LocalApkSearchUtils {
                 }
 
                 //getRunningAppProcessInfo(localAppInfo);
-               /* int type = doType(pm, packageName, versionCode);
+               *//* int type = doType(pm, packageName, versionCode);
                 localAppInfo.setInstalled(type);
-                Log.i(TAG, "getAppOf TYPE_LOCAL " + localAppInfo.getAppName());*/
+                Log.i(TAG, "getAppOf TYPE_LOCAL " + localAppInfo.getAppName());*//*
                     appInfoList.add(localAppInfo);
 
-                    /**获取apk的图标 *//*
+                    *//**获取apk的图标 *//**//*
                 appInfo.sourceDir = apk_path;
                 appInfo.publicSourceDir = apk_path;
                 Drawable apk_icon = appInfo.loadIcon(pm);
                 myFile.setApk_icon(apk_icon);
-                *//** 得到包名 *//*
+                *//**//** 得到包名 *//**//*
                 String packageName = packageInfo.packageName;
                 myFile.setPackageName(packageName);
-                *//** apk的绝对路劲 *//*
+                *//**//** apk的绝对路劲 *//**//*
                 myFile.setFilePath(file.getAbsolutePath());
-                *//** apk的版本名称 String *//*
+                *//**//** apk的版本名称 String *//**//*
                 String versionName = packageInfo.versionName;
                 myFile.setVersionName(versionName);
-                *//** apk的版本号码 int *//*
+                *//**//** apk的版本号码 int *//**//*
                 int versionCode = packageInfo.versionCode;
                 myFile.setVersionCode(versionCode);
-                *//**安装处理类型*//*
+                *//**//**安装处理类型*//**//*
                 int type = doType(pm, packageName, versionCode);
                 myFile.setInstalled(type);
 
                 Log.i("ok", "处理类型:"+String.valueOf(type)+"\n" + "------------------我是纯洁的分割线-------------------");
-                myFiles.add(myFile);*/
+                myFiles.add(myFile);*//*
             }
             // String apk_app = name_s.substring(name_s.lastIndexOf("."));
         } else {
@@ -131,6 +130,76 @@ public class LocalApkSearchUtils {
                 }
             }
         }
+    }*/
+
+    public void FindAllAPKFile(File file){
+        String[] projection = new String[] { MediaStore.Files.FileColumns._ID,
+                MediaStore.Files.FileColumns.DATA,
+                MediaStore.Files.FileColumns.SIZE
+        };
+        Cursor cursor = context.getContentResolver().query(
+                Uri.parse("content://media/external/file"),
+                //Uri.parse(Environment.getExternalStorageDirectory().toString()),
+                projection,
+                MediaStore.Files.FileColumns.DATA + " like ?",
+                new String[]{"%.apk"},
+                null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+
+                int idindex = cursor
+                        .getColumnIndex(MediaStore.Files.FileColumns._ID);
+                int dataindex = cursor
+                        .getColumnIndex(MediaStore.Files.FileColumns.DATA);
+                int sizeindex = cursor
+                        .getColumnIndex(MediaStore.Files.FileColumns.SIZE);
+                do {
+                    //String id = cursor.getString(idindex);
+                    String path = cursor.getString(dataindex);
+                    Log.i(TAG, "FindAllAPKFile: \npath="+path+"\nExternalStorageDirectory="+Environment.getExternalStorageDirectory().toString());
+                    if(!path.startsWith(Environment.getExternalStorageDirectory().toString()))
+                        continue;
+                   // String size = cursor.getString(sizeindex);
+                    PackageManager pm = context.getPackageManager();
+                    PackageInfo localPackageInfo = pm.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
+                    File localFile1 = new File(path);
+                    final AppInfo localAppInfo = new AppInfo();
+                    try {
+                        localAppInfo.appSourcDir = path;
+                        localAppInfo.appName = localFile1.getName();
+                        Log.i(TAG, "FindAllAPKFile: path="+path);
+                        if (localFile1 != null)
+                            localAppInfo.appSize = (int) (localFile1.length());
+                        //localAppInfo.appCache = 0;
+                        //localAppInfo.isSelected = Boolean.valueOf(false);
+                        localAppInfo.packageName = localPackageInfo.packageName;
+                        localAppInfo.versionName = localPackageInfo.versionName;
+                        localAppInfo.versionCode = localPackageInfo.versionCode;
+                        Log.i(TAG, "FindAllAPKFile: " +
+                                "\nappSourcDir"+localAppInfo.appSourcDir+
+                                "\nappName"+localAppInfo.appName+
+                                "\npackageName"+localAppInfo.packageName+
+                                "\nversionName"+localAppInfo.versionName+
+                                "\nversionCode"+localAppInfo.versionCode
+
+                        );
+                        //获取最近修改时间
+                        long time = localFile1.lastModified();//返回文件最后修改时间，是一个long型毫秒数
+                        localAppInfo.setLastUpdateTime(time);
+                        localAppInfo.appIcon = localPackageInfo.applicationInfo.loadIcon(context.getPackageManager());
+
+                        //Log.e(TAG, "FindAllAPKFile: 图标获取失败，设为默认图标");
+                        //Drawable defaultAppIcon = context.getResources().getDrawable(R.mipmap.default_app_icon);
+                        //localAppInfo.appIcon = defaultAppIcon;
+                        appInfoList.add(localAppInfo);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                } while (cursor.moveToNext());
+            }
+        }
+        cursor.close();
     }
 
 	/*

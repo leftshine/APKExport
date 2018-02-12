@@ -12,6 +12,13 @@
             android:summaryOff="@string/setting_autoClean_summaryOff"
             android:summaryOn="@string/setting_autoClean_summaryOn"
             android:title="@string/setting_autoClean_title" />
+        <SwitchPreference
+            android:id="@+id/pref_show_local_apk"
+            android:defaultValue="true"
+            android:key="@string/key_is_show_local_apk"
+            android:summaryOff="@string/setting_show_local_apk_summaryOff"
+            android:summaryOn="@string/setting_show_local_apk_summaryOn"
+            android:title="@string/setting_show_local_apk_title" />
         <EditTextPreference
             android:defaultValue="#N-#P-#V"
             android:dialogLayout="@layout/custom_file_name_dialog_layout"

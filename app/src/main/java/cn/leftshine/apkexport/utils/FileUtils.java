@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -234,6 +235,7 @@ public class FileUtils {
                         File newFile = new File(file.getParent(),newName);
                         file.renameTo(newFile);
                         onListDataChangedListener.OnListDataChanged(newFile.getPath());
+                        notifyMediaScan();
                     }
                 })
                 .setNegativeButton(R.string.cancel,null)
@@ -270,6 +272,8 @@ public class FileUtils {
                         File file = new File(mCurrentAppPath);
                         file.delete();
                         onListDataChangedListener.OnListDataChanged(null);
+                        notifyMediaScan();
+
                     }
                 })
                 .setNegativeButton(R.string.cancel,null)
@@ -279,5 +283,11 @@ public class FileUtils {
 
     public interface OnListDataChangedListener{
         public void OnListDataChanged(String newPath);
+    }
+
+    public void notifyMediaScan(){
+        String[] paths = new String[]{Environment.getExternalStorageDirectory().toString()};
+        String[] mimeTypes = new String[]{"application/vnd.android.package-archive"};
+        MediaScannerConnection.scanFile(mContext,paths, mimeTypes, null);
     }
 }

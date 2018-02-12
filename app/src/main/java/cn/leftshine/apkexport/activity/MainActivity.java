@@ -2,10 +2,15 @@ package cn.leftshine.apkexport.activity;
 
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -30,6 +35,7 @@ import java.util.List;
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.adapter.ContentPagerAdapter;
 import cn.leftshine.apkexport.fragment.AppFragment;
+import cn.leftshine.apkexport.utils.FileUtils;
 import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.utils.ToolUtils;
 
@@ -38,9 +44,11 @@ import static cn.leftshine.apkexport.utils.PermisionUtils.verifyStoragePermissio
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private static final int STARTED = 0;
+    private static final int FINISHED = 1;
     AppFragment fragmentUserApp;
     AppFragment fragmentSystemApp;
-    AppFragment fragmentLocalApp;
+    public AppFragment fragmentLocalApp;
     AppFragment currentFragment;
     FloatingActionButton fab;
     boolean isExitSnackbarShown = false;
@@ -51,11 +59,14 @@ public class MainActivity extends AppCompatActivity {
     private List<Fragment> tabFragments;
     private ContentPagerAdapter contentAdapter;
     int sortType = 0;
+    private ScanSdFilesReceiver scanReceiver;
+    private FileUtils fileUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         verifyStoragePermissions(this);
+        fileUtils =new FileUtils(this);
         setContentView(R.layout.activity_main);
         mTabTl = (TabLayout) findViewById(R.id.tl_tab);
         mContentVp = (ViewPager) findViewById(R.id.vp_content);
@@ -74,7 +85,8 @@ public class MainActivity extends AppCompatActivity {
                 anim.setDuration(500);
                 anim.start();
                 //((AppFragment)fragmentManager.findFragmentById(R.id.layout_fragment)).refresh();
-                currentFragment.refresh();
+                currentFragment.refresh(true);
+                fileUtils.notifyMediaScan();
                 Snackbar.make(view, R.string.Refreshing, Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
@@ -83,7 +95,28 @@ public class MainActivity extends AppCompatActivity {
             Snackbar.make(fab, deleteCache() ? getString(R.string.auto_clean_success) :getString(R.string.auto_clean_fail), Snackbar.LENGTH_LONG).show();
         }
 
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_MEDIA_SCANNER_STARTED);
+        intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
+        intentFilter.addDataScheme("file");
+        scanReceiver = new ScanSdFilesReceiver();
+        registerReceiver(scanReceiver, intentFilter);
     }
+
+    /*private void mediaScan(){
+        String[] paths = new String[]{Environment.getExternalStorageDirectory().toString()};
+        String[] mimeTypes = new String[]{"application/vnd.android.package-archive"};
+        MediaScannerConnection.scanFile(this,paths, mimeTypes, null);
+        *//*MediaScannerConnection.scanFile(this,paths, mimeTypes, new MediaScannerConnection.OnScanCompletedListener() {
+            @Override
+            public void onScanCompleted(String s, Uri uri) {
+                Log.i(TAG, "onScanCompleted: "+s+uri);
+               fragmentLocalApp.refresh(false);
+            }
+        });*//*
+
+        //sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+    }*/
+
     private void initTab(){
         mTabTl.setTabMode(TabLayout.MODE_FIXED);
         //mTabTl.setTabTextColors(ContextCompat.getColor(this, R.color.gray), ContextCompat.getColor(this, R.color.white));
@@ -95,33 +128,23 @@ public class MainActivity extends AppCompatActivity {
     private void initContent(){
         tabIndicators = new ArrayList<>();
         tabFragments = new ArrayList<>();
-        /*
-        for (int i = 0; i < 3; i++) {
-            tabIndicators.add("Tab " + i);
-        }
-        */
-        tabIndicators.add("用户软件");
-        tabIndicators.add("系统软件");
-        tabIndicators.add("本地APK");
-/*        for (String s : tabIndicators) {
-            tabFragments.add(AppFragment.newInstance(s));
-        }*/
-        if(fragmentUserApp==null) {
-            fragmentUserApp = AppFragment.newInstance(ToolUtils.TYPE_USER);
-            tabFragments.add(fragmentUserApp);
-        }
-        if(fragmentSystemApp==null) {
-            fragmentSystemApp = AppFragment.newInstance(ToolUtils.TYPE_SYSTEM);
-            tabFragments.add(fragmentSystemApp);
-        }
-        if(fragmentLocalApp==null) {
+
+        tabIndicators.add(getString(R.string.user_app));
+        fragmentUserApp = AppFragment.newInstance(ToolUtils.TYPE_USER);
+        tabFragments.add(fragmentUserApp);
+
+        tabIndicators.add(getString(R.string.system_app));
+        fragmentSystemApp = AppFragment.newInstance(ToolUtils.TYPE_SYSTEM);
+        tabFragments.add(fragmentSystemApp);
+
+        if(Settings.isShowLocalApk()) {
+            tabIndicators.add(getString(R.string.local_apk));
             fragmentLocalApp = AppFragment.newInstance(ToolUtils.TYPE_LOCAL);
             tabFragments.add(fragmentLocalApp);
+            fileUtils.notifyMediaScan();
         }
-        //fragmentUserApp.load();
+
         currentFragment = fragmentUserApp;
-        //tabFragments.add(fragmentUserApp);
-        //tabFragments.add(fragmentUserApp);
 
         contentAdapter = new ContentPagerAdapter(getSupportFragmentManager(),tabFragments,tabIndicators);
         mContentVp.setAdapter(contentAdapter);
@@ -202,8 +225,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(Settings.isIsNeedRefresh())
-            currentFragment.refresh();
+        if(Settings.isIsNeedRefresh()){
+            currentFragment.refresh(true);
+        }
+
+
     }
 
     @Override
@@ -289,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
                                     break;
                             }
                             Settings.setSortOrder("300");
-                            currentFragment.refresh();
+                            currentFragment.refresh(true);
                         }
                     })
                     .setPositiveButton(R.string.DES, new DialogInterface.OnClickListener() {
@@ -319,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
                                     break;
                             }
                             Settings.setSortOrder("301");
-                            currentFragment.refresh();
+                            currentFragment.refresh(true);
                         }
                     })
                     .show();
@@ -328,4 +354,33 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private class ScanSdFilesReceiver extends BroadcastReceiver {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (Intent.ACTION_MEDIA_SCANNER_STARTED.equals(action)) {
+                scanHandler.sendEmptyMessage(STARTED);
+            }
+            if (Intent.ACTION_MEDIA_SCANNER_FINISHED.equals(action)) {
+                scanHandler.sendEmptyMessage(FINISHED);
+            }
+        }
+    }
+
+    private Handler scanHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case STARTED:
+                    Log.i(TAG, "media scan start");
+                    break;
+                case FINISHED:
+                    Log.i(TAG, "media scan finished");
+                    fragmentLocalApp.refresh(false);
+                default:
+                    break;
+            }
+        }
+    };
+
 }

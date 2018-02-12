@@ -292,6 +292,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 														mLists.remove(position);
 														mLists.add(position, newInfo);
 														notifyDataSetChanged();
+
 													}
 												}
 											});

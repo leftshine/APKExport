@@ -39,6 +39,14 @@ public class Settings {
         sharedPreferences.edit().putBoolean(mContext.getString(R.string.key_is_auto_clean), autoClean).apply();
     }
 
+    public static boolean isShowLocalApk() {
+        return sharedPreferences.getBoolean(mContext.getString(R.string.key_is_show_local_apk), true);
+    }
+
+    public static void setShowLocalApk(boolean autoClean) {
+        sharedPreferences.edit().putBoolean(mContext.getString(R.string.key_is_show_local_apk), autoClean).apply();
+    }
+
     public static String getCustomFileNameFormat() {
         return sharedPreferences.getString(mContext.getString(R.string.key_custom_filename_format),"#N-#P-#V");
     }
@@ -64,7 +72,6 @@ public class Settings {
     public static void setSortOrder(String sortOrder) {
         //return sharedPreferences.getString(mContext.getString(R.string.key_sort_order),"300");
         sharedPreferences.edit().putString(mContext.getString(R.string.key_sort_order),sortOrder).apply();
-
     }
 
 }

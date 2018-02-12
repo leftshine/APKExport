@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -161,33 +162,39 @@ public class AppFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle arg0) {
+        super.onCreate(arg0);
+        type = getArguments().getInt(ToolUtils.TYPE);
+        Log.i(TAG, "onCreate: type="+type);
+        toolUtils = new ToolUtils();
+        registerAppChangedReceiver();
+        //initData();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_main, container, false);
         initView(root);
-        initData();
-        load();
         return root;
     }
 
     @Override
-    public void onCreate(Bundle arg0) {
-        super.onCreate(arg0);
-        toolUtils = new ToolUtils();
-        type = getArguments().getInt(ToolUtils.TYPE);
-        Log.i(TAG, "onCreate: type="+type);
-        registerAppChangedReceiver();
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initData();
     }
+
     private void initView(View root) {
         cloud = root.findViewById(R.id.cloud);
         ly_list_show = root.findViewById(R.id.ly_list_show);
         mAppStatus = (TextView) root.findViewById(R.id.have_app);
         mAppListView = (ListView) root.findViewById(R.id.app_listView);
         mAppListView.setTextFilterEnabled(true);
-    }
-    private void initData() {
         mAdapter = new AppInfoAdapter(getActivity(), mLists,type);
         mAppListView.setAdapter(mAdapter);
-
+    }
+    private void initData() {
+        load();
     }
 
     private void registerAppChangedReceiver() {
@@ -232,8 +239,10 @@ public class AppFragment extends Fragment {
             }
         }).start();
     }
-    public void refresh(){
-        showLoadUI();
+    public void refresh(boolean isShowHideUI){
+        if(isShowHideUI) {
+            showLoadUI();
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -307,6 +316,22 @@ public class AppFragment extends Fragment {
         mAppListView.setEnabled(true);
     }
 
+    /*public void mediaScan(){
+        String[] paths = new String[]{Environment.getExternalStorageDirectory().toString()};
+        //String[] paths = new String[]{path};
+        String[] mimeTypes = new String[]{"application/vnd.android.package-archive"};
+        MediaScannerConnection.scanFile(getActivity(),paths, mimeTypes, new MediaScannerConnection.OnScanCompletedListener() {
+            @Override
+            public void onScanCompleted(String s, Uri uri) {
+                Log.i(TAG, "onScanCompleted: "+s+uri);
+                mediaScanfinish();
+            }
+        });
+    }
+    void mediaScanfinish(){
+        if(type==ToolUtils.TYPE_LOCAL)
+            refresh(false);
+    }*/
     class AppReceiver extends BroadcastReceiver {
 
         @Override

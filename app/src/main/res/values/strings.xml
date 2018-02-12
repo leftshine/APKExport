@@ -34,11 +34,21 @@
     <string name="auto_clean_fail">Clean cache failed</string>
     <string name="one_more_click_to_exit">One more click to exit</string>
 
+    <string name="user_app">User App</string>
+    <string name="system_app">System App</string>
+    <string name="local_apk">Local APK</string>
+
+
     <string name="title_activity_setting">Settings</string>
     <string name="setting_General_title">General</string>
     <string name="setting_autoClean_title">Auto Clean</string>
     <string name="setting_autoClean_summaryOff">The apks exported will not be deleted</string>
     <string name="setting_autoClean_summaryOn">The apks exported will be deleted the next time you open the app</string>
+
+    <string name="setting_show_local_apk_title">Show Local Apk Tab(take effect until the next launch)</string>
+    <string name="setting_show_local_apk_summaryOff">"Local Apk" Tab Is Hidden</string>
+    <string name="setting_show_local_apk_summaryOn">"Local Apk" Tab Is Displayed</string>
+
     <string name="custom_file_name">Custom File Name Format</string>
     <string name="custom_file_name_summary">Click to set the filename format</string>
     <string name="custom_file_name_description">#N as App Name\n#P as Package Name\n#V as Version Code</string>
@@ -55,6 +65,7 @@
     <string name="setting_sort_order_title">Order</string>
 
     <string name="key_is_auto_clean" translatable="false">is_auto_clean</string>
+    <string name="key_is_show_local_apk" translatable="false">is_show_local_apk</string>
     <string name="key_custom_filename_format" translatable="false">custom_filename_format</string>
     <string name="key_long_press_action" translatable="false">long_press_action</string>
     <string name="key_sort_type" translatable="false">sort_type</string>

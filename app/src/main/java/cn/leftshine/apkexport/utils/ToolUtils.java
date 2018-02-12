@@ -121,7 +121,7 @@ public class ToolUtils {
                         if (localFile1 != null)
                             localAppInfo.appSize = (int) (localFile1.length());
                         localAppInfo.appCache = 0;
-                        String packageName = localPackageInfo.packageName;
+                        //String packageName = localPackageInfo.packageName;
                         localAppInfo.isSelected = Boolean.valueOf(false);
                         localAppInfo.packageName = localPackageInfo.packageName;
 
@@ -131,7 +131,7 @@ public class ToolUtils {
                         localAppInfo.setFirstInstallTime(localPackageInfo.firstInstallTime);
                         localAppInfo.setLastUpdateTime(localPackageInfo.lastUpdateTime);
                         //getRunningAppProcessInfo(localAppInfo);
-                        Log.i(TAG, "getAppOf TYPE_USER "+localAppInfo.getAppName());
+                        //Log.i(TAG, "getAppOf TYPE_USER "+localAppInfo.getAppName());
                         userAppInfoList.add(localAppInfo);
                         /*Message msg = mHandler.obtainMessage(MessageCode.MSG_GET_APP, localAppInfo);
                         // mHandler.sendEmptyMessage(0);
@@ -160,7 +160,7 @@ public class ToolUtils {
                         if (localFile1 != null)
                             localAppInfo.appSize = (int) (localFile1.length());
                         localAppInfo.appCache = 0;
-                        String packageName = localPackageInfo.packageName;
+                        //String packageName = localPackageInfo.packageName;
                         localAppInfo.isSelected = Boolean.valueOf(false);
                         localAppInfo.packageName = localPackageInfo.packageName;
 
@@ -265,7 +265,7 @@ public class ToolUtils {
             CharacterParser characterParser = CharacterParser.getInstance();
             String compare1 = characterParser.getSelling(appInfo1.appName).toUpperCase();
             String compare2 = characterParser.getSelling(appInfo2.appName).toUpperCase();
-            Log.i(TAG, "compare: " + compare1+":"+compare2);
+            //Log.i(TAG, "compare: " + compare1+":"+compare2);
             if(compare1==compare2)
                 return 0;
             else
@@ -278,7 +278,7 @@ public class ToolUtils {
             CharacterParser characterParser = CharacterParser.getInstance();
             String compare1 = characterParser.getSelling(appInfo1.packageName).toUpperCase();
             String compare2 = characterParser.getSelling(appInfo2.packageName).toUpperCase();
-            Log.i(TAG, "compare: " + compare1+":"+compare2);
+            //Log.i(TAG, "compare: " + compare1+":"+compare2);
             if(compare1==compare2)
                 return 0;
             else
@@ -290,7 +290,7 @@ public class ToolUtils {
         public int compare(AppInfo appInfo1, AppInfo appInfo2) {
             Long  compare1 = appInfo1.appSize;
             Long  compare2 = appInfo2.appSize;
-            Log.i(TAG, "compare: " + compare1);
+            //Log.i(TAG, "compare: " + compare1);
           if(compare2<compare1)
               return 1;
           if(compare2==compare1)
@@ -304,7 +304,7 @@ public class ToolUtils {
         public int compare(AppInfo appInfo1, AppInfo appInfo2) {
             Long  compare1 = appInfo1.getFirstInstallTime();
             Long  compare2 = appInfo2.getFirstInstallTime();
-            Log.i(TAG, "compare: " + compare1);
+            //Log.i(TAG, "compare: " + compare1);
             if(compare2<compare1)
                 return 1;
             if(compare2==compare1)
@@ -335,7 +335,7 @@ public class ToolUtils {
             CharacterParser characterParser = CharacterParser.getInstance();
             String compare1 = characterParser.getSelling(appInfo1.appName).toUpperCase();
             String compare2 = characterParser.getSelling(appInfo2.appName).toUpperCase();
-            Log.i(TAG, "compare: " + compare1+":"+compare2);
+            //Log.i(TAG, "compare: " + compare1+":"+compare2);
             if(compare1==compare2)
                 return 0;
             else
@@ -348,7 +348,7 @@ public class ToolUtils {
             CharacterParser characterParser = CharacterParser.getInstance();
             String compare1 = characterParser.getSelling(appInfo1.packageName).toUpperCase();
             String compare2 = characterParser.getSelling(appInfo2.packageName).toUpperCase();
-            Log.i(TAG, "compare: " + compare1+":"+compare2);
+            //Log.i(TAG, "compare: " + compare1+":"+compare2);
             if(compare1==compare2)
                 return 0;
             else
@@ -360,7 +360,7 @@ public class ToolUtils {
         public int compare(AppInfo appInfo1, AppInfo appInfo2) {
             Long  compare1 = appInfo1.appSize;
             Long  compare2 = appInfo2.appSize;
-            Log.i(TAG, "compare: " + compare1);
+            //Log.i(TAG, "compare: " + compare1);
             if(compare2>compare1)
                 return 1;
             if(compare2==compare1)
@@ -374,7 +374,7 @@ public class ToolUtils {
         public int compare(AppInfo appInfo1, AppInfo appInfo2) {
             Long  compare1 = appInfo1.getFirstInstallTime();
             Long  compare2 = appInfo2.getFirstInstallTime();
-            Log.i(TAG, "compare: " + compare1);
+            //Log.i(TAG, "compare: " + compare1);
             if(compare2>compare1)
                 return 1;
             if(compare2==compare1)
@@ -388,7 +388,7 @@ public class ToolUtils {
         public int compare(AppInfo appInfo1, AppInfo appInfo2) {
             Long  compare1 = appInfo1.getLastUpdateTime();
             Long  compare2 = appInfo2.getLastUpdateTime();
-            Log.i(TAG, "compare: " + compare1);
+            //Log.i(TAG, "compare: " + compare1);
             if(compare2>compare1)
                 return 1;
             if(compare2==compare1)
