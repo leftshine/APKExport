@@ -87,7 +87,8 @@ public class FileUtils {
     }
 
     private void doCopy(final Handler mHandler, final String mCurrentAppPath, final int mode) {
-        File mFolder = new File( Environment.getExternalStorageDirectory()+File.separator+"APKExport");
+        //File mFolder = new File( Environment.getExternalStorageDirectory()+File.separator+"APKExport");
+        File mFolder = new File(Settings.getCustomExportPath());
         if (!mFolder.exists()) {
             mFolder.mkdir();
         }
@@ -286,6 +287,7 @@ public class FileUtils {
     }
 
     public void notifyMediaScan(){
+        Log.i(TAG, "notifyMediaScan");
         String[] paths = new String[]{Environment.getExternalStorageDirectory().toString()};
         String[] mimeTypes = new String[]{"application/vnd.android.package-archive"};
         MediaScannerConnection.scanFile(mContext,paths, mimeTypes, null);

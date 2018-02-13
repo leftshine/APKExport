@@ -158,7 +158,10 @@ public class LocalApkSearchUtils {
                     //String id = cursor.getString(idindex);
                     String path = cursor.getString(dataindex);
                     Log.i(TAG, "FindAllAPKFile: \npath="+path+"\nExternalStorageDirectory="+Environment.getExternalStorageDirectory().toString());
-                    if(!path.startsWith(Environment.getExternalStorageDirectory().toString()))
+                    //排除一些重复的
+                    /*if(!path.startsWith(Environment.getExternalStorageDirectory().toString()))
+                        continue;*/
+                    if(path.startsWith("/storage/emulated/legacy/"))
                         continue;
                    // String size = cursor.getString(sizeindex);
                     PackageManager pm = context.getPackageManager();

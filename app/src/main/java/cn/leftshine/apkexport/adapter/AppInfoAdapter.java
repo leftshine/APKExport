@@ -17,6 +17,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -34,9 +35,7 @@ import cn.leftshine.apkexport.utils.FileUtils;
 import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.utils.ToolUtils;
 
-import static cn.leftshine.apkexport.utils.FileUtils.MODE_EXPORT_RENAME_SHARE;
-import static cn.leftshine.apkexport.utils.FileUtils.MODE_EXPORT_SHARE;
-import static cn.leftshine.apkexport.utils.FileUtils.MODE_ONLY_EXPORT;
+import static cn.leftshine.apkexport.utils.ToolUtils.DEFAULT_COPY_DATA;
 
 public class AppInfoAdapter extends BaseAdapter implements Filterable{
 
@@ -199,20 +198,27 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
         						<item>复制包名</item>
         						<item>复制版本号</item>
 								 */
-										ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-										ClipData clipData = ClipData.newPlainText(null, "");
+										//ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+										//ClipData clipData = ClipData.newPlainText(null, "");
+										String copy_str = DEFAULT_COPY_DATA;
 										switch (i) {
 											case 0:
-												clipData = ClipData.newPlainText(null, info.getAppName());
+												copy_str = info.getAppName();
+												//clipData = ClipData.newPlainText(null, info.getAppName());
 												break;
 											case 1:
-												clipData = ClipData.newPlainText(null, info.getPackageName());
+												copy_str = info.getPackageName();
+												//clipData = ClipData.newPlainText(null, info.getPackageName());
 												break;
 											case 2:
-												clipData = ClipData.newPlainText(null, info.getVersionName());
+												copy_str = info.getVersionName();
+												//clipData = ClipData.newPlainText(null, info.getVersionName());
 												break;
 										}
+										ClipData clipData = ClipData.newPlainText(null, copy_str);
+										ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
 										cm.setPrimaryClip(clipData);
+										Toast.makeText(mContext,mContext.getString(R.string.copy_success, copy_str),Toast.LENGTH_SHORT).show();
 									}
 								})
 								.show();
@@ -300,7 +306,6 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 											break;
 										case 3:
 											//mode = MODE_LOCAL_DELETE;
-
 											fileUtils.delete(info.appSourcDir, new FileUtils.OnListDataChangedListener() {
 												@Override
 												public void OnListDataChanged(String newPath) {
@@ -319,38 +324,44 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 			holder.LocalApkitem.setOnLongClickListener(new View.OnLongClickListener() {
 				@Override
 				public boolean onLongClick(View view) {
-					String long_click_action = Settings.getLongPressAction();
+					/*String long_click_action = Settings.getLongPressAction();
 					Log.i(TAG, "onLongClick: long_click_action="+long_click_action);
-					if (long_click_action.equals("103")) {
+					if (long_click_action.equals("103")) {*/
 						//复制应用信息
 						new AlertDialog.Builder(mContext)
 								.setTitle(R.string.choose_next_action)
-								.setItems(R.array.copy_info_actions, new DialogInterface.OnClickListener() {
+								.setItems(R.array.localAPK_copy_info_actions, new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialogInterface, int i) {
 								/*
-								<item>复制应用名称</item>
+								<item>复制文件名</item>
         						<item>复制包名</item>
-        						<item>复制版本号</item>
+        						<item>复制文件路径</item>
 								 */
-										ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-										ClipData clipData = ClipData.newPlainText(null, "");
+										//ClipData clipData = ClipData.newPlainText(null, "");
+										String copy_str = DEFAULT_COPY_DATA;
 										switch (i) {
 											case 0:
-												clipData = ClipData.newPlainText(null, info.getAppName());
+												copy_str=info.getAppName();
+												//clipData = ClipData.newPlainText(null, info.getAppName());
 												break;
 											case 1:
-												clipData = ClipData.newPlainText(null, info.getPackageName());
+												copy_str = info.getPackageName();
+												//clipData = ClipData.newPlainText(null, info.getPackageName());
 												break;
 											case 2:
-												clipData = ClipData.newPlainText(null, info.getVersionName());
+												copy_str = info.getAppSourcDir();
+												//clipData = ClipData.newPlainText(null, info.getAppSourcDir());
 												break;
 										}
+										ClipData clipData = ClipData.newPlainText(null, copy_str);
+										ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
 										cm.setPrimaryClip(clipData);
+										Toast.makeText(mContext,mContext.getString(R.string.copy_success, copy_str),Toast.LENGTH_LONG).show();
 									}
 								})
 								.show();
-					}else{
+					/*}else{
 						//导出操作
 						int mode = MODE_ONLY_EXPORT;
 						switch (long_click_action){
@@ -365,7 +376,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 								break;
 						}
 						fileUtils.doExport(mHandler,mode,info);
-					}
+					}*/
 					//FileUtils.copyInfo(context,mHandler,info);
 					return true;
 				}

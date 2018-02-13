@@ -6,6 +6,12 @@
         <item>Share after Export&amp;Rename</item>
     </string-array>
 
+    <string-array name="copy_info_actions">
+        <item>Copy App Name</item>
+        <item>Copy Package Name</item>
+        <item>Copy Version Code</item>
+    </string-array>
+
     <string-array name="localAPK_actions">
         <item>Share</item>
         <item>Install</item>
@@ -13,10 +19,10 @@
         <item>Delete</item>
     </string-array>
 
-    <string-array name="copy_info_actions">
-        <item>Copy App Name</item>
+    <string-array name="localAPK_copy_info_actions">
+        <item>Copy File Name</item>
         <item>Copy Package Name</item>
-        <item>Copy Version Code</item>
+        <item>Copy File Path</item>
     </string-array>
 
     <string-array name="long_press_actions_name">
@@ -34,7 +40,7 @@
 
     <string-array name="sort_type_name">
         <item>By App Name</item>
-        <item>By Package Name(Not Applicable For local APK)</item>
+        <item>By Package Name</item>
         <item>By App Size</item>
         <item>By Install Time(Not Applicable For local APK)</item>
         <item>By Last Update/Modify Time</item>

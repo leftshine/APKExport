@@ -2,7 +2,10 @@ package cn.leftshine.apkexport.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+
+import java.io.File;
 
 import cn.leftshine.apkexport.R;
 
@@ -12,6 +15,7 @@ import cn.leftshine.apkexport.R;
 
 public class Settings {
     //public String SETTING_PREF_NAME="pref_settings";
+    private static String DEFAULT_EXPORT_PATH = Environment.getExternalStorageDirectory()+ File.separator+"APKExport";
     private static Context mContext;
     private static SharedPreferences sharedPreferences;
 
@@ -53,6 +57,13 @@ public class Settings {
 
     public static void setCustomFileNameFormat(String customFileNameFormat) {
         sharedPreferences.edit().putString(mContext.getString(R.string.key_custom_filename_format), customFileNameFormat).apply();
+    }
+    public static String getCustomExportPath() {
+        return sharedPreferences.getString(mContext.getString(R.string.key_custom_export_path),DEFAULT_EXPORT_PATH);
+    }
+
+    public static void setCustomExportPath(String customFileNameFormat) {
+        sharedPreferences.edit().putString(mContext.getString(R.string.key_custom_export_path), customFileNameFormat).apply();
     }
 
     public static String getLongPressAction() {

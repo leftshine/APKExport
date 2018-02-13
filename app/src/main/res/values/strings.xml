@@ -40,7 +40,10 @@
 
 
     <string name="title_activity_setting">Settings</string>
-    <string name="setting_General_title">General</string>
+    <string name="setting_general_title">General</string>
+    <string name="setting_export_title">Export</string>
+    <string name="setting_export_open">Open</string>
+    <string name="custom_export_path">Custom Export Path</string>
     <string name="setting_autoClean_title">Auto Clean</string>
     <string name="setting_autoClean_summaryOff">The apks exported will not be deleted</string>
     <string name="setting_autoClean_summaryOn">The apks exported will be deleted the next time you open the app</string>
@@ -67,6 +70,7 @@
     <string name="key_is_auto_clean" translatable="false">is_auto_clean</string>
     <string name="key_is_show_local_apk" translatable="false">is_show_local_apk</string>
     <string name="key_custom_filename_format" translatable="false">custom_filename_format</string>
+    <string name="key_custom_export_path" translatable="false">custom_export_path</string>
     <string name="key_long_press_action" translatable="false">long_press_action</string>
     <string name="key_sort_type" translatable="false">sort_type</string>
     <string name="key_sort_order" translatable="false">sort_order</string>
@@ -79,5 +83,8 @@
     <string name="confirm">Confirm</string>
     <string name="confirm_delete">Confirm to delete?</string>
     <string name="cancel">Cancel</string>
+
+    <string name="copy_success">Copy_Success:%1$s</string>
+    <string name="custom_export_path_summary" translatable="false">APKExport</string>
 
 </resources>

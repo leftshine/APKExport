@@ -1,12 +1,12 @@
 package cn.leftshine.apkexport.utils;
 
 
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import java.io.File;
@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ToolUtils {
+    public static final String DEFAULT_COPY_DATA = "gUC65D40b9";
     private final static String TAG = "ToolUtils";
     public static final String TYPE = "type";
     public final static int TYPE_USER = 0;
@@ -32,7 +33,13 @@ public class ToolUtils {
     public final static String SORT_ORDER_ASC = "300";
     public final static String SORT_ORDER_DES = "301";
 
-	/**
+    private Context mContext;
+
+    public ToolUtils(Context context) {
+        mContext = context;
+    }
+
+    /**
      * 返回byte的数据大小对应的文本
      * 
      * @param size
@@ -62,11 +69,11 @@ public class ToolUtils {
     List<AppInfo> systemAppInfoList = new ArrayList<AppInfo>();
     List<AppInfo> localAppInfoList = new ArrayList<AppInfo>();
 
-    public void loadApp(Fragment fragment, Handler mHandler, int type) {
+    public void loadApp(Handler mHandler, int type) {
         switch (type) {
             case TYPE_USER:
                 if(userAppInfoList==null||userAppInfoList.isEmpty()) {
-                    getApp(fragment, mHandler, type);
+                    getApp(mHandler, type);
                 }else {
                     Message msg1 = Message.obtain();
                     Log.i(TAG, "TYPE_USER getApp:"+"completed");
@@ -77,7 +84,7 @@ public class ToolUtils {
                 break;
             case TYPE_SYSTEM:
                 if(systemAppInfoList==null||systemAppInfoList.isEmpty()) {
-                    getApp(fragment, mHandler, type);
+                    getApp(mHandler, type);
                 }else{
 
                     Message msg2 = Message.obtain();
@@ -89,7 +96,7 @@ public class ToolUtils {
                 break;
             case TYPE_LOCAL:
                 if(localAppInfoList==null||localAppInfoList.isEmpty()) {
-                    getApp(fragment, mHandler, type);
+                    getApp(mHandler, type);
                 }else{
                     Message msg3 = Message.obtain();
                     Log.i(TAG, "TYPE_LOCAL getApp:"+"completed");
@@ -101,41 +108,46 @@ public class ToolUtils {
         }
 
     }
-    public  void getApp(Fragment fragment, Handler mHandler, int type) {
+    public  void getApp(Handler mHandler, int type) {
 
-        List<?> localList = fragment.getActivity().getPackageManager().getInstalledPackages(0);
+        List<?> localList = mContext.getPackageManager().getInstalledPackages(0);
         Log.i(TAG, "getApp: type="+type);
         switch (type){
             case TYPE_USER:
                 userAppInfoList.clear();
                 for (int i = 0; i < localList.size(); i++) {
-                    PackageInfo localPackageInfo = (PackageInfo) localList.get(i);
-                    if ((ApplicationInfo.FLAG_SYSTEM &
-                            localPackageInfo.applicationInfo.flags) == 0) {
-                        final AppInfo localAppInfo = new AppInfo();
-                        localAppInfo.appName = localPackageInfo.applicationInfo.loadLabel(fragment.getActivity().getPackageManager()).toString();
-                        localAppInfo.appSourcDir = localPackageInfo.applicationInfo.publicSourceDir;
-                        localAppInfo.appSize = 0;
-                        //File localFile1 = new File(localPackageInfo.applicationInfo.publicSourceDir);
-                        File localFile1 = new File(localAppInfo.appSourcDir);
-                        if (localFile1 != null)
-                            localAppInfo.appSize = (int) (localFile1.length());
-                        localAppInfo.appCache = 0;
-                        //String packageName = localPackageInfo.packageName;
-                        localAppInfo.isSelected = Boolean.valueOf(false);
-                        localAppInfo.packageName = localPackageInfo.packageName;
+                    try {
+                        PackageInfo localPackageInfo = (PackageInfo) localList.get(i);
+                        if ((ApplicationInfo.FLAG_SYSTEM &
+                                localPackageInfo.applicationInfo.flags) == 0) {
+                            final AppInfo localAppInfo = new AppInfo();
+                            localAppInfo.appName = localPackageInfo.applicationInfo.loadLabel(mContext.getPackageManager()).toString();
+                            localAppInfo.appSourcDir = localPackageInfo.applicationInfo.publicSourceDir;
+                            localAppInfo.appSize = 0;
+                            //File localFile1 = new File(localPackageInfo.applicationInfo.publicSourceDir);
+                            File localFile1 = new File(localAppInfo.appSourcDir);
+                            if (localFile1 != null)
+                                localAppInfo.appSize = (int) (localFile1.length());
+                            localAppInfo.appCache = 0;
+                            //String packageName = localPackageInfo.packageName;
+                            localAppInfo.isSelected = Boolean.valueOf(false);
+                            localAppInfo.packageName = localPackageInfo.packageName;
 
-                        localAppInfo.versionName = localPackageInfo.versionName;
-                        localAppInfo.versionCode = localPackageInfo.versionCode;
-                        localAppInfo.appIcon = localPackageInfo.applicationInfo.loadIcon(fragment.getActivity().getPackageManager());
-                        localAppInfo.setFirstInstallTime(localPackageInfo.firstInstallTime);
-                        localAppInfo.setLastUpdateTime(localPackageInfo.lastUpdateTime);
-                        //getRunningAppProcessInfo(localAppInfo);
-                        //Log.i(TAG, "getAppOf TYPE_USER "+localAppInfo.getAppName());
-                        userAppInfoList.add(localAppInfo);
+                            localAppInfo.versionName = localPackageInfo.versionName;
+                            localAppInfo.versionCode = localPackageInfo.versionCode;
+                            localAppInfo.appIcon = localPackageInfo.applicationInfo.loadIcon(mContext.getPackageManager());
+                            localAppInfo.setFirstInstallTime(localPackageInfo.firstInstallTime);
+                            localAppInfo.setLastUpdateTime(localPackageInfo.lastUpdateTime);
+                            //getRunningAppProcessInfo(localAppInfo);
+                            //Log.i(TAG, "getAppOf TYPE_USER "+localAppInfo.getAppName());
+                            userAppInfoList.add(localAppInfo);
                         /*Message msg = mHandler.obtainMessage(MessageCode.MSG_GET_APP, localAppInfo);
                         // mHandler.sendEmptyMessage(0);
                         msg.sendToTarget();*/
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Log.e(TAG, "getApp: failed i="+i );
                     }
                 }
                 userAppInfoList = sort(userAppInfoList);
@@ -148,31 +160,36 @@ public class ToolUtils {
             case TYPE_SYSTEM:
                 systemAppInfoList.clear();
                 for (int i = 0; i < localList.size(); i++) {
-                    PackageInfo localPackageInfo = (PackageInfo) localList.get(i);
-                    if ((ApplicationInfo.FLAG_SYSTEM &
-                            localPackageInfo.applicationInfo.flags) > 0) {
-                        final AppInfo localAppInfo = new AppInfo();
-                        localAppInfo.appName = localPackageInfo.applicationInfo.loadLabel(fragment.getActivity().getPackageManager()).toString();
-                        localAppInfo.appSourcDir = localPackageInfo.applicationInfo.publicSourceDir;
-                        localAppInfo.appSize = 0;
-                        //File localFile1 = new File(localPackageInfo.applicationInfo.publicSourceDir);
-                        File localFile1 = new File(localAppInfo.appSourcDir);
-                        if (localFile1 != null)
-                            localAppInfo.appSize = (int) (localFile1.length());
-                        localAppInfo.appCache = 0;
-                        //String packageName = localPackageInfo.packageName;
-                        localAppInfo.isSelected = Boolean.valueOf(false);
-                        localAppInfo.packageName = localPackageInfo.packageName;
+                    try {
+                        PackageInfo localPackageInfo = (PackageInfo) localList.get(i);
+                        if ((ApplicationInfo.FLAG_SYSTEM &
+                                localPackageInfo.applicationInfo.flags) > 0) {
+                            final AppInfo localAppInfo = new AppInfo();
+                            localAppInfo.appName = localPackageInfo.applicationInfo.loadLabel(mContext.getPackageManager()).toString();
+                            localAppInfo.appSourcDir = localPackageInfo.applicationInfo.publicSourceDir;
+                            localAppInfo.appSize = 0;
+                            //File localFile1 = new File(localPackageInfo.applicationInfo.publicSourceDir);
+                            File localFile1 = new File(localAppInfo.appSourcDir);
+                            if (localFile1 != null)
+                                localAppInfo.appSize = (int) (localFile1.length());
+                            localAppInfo.appCache = 0;
+                            //String packageName = localPackageInfo.packageName;
+                            localAppInfo.isSelected = Boolean.valueOf(false);
+                            localAppInfo.packageName = localPackageInfo.packageName;
 
-                        localAppInfo.versionName = localPackageInfo.versionName;
-                        localAppInfo.versionCode = localPackageInfo.versionCode;
-                        localAppInfo.appIcon = localPackageInfo.applicationInfo.loadIcon(fragment.getActivity().getPackageManager());
-                        //getRunningAppProcessInfo(localAppInfo);
-                        Log.i(TAG, "getAppOf TYPE_SYSTEM "+localAppInfo.getAppName());
-                        systemAppInfoList.add(localAppInfo);
+                            localAppInfo.versionName = localPackageInfo.versionName;
+                            localAppInfo.versionCode = localPackageInfo.versionCode;
+                            localAppInfo.appIcon = localPackageInfo.applicationInfo.loadIcon(mContext.getPackageManager());
+                            //getRunningAppProcessInfo(localAppInfo);
+                            Log.i(TAG, "getAppOf TYPE_SYSTEM " + localAppInfo.getAppName());
+                            systemAppInfoList.add(localAppInfo);
                         /*Message msg = mHandler.obtainMessage(MessageCode.MSG_GET_APP, localAppInfo);
                         // mHandler.sendEmptyMessage(0);
                         msg.sendToTarget();*/
+                        }
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e(TAG, "getApp: failed i=" + i);
                     }
                 }
                 systemAppInfoList = sort(systemAppInfoList);
@@ -185,7 +202,7 @@ public class ToolUtils {
             case TYPE_LOCAL:
                 localAppInfoList.clear();
                 Log.i(TAG, "getApp:TYPE_LOCAL ");
-                LocalApkSearchUtils localApkSearchUtils = new LocalApkSearchUtils(fragment.getActivity());
+                LocalApkSearchUtils localApkSearchUtils = new LocalApkSearchUtils(mContext);
                 //localApkSearchUtils.FindAllAPKFile(Environment.getDataDirectory());
                 localApkSearchUtils.FindAllAPKFile(Environment.getExternalStorageDirectory());
                 localAppInfoList = localApkSearchUtils.getAppInfo();

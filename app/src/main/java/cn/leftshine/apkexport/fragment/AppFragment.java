@@ -54,7 +54,7 @@ public class AppFragment extends Fragment {
     //boolean isReady = false;
     //boolean isLoading = false;
     //public boolean isFirstLoad = true;
-    ToolUtils toolUtils;
+    ToolUtils toolUtils = new ToolUtils(getActivity());
     private AppInfoAdapter mAdapter;
     private Handler mHandler = new Handler() {
 
@@ -113,7 +113,7 @@ public class AppFragment extends Fragment {
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    toolUtils.getApp(AppFragment.this, mHandler, type);
+                                    toolUtils.getApp(mHandler, type);
                                 }
                             }).start();
                         //   isLoading = true;
@@ -166,7 +166,7 @@ public class AppFragment extends Fragment {
         super.onCreate(arg0);
         type = getArguments().getInt(ToolUtils.TYPE);
         Log.i(TAG, "onCreate: type="+type);
-        toolUtils = new ToolUtils();
+        toolUtils = new ToolUtils(getActivity());
         registerAppChangedReceiver();
         //initData();
     }
@@ -235,20 +235,25 @@ public class AppFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                toolUtils.loadApp(AppFragment.this, mHandler, type);
+                toolUtils.loadApp(mHandler, type);
             }
         }).start();
     }
     public void refresh(boolean isShowHideUI){
+
         if(isShowHideUI) {
             showLoadUI();
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                toolUtils.getApp(AppFragment.this, mHandler, type);
-            }
-        }).start();
+        try {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    toolUtils.getApp(mHandler, type);
+                }
+            }).start();
+        }catch (Exception e){
+            Log.e(TAG, "refresh: failed"+e );
+        }
     }
 //region
     /*public void load() {

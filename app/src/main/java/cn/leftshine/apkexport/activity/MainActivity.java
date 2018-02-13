@@ -3,12 +3,13 @@ package cn.leftshine.apkexport.activity;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
@@ -169,7 +170,8 @@ public class MainActivity extends AppCompatActivity {
 
     //请出缓存
     private boolean deleteCache() {
-        File mFolder = new File( Environment.getExternalStorageDirectory()+File.separator+"APKExport");
+        //File mFolder = new File( Environment.getExternalStorageDirectory()+File.separator+"APKExport");
+        File mFolder = new File(Settings.getCustomExportPath());
         if (mFolder.exists()) {
             if (mFolder.isDirectory())
             {
@@ -228,7 +230,12 @@ public class MainActivity extends AppCompatActivity {
         if(Settings.isIsNeedRefresh()){
             currentFragment.refresh(true);
         }
-
+        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if(!cm.hasPrimaryClip())
+        {
+            ClipData clipData = ClipData.newPlainText(null, ToolUtils.DEFAULT_COPY_DATA);
+            cm.setPrimaryClip(clipData);
+        }
 
     }
 

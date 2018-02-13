@@ -15,6 +15,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.github.angads25.filepicker.view.FilePickerPreference;
+
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.utils.AppUtils;
 import cn.leftshine.apkexport.utils.Settings;
@@ -26,20 +29,22 @@ import cn.leftshine.apkexport.view.ClearEditText;
 public class SettingActivityFragment extends PreferenceFragment {
 
     private SwitchPreference prefIsAutoClean;
-    private EditTextPreference prefCustomFileNameformat ;
+    private EditTextPreference prefCustomFileNameformat;
     private ListPreference prefLongPressAction;
     private ListPreference sortType;
     private ListPreference sortOrder;
-    private static Dialog dialogCustomFileNameformat;
+    private static Dialog dialogCustomFileNameformat,dialogCustomExportPath;
     //private EditText txt_custom_filename_format;
-    private ClearEditText txt_custom_filename_format;
+    private ClearEditText txt_custom_filename_format,txt_custom_export_path;
     private Button btn_insert_N;
     private Button btn_insert_P;
     private Button btn_insert_V;
     private Button btn_insert_default;
+    private Button btn_open_custom_path;
     private TextView txt_custom_filename_preview;
-    private String str_custom_filename_format;
+    private String str_custom_filename_format,str_custom_export_path;
     private Context context;
+    private FilePickerPreference prefCustomExportPath;
 
 
     public SettingActivityFragment() {
@@ -63,6 +68,11 @@ public class SettingActivityFragment extends PreferenceFragment {
         prefCustomFileNameformat.setOnPreferenceChangeListener(preferenceChangeListener);
         prefCustomFileNameformat.setSummary(Settings.getCustomFileNameFormat());
 
+        prefCustomExportPath = (FilePickerPreference)findPreference(getString(R.string.key_custom_export_path));
+        //prefCustomExportPath.setOnPreferenceClickListener(preferenceclickListener);
+        prefCustomExportPath.setOnPreferenceChangeListener(preferenceChangeListener);
+        prefCustomExportPath.setSummary(Settings.getCustomExportPath());
+
         prefLongPressAction = (ListPreference)findPreference(getString(cn.leftshine.apkexport.R.string.key_long_press_action));
         prefLongPressAction.setOnPreferenceChangeListener(preferenceChangeListener);
         prefLongPressAction.setSummary(prefLongPressAction.getEntry());
@@ -83,17 +93,16 @@ public class SettingActivityFragment extends PreferenceFragment {
             // TODO Auto-generated method stub
             //Log.d("config","clickListener");
 
-            //点击Manually_Server
             if(preference.getKey().equals(getResources().getString(R.string.key_custom_filename_format)))
             {
                 dialogCustomFileNameformat = prefCustomFileNameformat.getDialog();
                 /*txt_custom_filename_format = (EditText)dialogCustomFileNameformat.findViewById(R.id.txt_custom_filename_format);*/
                 txt_custom_filename_format = (ClearEditText) dialogCustomFileNameformat.findViewById(R.id.txt_custom_filename_format);
-                btn_insert_N = (Button)dialogCustomFileNameformat.findViewById(cn.leftshine.apkexport.R.id.btn_insert_N);
+                btn_insert_N = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_N);
                 btn_insert_P = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_P);
                 btn_insert_V = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_V);
-                btn_insert_default = (Button)dialogCustomFileNameformat.findViewById(cn.leftshine.apkexport.R.id.btn_insert_default);
-                txt_custom_filename_preview = (TextView)dialogCustomFileNameformat.findViewById(cn.leftshine.apkexport.R.id.txt_custom_filename_preview);
+                btn_insert_default = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_default);
+                txt_custom_filename_preview = (TextView)dialogCustomFileNameformat.findViewById(R.id.txt_custom_filename_preview);
                 btn_insert_N.setOnClickListener(onClickListener);
                 btn_insert_P.setOnClickListener(onClickListener);
                 btn_insert_V.setOnClickListener(onClickListener);
@@ -101,6 +110,15 @@ public class SettingActivityFragment extends PreferenceFragment {
                 txt_custom_filename_format.addTextChangedListener(textWatcher);
                 txt_custom_filename_format.setText(Settings.getCustomFileNameFormat());
             }
+
+            /*if(preference.getKey().equals(getResources().getString(R.string.key_custom_export_path)))
+            {
+                dialogCustomExportPath = prefCustomExportPath.getDialog();
+                txt_custom_export_path = (ClearEditText) dialogCustomExportPath.findViewById(R.id.txt_custom_export_path);
+                btn_open_custom_path = (Button)dialogCustomExportPath.findViewById(R.id.btn_open_custom_path);
+                btn_open_custom_path.setOnClickListener(onClickListener);
+                txt_custom_export_path.setText(Settings.getCustomExportPath());
+            }*/
             return false;
         }
     };
@@ -116,13 +134,23 @@ public class SettingActivityFragment extends PreferenceFragment {
                     insertText(txt_custom_filename_format,"#P");
                     //txt_custom_filename_format.append("#P");
                     break;
-                case cn.leftshine.apkexport.R.id.btn_insert_V:
+                case R.id.btn_insert_V:
                     insertText(txt_custom_filename_format,"#V");
                     //txt_custom_filename_format.append("#V");
                     break;
-                case cn.leftshine.apkexport.R.id.btn_insert_default:
+                case R.id.btn_insert_default:
                     insertText(txt_custom_filename_format,"#N-#P-#V");
                     break;
+                //case R.id.btn_open_custom_path:
+                    //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    //intent.setType(“image*//*”);//选择图片
+                    //intent.setType(“audio*//*”); //选择音频
+                    //intent.setType(“video*//*”); //选择视频 （mp4 3gp 是android支持的视频格式）
+                    //intent.setType(“video*//*;image*//*”);//同时选择视频和图片
+                    //intent.setType("**/*//*");//无类型限制
+                    //intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    //startActivityForResult(intent, 10001);
+                 //   break;
             }
         }
     };
@@ -151,11 +179,21 @@ public class SettingActivityFragment extends PreferenceFragment {
     Preference.OnPreferenceChangeListener preferenceChangeListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object o) {
-           if(getString(cn.leftshine.apkexport.R.string.key_custom_filename_format).equals(preference.getKey())){
-               String otr=  o.toString();
+           if(getString(R.string.key_custom_filename_format).equals(preference.getKey())) {
+               String otr = o.toString();
                str_custom_filename_format = txt_custom_filename_format.getText().toString();
                Settings.setCustomFileNameFormat(str_custom_filename_format);
                prefCustomFileNameformat.setSummary(Settings.getCustomFileNameFormat());
+               return false;
+           }else if(getString(R.string.key_custom_export_path).equals(preference.getKey())){
+               //str_custom_export_path = txt_custom_export_path.getText().toString();
+               String value=(String)o;
+               String arr[]=value.split(":");
+               if(arr.length>=1) {
+                   str_custom_export_path = arr[0];
+               }
+               Settings.setCustomExportPath(str_custom_export_path);
+               prefCustomExportPath.setSummary(Settings.getCustomExportPath());
                return false;
            }else if(getString(R.string.key_long_press_action).equals(preference.getKey())){
                prefLongPressAction.setValue(o.toString());
