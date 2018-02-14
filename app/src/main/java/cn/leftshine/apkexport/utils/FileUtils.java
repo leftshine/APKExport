@@ -286,7 +286,7 @@ public class FileUtils {
         public void OnListDataChanged(String newPath);
     }
 
-    public void notifyMediaScan(){
+    public static void  notifyMediaScan(){
         Log.i(TAG, "notifyMediaScan");
         String[] paths = new String[]{Environment.getExternalStorageDirectory().toString()};
         String[] mimeTypes = new String[]{"application/vnd.android.package-archive"};

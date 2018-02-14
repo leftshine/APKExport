@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 anim.start();
                 //((AppFragment)fragmentManager.findFragmentById(R.id.layout_fragment)).refresh();
                 currentFragment.refresh(true);
-                fileUtils.notifyMediaScan();
+                FileUtils.notifyMediaScan();
                 Snackbar.make(view, R.string.Refreshing, Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
         tabIndicators.add(getString(R.string.user_app));
         fragmentUserApp = AppFragment.newInstance(ToolUtils.TYPE_USER);
         tabFragments.add(fragmentUserApp);
+        //fragmentUserApp.load();
 
         tabIndicators.add(getString(R.string.system_app));
         fragmentSystemApp = AppFragment.newInstance(ToolUtils.TYPE_SYSTEM);
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
             tabIndicators.add(getString(R.string.local_apk));
             fragmentLocalApp = AppFragment.newInstance(ToolUtils.TYPE_LOCAL);
             tabFragments.add(fragmentLocalApp);
-            fileUtils.notifyMediaScan();
+            FileUtils.notifyMediaScan();
         }
 
         currentFragment = fragmentUserApp;
@@ -159,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 AppFragment fragment = (AppFragment)contentAdapter.getItem(position);
                 currentFragment = fragment;
+                //currentFragment.load();
             }
 
             @Override
@@ -366,9 +368,11 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (Intent.ACTION_MEDIA_SCANNER_STARTED.equals(action)) {
+                Log.i(TAG, "ACTION_MEDIA_SCANNER_STARTED");
                 scanHandler.sendEmptyMessage(STARTED);
             }
             if (Intent.ACTION_MEDIA_SCANNER_FINISHED.equals(action)) {
+                Log.i(TAG, "ACTION_MEDIA_SCANNER_FINISHED");
                 scanHandler.sendEmptyMessage(FINISHED);
             }
         }

@@ -54,7 +54,7 @@ public class AppFragment extends Fragment {
     //boolean isReady = false;
     //boolean isLoading = false;
     //public boolean isFirstLoad = true;
-    ToolUtils toolUtils = new ToolUtils(getActivity());
+    //ToolUtils toolUtils;
     private AppInfoAdapter mAdapter;
     private Handler mHandler = new Handler() {
 
@@ -105,7 +105,7 @@ public class AppFragment extends Fragment {
                     mAppListView.setVisibility(View.GONE);
                     mAppStatus.setVisibility(View.VISIBLE);
                     break;
-                case MessageCode.MSG_PACKAGE_ADDED:
+               /* case MessageCode.MSG_PACKAGE_ADDED:
                     if (isAdded() && isResumed()) {
                         //if(!isLoading) {
                             showLoadUI();
@@ -119,7 +119,7 @@ public class AppFragment extends Fragment {
                         //   isLoading = true;
                         //}
                     }
-                    break;
+                    break;*/
                 case MessageCode.MSG_GET_APP_COMPLETED:
                     Log.i(TAG, "MSG_GET_APP_COMPLETED ");
                     hideLoadUI();
@@ -166,7 +166,7 @@ public class AppFragment extends Fragment {
         super.onCreate(arg0);
         type = getArguments().getInt(ToolUtils.TYPE);
         Log.i(TAG, "onCreate: type="+type);
-        toolUtils = new ToolUtils(getActivity());
+        //toolUtils = new ToolUtils(getActivity());
         registerAppChangedReceiver();
         //initData();
     }
@@ -175,6 +175,7 @@ public class AppFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_main, container, false);
         initView(root);
+        //initData();
         return root;
     }
 
@@ -235,7 +236,8 @@ public class AppFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                toolUtils.loadApp(mHandler, type);
+                ToolUtils  toolUtilsLoad = new ToolUtils(getActivity());
+                toolUtilsLoad.loadApp(mHandler, type);
             }
         }).start();
     }
@@ -248,7 +250,8 @@ public class AppFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    toolUtils.getApp(mHandler, type);
+                    ToolUtils  toolUtilsGet = new ToolUtils(getActivity());
+                    toolUtilsGet.getApp(mHandler, type);
                 }
             }).start();
         }catch (Exception e){
