@@ -50,6 +50,15 @@ v2.00
 优化滑动切换tab时的一个小卡顿
 解决8.0分享问题
 
--使用mediascanner优化本地apk扫描速度
+v2.01
+大幅优化本地apk扫描速度
+增加本地apk页开关
+
+v2.02
+尝试修复偶然闪退的bug，请大家测试反馈
+导出目录自定义
 -toolbar添加返回按钮
--滚动时隐藏 floatactionbar和toolbar
+-滚动时隐藏 floatactionbar和toolbar（更滑listview）
+
+
+
