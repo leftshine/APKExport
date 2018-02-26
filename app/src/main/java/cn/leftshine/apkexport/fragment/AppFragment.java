@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.leftshine.apkexport.R;
+import cn.leftshine.apkexport.activity.MainActivity;
 import cn.leftshine.apkexport.adapter.AppInfoAdapter;
 import cn.leftshine.apkexport.utils.AppInfo;
 import cn.leftshine.apkexport.utils.MessageCode;
@@ -53,7 +55,7 @@ public class AppFragment extends Fragment {
     private RelativeLayout cloud,ly_list_show;
     private int type = ToolUtils.TYPE_USER;
     boolean isUIReady = false;
-    //boolean isLoading = false;
+    boolean isLoading = false;
     //public boolean isFirstLoad = true;
     //ToolUtils toolUtils;
     private AppInfoAdapter mAdapter;
@@ -79,10 +81,10 @@ public class AppFragment extends Fragment {
                     //}*/
                     load();
                     break;
-                /*
+
                 case MessageCode.MSG_REFRESH_START:
                     Log.i(TAG, "MSG_REFRESH_START");
-                    //if(!isLoading) {
+                    /*//if(!isLoading) {
                         showLoadUI();
                         new Thread(new Runnable() {
                             @Override
@@ -91,8 +93,10 @@ public class AppFragment extends Fragment {
                             }
                         }).start();
                     //    isLoading=true;
-                    //}
+                    //}*/
+                    refresh((boolean)msg.obj);
                     break;
+                    /*
                 case MessageCode.MSG_GET_APP:
                     *//*if (View.GONE == mAppListView.getVisibility()) {
                         mAppStatus.setVisibility(View.GONE);
@@ -127,7 +131,7 @@ public class AppFragment extends Fragment {
                 case MessageCode.MSG_GET_APP_COMPLETED:
                     Log.i(TAG, "MSG_GET_APP_COMPLETED ");
                     hideLoadUI();
-                    //isLoading = false;
+                    isLoading = false;
                     //isFirstLoad = false;
                     if (View.GONE == mAppListView.getVisibility()) {
                         mAppStatus.setVisibility(View.GONE);
@@ -148,7 +152,9 @@ public class AppFragment extends Fragment {
             }
         }
     };
-       //region
+
+
+    //region
 /*    private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
@@ -195,6 +201,7 @@ public class AppFragment extends Fragment {
     }
 
     private void initView(View root) {
+        //fab = (FloatingActionButton) rfindViewById(R.id.fab);
         cloud = root.findViewById(R.id.cloud);
         ly_list_show = root.findViewById(R.id.ly_list_show);
         mAppStatus = (TextView) root.findViewById(R.id.have_app);
@@ -239,32 +246,58 @@ public class AppFragment extends Fragment {
         //mThread.quit();
         super.onDestroy();
     }
-public  void loadWaitUI(){
-    new Thread(new Runnable() {
-        @Override
-        public void run() {
-           /* try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
-            while (true) {
-                if (isUIReady)
-                    break;
-                Log.i(TAG, "refresh: 等待界面初始化");
-                try {
-                    Thread.sleep(100);
+    public  void loadWaitUI(){
+        if(isLoading)
+            return;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+               /* try {
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }*/
+                while (true) {
+                    if (isUIReady)
+                        break;
+                    Log.i(TAG, "refresh: 等待界面初始化");
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+                Message msg = mHandler.obtainMessage();
+                msg.what = MessageCode.MSG_LOAD_START;
+                mHandler.sendMessage(msg);
             }
-            Message msg = mHandler.obtainMessage();
-            msg.what = MessageCode.MSG_LOAD_START;
-            mHandler.sendMessage(msg);
-        }
-    }).start();
-}
+        }).start();
+    }
+    public void refreshWaitUI(final boolean isShowLoadUI){
+        if(isLoading)
+            return;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    if (isUIReady)
+                        break;
+                    Log.i(TAG, "refresh: 等待界面初始化");
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Message msg = mHandler.obtainMessage();
+                msg.what = MessageCode.MSG_REFRESH_START;
+                msg.obj=isShowLoadUI;
+                mHandler.sendMessage(msg);
+            }
+        }).start();
+    }
     public void load() {
+        isLoading = true;
         showLoadUI();
         new Thread(new Runnable() {
             @Override
@@ -278,8 +311,9 @@ public  void loadWaitUI(){
             }
         }).start();
     }
-    public void refresh(boolean isShowHideUI){
-        if(isShowHideUI) {
+    public void refresh(boolean isShowLoadUI){
+        isLoading = true;
+        if(isShowLoadUI) {
             showLoadUI();
         }
         try {
@@ -294,6 +328,7 @@ public  void loadWaitUI(){
             Log.e(TAG, "refresh: failed"+e );
         }
     }
+
 //region
     /*public void load() {
         new Thread(new Runnable() {
@@ -315,27 +350,7 @@ public  void loadWaitUI(){
             }
         }).start();
     }*/
-    /*public void refresh(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    if (isReady)
-                        break;
-                    Log.i(TAG, "refresh: 等待界面初始化");
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                Message msg = mHandler.obtainMessage();
-                msg.what = MessageCode.MSG_REFRESH_START;
-                mHandler.sendMessage(msg);
-            }
-        }).start();
 
-    }*/
     //endregion
     public void doSearch(String queryText) {
         mAdapter.doSearch(queryText);

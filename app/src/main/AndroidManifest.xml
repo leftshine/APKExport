@@ -22,7 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.AboutActivity" />
+
+        <activity
+            android:name=".activity.AboutActivity"
+            android:parentActivityName="activity.MainActivity"/>
+
         <activity
             android:name=".activity.SettingActivity"
             android:label="@string/title_activity_setting"

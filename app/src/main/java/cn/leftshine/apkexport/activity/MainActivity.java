@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     AppFragment fragmentSystemApp;
     public AppFragment fragmentLocalApp;
     AppFragment currentFragment;
-    FloatingActionButton fab;
+    public FloatingActionButton fab;
     boolean isExitSnackbarShown = false;
     private TabLayout mTabTl;
     private ViewPager mContentVp;
@@ -88,7 +88,8 @@ public class MainActivity extends AppCompatActivity {
                 anim.setDuration(500);
                 anim.start();
                 //((AppFragment)fragmentManager.findFragmentById(R.id.layout_fragment)).refresh();
-                currentFragment.refresh(true);
+                //currentFragment.refresh(true);
+                currentFragment.refreshWaitUI(true);
                 FileUtils.notifyMediaScan();
                 Snackbar.make(view, R.string.Refreshing, Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
@@ -232,7 +233,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if(Settings.isIsNeedRefresh()){
-            currentFragment.refresh(true);
+            //currentFragment.refresh(true);
+            currentFragment.refreshWaitUI(true);
         }
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if(!cm.hasPrimaryClip())
@@ -326,7 +328,8 @@ public class MainActivity extends AppCompatActivity {
                                     break;
                             }
                             Settings.setSortOrder("300");
-                            currentFragment.refresh(true);
+                            //currentFragment.refresh(true);
+                            currentFragment.refreshWaitUI(true);
                         }
                     })
                     .setPositiveButton(R.string.DES, new DialogInterface.OnClickListener() {
@@ -356,7 +359,8 @@ public class MainActivity extends AppCompatActivity {
                                     break;
                             }
                             Settings.setSortOrder("301");
-                            currentFragment.refresh(true);
+                            //currentFragment.refresh(true);
+                            currentFragment.refreshWaitUI(true);
                         }
                     })
                     .show();
@@ -389,7 +393,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case FINISHED:
                     Log.i(TAG, "media scan finished");
-                    fragmentLocalApp.refresh(false);
+                    //fragmentLocalApp.refresh(false);
+                    fragmentLocalApp.refreshWaitUI(false);
                 default:
                     break;
             }
