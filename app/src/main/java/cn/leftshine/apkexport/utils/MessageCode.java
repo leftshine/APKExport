@@ -13,6 +13,7 @@ public class MessageCode {
     public static final int MSG_COPY_START = 1005;
     public static final int MSG_REFRESH_START = 1006;
     public static final int MSG_LOAD_START = 1007;
+    public static final int MSG_SHOW_LOAD_UI = 1008;
     public final static int MSG_PACKAGE_ADDED = 3;
     public final static int MSG_INSTALLED_APP_DETAILS = 1;
     public final static int MSG_GET_APP = 0;

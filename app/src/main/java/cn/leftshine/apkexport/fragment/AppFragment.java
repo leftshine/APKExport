@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.aware.PublishConfig;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -51,11 +52,12 @@ public class AppFragment extends Fragment {
     //private SearchView searchBox;
     private RelativeLayout cloud,ly_list_show;
     private int type = ToolUtils.TYPE_USER;
-    //boolean isReady = false;
+    boolean isUIReady = false;
     //boolean isLoading = false;
     //public boolean isFirstLoad = true;
     //ToolUtils toolUtils;
     private AppInfoAdapter mAdapter;
+    ToolUtils  toolUtilsLoad;
     private Handler mHandler = new Handler() {
 
         @Override
@@ -63,9 +65,9 @@ public class AppFragment extends Fragment {
             // TODO Auto-generated method stub
             switch (msg.what) {
                 //region
-                /*case MessageCode.MSG_LOAD_START:
+                case MessageCode.MSG_LOAD_START:
                     Log.i(TAG, "MSG_LOAD_START");
-                    //if(!isLoading) {
+                    /*//if(!isLoading) {
                         showLoadUI();
                         new Thread(new Runnable() {
                             @Override
@@ -74,8 +76,10 @@ public class AppFragment extends Fragment {
                             }
                         }).start();
                     //  isLoading=true;
-                    //}
+                    //}*/
+                    load();
                     break;
+                /*
                 case MessageCode.MSG_REFRESH_START:
                     Log.i(TAG, "MSG_REFRESH_START");
                     //if(!isLoading) {
@@ -136,6 +140,9 @@ public class AppFragment extends Fragment {
                     mLists.addAll(appInfoList);
                     mAdapter.notifyDataSetChanged();
                     break;
+                case MessageCode.MSG_SHOW_LOAD_UI:
+                    showLoadUI();
+                    break;
                 default:
                     break;
             }
@@ -167,6 +174,7 @@ public class AppFragment extends Fragment {
         type = getArguments().getInt(ToolUtils.TYPE);
         Log.i(TAG, "onCreate: type="+type);
         //toolUtils = new ToolUtils(getActivity());
+        toolUtilsLoad = new ToolUtils(getActivity());
         registerAppChangedReceiver();
         //initData();
     }
@@ -182,7 +190,8 @@ public class AppFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initData();
+        //initData();
+        isUIReady = true;
     }
 
     private void initView(View root) {
@@ -230,19 +239,46 @@ public class AppFragment extends Fragment {
         //mThread.quit();
         super.onDestroy();
     }
-
+public  void loadWaitUI(){
+    new Thread(new Runnable() {
+        @Override
+        public void run() {
+           /* try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
+            while (true) {
+                if (isUIReady)
+                    break;
+                Log.i(TAG, "refresh: 等待界面初始化");
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Message msg = mHandler.obtainMessage();
+            msg.what = MessageCode.MSG_LOAD_START;
+            mHandler.sendMessage(msg);
+        }
+    }).start();
+}
     public void load() {
         showLoadUI();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ToolUtils  toolUtilsLoad = new ToolUtils(getActivity());
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 toolUtilsLoad.loadApp(mHandler, type);
             }
         }).start();
     }
     public void refresh(boolean isShowHideUI){
-
         if(isShowHideUI) {
             showLoadUI();
         }
@@ -309,19 +345,21 @@ public class AppFragment extends Fragment {
         ly_list_show.setVisibility(View.INVISIBLE);
         cloud.setVisibility(View.VISIBLE);
         AlphaAnimation alphaAnimation = new AlphaAnimation(0,1f);
-        alphaAnimation.setDuration(500);
+        alphaAnimation.setDuration(200);
         alphaAnimation.setFillAfter(true);
         cloud.startAnimation(alphaAnimation);
         mAppListView.setEnabled(false);
     }
     private void hideLoadUI() {
-        ly_list_show.setVisibility(View.VISIBLE);
-        AlphaAnimation alphaAnimation = new AlphaAnimation(1f,0);
-        alphaAnimation.setDuration(500);
-        //alphaAnimation.setFillAfter(true);
-        cloud.startAnimation(alphaAnimation);
-        cloud.setVisibility(View.INVISIBLE);
-        mAppListView.setEnabled(true);
+        if(cloud.getVisibility() == View.VISIBLE) {
+            ly_list_show.setVisibility(View.VISIBLE);
+            AlphaAnimation alphaAnimation = new AlphaAnimation(1f, 0);
+            alphaAnimation.setDuration(200);
+            //alphaAnimation.setFillAfter(true);
+            cloud.startAnimation(alphaAnimation);
+            cloud.setVisibility(View.INVISIBLE);
+            mAppListView.setEnabled(true);
+        }
     }
 
     /*public void mediaScan(){

@@ -39,6 +39,7 @@ import cn.leftshine.apkexport.fragment.AppFragment;
 import cn.leftshine.apkexport.utils.FileUtils;
 import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.utils.ToolUtils;
+import cn.leftshine.apkexport.view.ZoomOutPageTransformer;
 
 import static cn.leftshine.apkexport.utils.PermisionUtils.verifyStoragePermissions;
 
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mTabTl = (TabLayout) findViewById(R.id.tl_tab);
         mContentVp = (ViewPager) findViewById(R.id.vp_content);
+        mContentVp.setPageTransformer(true, new ZoomOutPageTransformer());
         initContent();
         initTab();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -133,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         tabIndicators.add(getString(R.string.user_app));
         fragmentUserApp = AppFragment.newInstance(ToolUtils.TYPE_USER);
         tabFragments.add(fragmentUserApp);
-        //fragmentUserApp.load();
+        fragmentUserApp.loadWaitUI();
 
         tabIndicators.add(getString(R.string.system_app));
         fragmentSystemApp = AppFragment.newInstance(ToolUtils.TYPE_SYSTEM);
@@ -158,9 +160,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                AppFragment fragment = (AppFragment)contentAdapter.getItem(position);
-                currentFragment = fragment;
-                //currentFragment.load();
+                currentFragment = (AppFragment)contentAdapter.getItem(position);
+                currentFragment.load();
+                //currentFragment.loadWaitUI();
             }
 
             @Override

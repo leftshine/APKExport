@@ -70,6 +70,9 @@ public class ToolUtils {
     List<AppInfo> localAppInfoList = new ArrayList<AppInfo>();
 
     public void loadApp(Handler mHandler, int type) {
+/*        Message msg = Message.obtain();
+        msg.what =MessageCode.MSG_SHOW_LOAD_UI;
+        mHandler.sendMessage(msg);*/
         switch (type) {
             case TYPE_USER:
                 if(userAppInfoList==null||userAppInfoList.isEmpty()) {
@@ -109,7 +112,6 @@ public class ToolUtils {
 
     }
     public  void getApp(Handler mHandler, int type) {
-
         List<?> localList = mContext.getPackageManager().getInstalledPackages(0);
         Log.i(TAG, "getApp: type="+type);
         switch (type){

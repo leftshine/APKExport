@@ -6,8 +6,8 @@ android {
         applicationId "cn.leftshine.apkexport"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 201
-        versionName "2.01"
+        versionCode 202
+        versionName "2.02"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

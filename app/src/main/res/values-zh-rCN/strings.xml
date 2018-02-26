@@ -18,7 +18,7 @@
     <string name="about_feedback_title">官方QQ群: %1$s（点击加群）</string>
     <string name="about_feedback_tips">群号已复制到剪贴板！</string>
     <string name="about_version_title">版本：%1$s</string>
-    <string name="loading">正在扫描...</string>
+    <string name="loading">加载中...</string>
     <string name="Refreshing">"刷新列表..."</string>
     <string name="share_to">分享 %1$s 到...</string>
 
