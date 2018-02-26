@@ -1,10 +1,12 @@
 package cn.leftshine.apkexport.fragment;
 
+import android.animation.ObjectAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.aware.PublishConfig;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,9 +16,12 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -60,6 +65,13 @@ public class AppFragment extends Fragment {
     //ToolUtils toolUtils;
     private AppInfoAdapter mAdapter;
     ToolUtils  toolUtilsLoad;
+    private float scaledTouchSlop;
+    private float firstY = 0;
+    //private Toolbar toolbar;
+    private ObjectAnimator animtor;
+    private MainActivity mainActivity;
+
+
     private Handler mHandler = new Handler() {
 
         @Override
@@ -182,6 +194,7 @@ public class AppFragment extends Fragment {
         //toolUtils = new ToolUtils(getActivity());
         toolUtilsLoad = new ToolUtils(getActivity());
         registerAppChangedReceiver();
+        mainActivity = (MainActivity)getActivity();
         //initData();
     }
 
@@ -207,12 +220,80 @@ public class AppFragment extends Fragment {
         mAppStatus = (TextView) root.findViewById(R.id.have_app);
         mAppListView = (ListView) root.findViewById(R.id.app_listView);
         mAppListView.setTextFilterEnabled(true);
+        //使listview支持appbar_scrolling_view_behavior，不适用于Lollipop以下版本
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mAppListView.setNestedScrollingEnabled(true);
+        }
+        /**
+         * 添加一个HeadView避免第一个Item被ToolBar遮挡
+         * 必须在setAdapter之前进行设置
+         */
+        //initHeadView();
         mAdapter = new AppInfoAdapter(getActivity(), mLists,type);
         mAppListView.setAdapter(mAdapter);
+
+        /*//判断认为是滑动的最小距离(乘以系数调整滑动灵敏度)
+        scaledTouchSlop = ViewConfiguration.get(getActivity()).getScaledTouchSlop()*3.0f;
+        *//**
+         * 设置触摸事件
+         *//*
+        mAppListView.setOnTouchListener(new View.OnTouchListener() {
+            private float currentY;
+            private int direction=-1;
+            private boolean mShow = true;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        firstY = event.getY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        currentY = event.getY();
+                        //向下滑动
+                        if (currentY - firstY > scaledTouchSlop) {
+                            direction = 0;
+                        }
+                        //向上滑动
+                        else if (firstY - currentY > scaledTouchSlop) {
+                            direction = 1;
+                        }
+                        //如果是向上滑动，并且ToolBar是显示的，就隐藏ToolBar
+                        if (direction == 1) {
+                            if (mShow) {
+                                mainActivity.toobarAnim(1);
+                                mShow = !mShow;
+                            }
+                        } else if (direction == 0) {
+                            if (!mShow) {
+                                mainActivity.toobarAnim(0);
+                                mShow = !mShow;
+                            }
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        break;
+                }
+                return false;//注意此处不能返回true，因为如果返回true,onTouchEvent就无法执行，导致的后果是ListView无法滑动
+            }
+        });*/
     }
+
     private void initData() {
         load();
     }
+    /**
+     * 设置头布局，注意：这个头布局的高度要和ToolBar的高度一致
+     */
+    /*public void initHeadView() {
+        View view = new View(getActivity());
+        //abc_action_bar_default_height_material获取系统ActionBar的高度
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams
+                (AbsListView.LayoutParams.MATCH_PARENT,mainActivity.getAppBarHeight()
+                        *//*(int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material)*//*);
+        view.setLayoutParams(params);
+        mAppListView.addHeaderView(view);
+    }*/
 
     private void registerAppChangedReceiver() {
         if (null != mAppReceiver) {

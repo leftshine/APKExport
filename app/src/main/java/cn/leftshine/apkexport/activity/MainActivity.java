@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -63,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
     int sortType = 0;
     private ScanSdFilesReceiver scanReceiver;
     private FileUtils fileUtils;
+    private Toolbar toolbar;
+    private AppBarLayout ly_app_bar;
+    private ObjectAnimator animtor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,14 +75,14 @@ public class MainActivity extends AppCompatActivity {
         verifyStoragePermissions(this);
         fileUtils =new FileUtils(this);
         setContentView(R.layout.activity_main);
+        ly_app_bar = findViewById(R.id.ly_app_bar);
         mTabTl = (TabLayout) findViewById(R.id.tl_tab);
         mContentVp = (ViewPager) findViewById(R.id.vp_content);
         mContentVp.setPageTransformer(true, new ZoomOutPageTransformer());
         initContent();
         initTab();
         FragmentManager fragmentManager = getSupportFragmentManager();
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -400,5 +405,25 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
-
+    public int getAppBarHeight(){
+        return ly_app_bar.getHeight();
+    }
+    /**
+     * ToolBar显示隐藏动画
+     * @param direction
+     */
+    public void toobarAnim(int direction) {
+        //开始新的动画之前要先取消以前的动画
+        if (animtor != null && animtor.isRunning()) {
+            animtor.cancel();
+        }
+        //toolbar.getTranslationY()获取的是Toolbar距离自己顶部的距离
+        float translationY=ly_app_bar.getTranslationY();
+        if (direction == 0) {
+            animtor = ObjectAnimator.ofFloat(ly_app_bar, "translationY", translationY, 0);
+        } else if (direction == 1) {
+            animtor = ObjectAnimator.ofFloat(ly_app_bar, "translationY", translationY, -ly_app_bar.getHeight());
+        }
+        animtor.start();
+    }
 }
