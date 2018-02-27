@@ -231,13 +231,33 @@ public class AppFragment extends Fragment {
         //initHeadView();
         mAdapter = new AppInfoAdapter(getActivity(), mLists,type);
         mAppListView.setAdapter(mAdapter);
+        mAppListView.setOnScrollListener(new AbsListView.OnScrollListener(){
+            private int oldVisibleItem = 0; //滑动开始前，列表第一个可见item序号
+            private boolean visible = true;//是否可见
 
-        /*//判断认为是滑动的最小距离(乘以系数调整滑动灵敏度)
-        scaledTouchSlop = ViewConfiguration.get(getActivity()).getScaledTouchSlop()*3.0f;
-        *//**
-         * 设置触摸事件
-         *//*
-        mAppListView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                //firstVisibleItem 滑动时第一个可以item的序号，对比滑动开始前，列表第一个可见item序号，判断滑动方向
+                if (firstVisibleItem < oldVisibleItem && !visible) {
+                    //显示Fab
+                    mainActivity.toobarAnim(0);
+                    visible = true;
+                } else if (firstVisibleItem >oldVisibleItem && visible) {
+                    //隐藏Fab
+                    mainActivity.toobarAnim(1);
+                    visible = false;
+                }
+                oldVisibleItem = firstVisibleItem;
+            }
+        });
+        //region 监听listview触摸事件，判断滑动方向，不够灵敏
+        //判断认为是滑动的最小距离(乘以系数调整滑动灵敏度)
+        //scaledTouchSlop = ViewConfiguration.get(getActivity()).getScaledTouchSlop()*1.0f;
+        /*mAppListView.setOnTouchListener(new View.OnTouchListener() {
             private float currentY;
             private int direction=-1;
             private boolean mShow = true;
@@ -277,23 +297,12 @@ public class AppFragment extends Fragment {
                 return false;//注意此处不能返回true，因为如果返回true,onTouchEvent就无法执行，导致的后果是ListView无法滑动
             }
         });*/
+        //endregion
     }
 
     private void initData() {
         load();
     }
-    /**
-     * 设置头布局，注意：这个头布局的高度要和ToolBar的高度一致
-     */
-    /*public void initHeadView() {
-        View view = new View(getActivity());
-        //abc_action_bar_default_height_material获取系统ActionBar的高度
-        AbsListView.LayoutParams params = new AbsListView.LayoutParams
-                (AbsListView.LayoutParams.MATCH_PARENT,mainActivity.getAppBarHeight()
-                        *//*(int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material)*//*);
-        view.setLayoutParams(params);
-        mAppListView.addHeaderView(view);
-    }*/
 
     private void registerAppChangedReceiver() {
         if (null != mAppReceiver) {

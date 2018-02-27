@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -29,6 +30,9 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.RelativeLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -415,16 +419,22 @@ public class MainActivity extends AppCompatActivity {
      */
     public void toobarAnim(int direction) {
         //开始新的动画之前要先取消以前的动画
-        if (animtor != null && animtor.isRunning()) {
+        /*if (animtor != null && animtor.isRunning()) {
             animtor.cancel();
         }
         //toolbar.getTranslationY()获取的是Toolbar距离自己顶部的距离
-        float translationY=ly_app_bar.getTranslationY();
+        float translationY=ly_app_bar.getTranslationY();*/
         if (direction == 0) {
-            animtor = ObjectAnimator.ofFloat(ly_app_bar, "translationY", translationY, 0);
+            //animtor = ObjectAnimator.ofFloat(ly_app_bar, "translationY", translationY, 0);
+            //fab.show();
+            ViewCompat.animate(fab).translationY(0).setInterpolator(new DecelerateInterpolator(3));
+
         } else if (direction == 1) {
-            animtor = ObjectAnimator.ofFloat(ly_app_bar, "translationY", translationY, -ly_app_bar.getHeight());
+            //animtor = ObjectAnimator.ofFloat(ly_app_bar, "translationY", translationY, -ly_app_bar.getHeight());
+            //fab.hide();
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+            ViewCompat.animate(fab).translationY(fab.getHeight() + layoutParams.bottomMargin + layoutParams.topMargin).setInterpolator(new AccelerateInterpolator(3));
         }
-        animtor.start();
+        //animtor.start();
     }
 }
