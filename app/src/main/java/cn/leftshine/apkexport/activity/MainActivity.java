@@ -399,7 +399,8 @@ public class MainActivity extends AppCompatActivity {
                 case FINISHED:
                     Log.i(TAG, "media scan finished");
                     //fragmentLocalApp.refresh(false);
-                    fragmentLocalApp.refreshWaitUI(false);
+                    if(currentFragment == fragmentLocalApp)
+                        fragmentLocalApp.refreshWaitUI(false);
                 default:
                     break;
             }
