@@ -64,7 +64,7 @@ public class AppFragment extends Fragment {
     //public boolean isFirstLoad = true;
     //ToolUtils toolUtils;
     private AppInfoAdapter mAdapter;
-    ToolUtils  toolUtilsLoad;
+    ToolUtils  toolUtils;
     private float scaledTouchSlop;
     private float firstY = 0;
     //private Toolbar toolbar;
@@ -91,7 +91,7 @@ public class AppFragment extends Fragment {
                         }).start();
                     //  isLoading=true;
                     //}*/
-                    load();
+                    load(true,false);
                     break;
 
                 case MessageCode.MSG_REFRESH_START:
@@ -106,7 +106,7 @@ public class AppFragment extends Fragment {
                         }).start();
                     //    isLoading=true;
                     //}*/
-                    refresh((boolean)msg.obj);
+                    load((boolean)msg.obj,true);
                     break;
                     /*
                 case MessageCode.MSG_GET_APP:
@@ -192,7 +192,7 @@ public class AppFragment extends Fragment {
         type = getArguments().getInt(ToolUtils.TYPE);
         Log.i(TAG, "onCreate: type="+type);
         //toolUtils = new ToolUtils(getActivity());
-        toolUtilsLoad = new ToolUtils(getActivity());
+        toolUtils = new ToolUtils(getActivity());
         registerAppChangedReceiver();
         mainActivity = (MainActivity)getActivity();
         //initData();
@@ -300,9 +300,9 @@ public class AppFragment extends Fragment {
         //endregion
     }
 
-    private void initData() {
+/*    private void initData() {
         load();
-    }
+    }*/
 
     private void registerAppChangedReceiver() {
         if (null != mAppReceiver) {
@@ -386,9 +386,11 @@ public class AppFragment extends Fragment {
             }
         }).start();
     }
-    public void load() {
+    public void load(boolean isShowLoadUI, final boolean isRefresh) {
         isLoading = true;
-        showLoadUI();
+        if(isShowLoadUI) {
+            showLoadUI();
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -397,11 +399,11 @@ public class AppFragment extends Fragment {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                toolUtilsLoad.loadApp(mHandler, type);
+                toolUtils.loadApp(mHandler, type, isRefresh);
             }
         }).start();
     }
-    public void refresh(boolean isShowLoadUI){
+    /*public void refresh(boolean isShowLoadUI){
         isLoading = true;
         if(isShowLoadUI) {
             showLoadUI();
@@ -410,14 +412,14 @@ public class AppFragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ToolUtils  toolUtilsGet = new ToolUtils(getActivity());
-                    toolUtilsGet.getApp(mHandler, type);
+                    //ToolUtils  toolUtilsGet = new ToolUtils(getActivity());
+                    toolUtils.getApp(mHandler, type);
                 }
             }).start();
         }catch (Exception e){
             Log.e(TAG, "refresh: failed"+e );
         }
-    }
+    }*/
 
 //region
     /*public void load() {

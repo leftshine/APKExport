@@ -62,8 +62,12 @@ v2.02
 过渡动画优化
 细节优化
 
+v2.03
 修改列表分割线颜色
 滚动时隐藏和显示浮动刷新按钮
+
+v2.04
+修复一些排序的小问题
 
 -更换listview为recycleView
 -修改List加载逻辑Appframent保留三个不同list

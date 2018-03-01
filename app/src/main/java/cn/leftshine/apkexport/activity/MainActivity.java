@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 currentFragment = (AppFragment)contentAdapter.getItem(position);
-                currentFragment.load();
+                currentFragment.load(true,false);
                 //currentFragment.loadWaitUI();
             }
 
@@ -295,6 +295,23 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if(id == R.id.action_sort){
+            switch (Settings.getSortType()){
+                case "200":
+                    sortType = 0;
+                    break;
+                case "201":
+                    sortType = 1;
+                    break;
+                case "202":
+                    sortType = 2;
+                    break;
+                case "203":
+                    sortType = 3;
+                    break;
+                case "204":
+                    sortType = 4;
+                    break;
+            }
             new AlertDialog.Builder(this)
                     .setTitle(R.string.choose_sort_type)
                     /*.setItems(R.array.sort_type_name, new DialogInterface.OnClickListener() {
