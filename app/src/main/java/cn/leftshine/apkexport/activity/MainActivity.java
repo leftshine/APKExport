@@ -32,7 +32,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.RelativeLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 anim.start();
                 //((AppFragment)fragmentManager.findFragmentById(R.id.layout_fragment)).refresh();
                 //currentFragment.refresh(true);
-                currentFragment.refreshWaitUI(true);
+                currentFragment.loadWaitUI(true,true);
                 FileUtils.notifyMediaScan();
                 Snackbar.make(view, R.string.Refreshing, Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
@@ -145,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         tabIndicators.add(getString(R.string.user_app));
         fragmentUserApp = AppFragment.newInstance(ToolUtils.TYPE_USER);
         tabFragments.add(fragmentUserApp);
-        fragmentUserApp.loadWaitUI();
+        fragmentUserApp.loadWaitUI(true,false);
 
         tabIndicators.add(getString(R.string.system_app));
         fragmentSystemApp = AppFragment.newInstance(ToolUtils.TYPE_SYSTEM);
@@ -241,9 +240,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(Settings.isIsNeedRefresh()){
+        if(Settings.isIsNeedLoad()){
             //currentFragment.refresh(true);
-            currentFragment.refreshWaitUI(true);
+            currentFragment.loadWaitUI(true,false);
         }
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if(!cm.hasPrimaryClip())
@@ -355,7 +354,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                             Settings.setSortOrder("300");
                             //currentFragment.refresh(true);
-                            currentFragment.refreshWaitUI(true);
+                            currentFragment.loadWaitUI(true,false);
                         }
                     })
                     .setPositiveButton(R.string.DES, new DialogInterface.OnClickListener() {
@@ -386,7 +385,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                             Settings.setSortOrder("301");
                             //currentFragment.refresh(true);
-                            currentFragment.refreshWaitUI(true);
+                            currentFragment.loadWaitUI(true,false);
                         }
                     })
                     .show();
@@ -421,7 +420,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG, "media scan finished");
                     //fragmentLocalApp.refresh(false);
                     if(currentFragment == fragmentLocalApp)
-                        fragmentLocalApp.refreshWaitUI(false);
+                        fragmentLocalApp.loadWaitUI(false,true);
                 default:
                     break;
             }

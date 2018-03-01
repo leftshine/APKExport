@@ -336,7 +336,7 @@ public class AppFragment extends Fragment {
         //mThread.quit();
         super.onDestroy();
     }
-    public  void loadWaitUI(){
+    public  void loadWaitUI(final boolean isShowLoadUI,final boolean isRefresh){
         if(isLoading)
             return;
         new Thread(new Runnable() {
@@ -357,13 +357,37 @@ public class AppFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
-                Message msg = mHandler.obtainMessage();
-                msg.what = MessageCode.MSG_LOAD_START;
-                mHandler.sendMessage(msg);
+                if(isRefresh){
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = MessageCode.MSG_REFRESH_START;
+                    msg.obj=isShowLoadUI;
+                    mHandler.sendMessage(msg);
+                }else {
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = MessageCode.MSG_LOAD_START;
+                    mHandler.sendMessage(msg);
+                }
             }
         }).start();
     }
-    public void refreshWaitUI(final boolean isShowLoadUI){
+    public void load(boolean isShowLoadUI, final boolean isRefresh) {
+        isLoading = true;
+        if(isShowLoadUI) {
+            showLoadUI();
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                toolUtils.loadApp(mHandler, type, isRefresh);
+            }
+        }).start();
+    }
+   /* public void refreshWaitUI(final boolean isShowLoadUI){
         if(isLoading)
             return;
         new Thread(new Runnable() {
@@ -385,24 +409,8 @@ public class AppFragment extends Fragment {
                 mHandler.sendMessage(msg);
             }
         }).start();
-    }
-    public void load(boolean isShowLoadUI, final boolean isRefresh) {
-        isLoading = true;
-        if(isShowLoadUI) {
-            showLoadUI();
-        }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                toolUtils.loadApp(mHandler, type, isRefresh);
-            }
-        }).start();
-    }
+    }*/
+
     /*public void refresh(boolean isShowLoadUI){
         isLoading = true;
         if(isShowLoadUI) {

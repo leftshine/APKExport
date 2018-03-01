@@ -57,7 +57,7 @@ public class SettingActivityFragment extends PreferenceFragment {
         context = this.getActivity();
         addPreferencesFromResource(cn.leftshine.apkexport.R.xml.preferences);
         //getPreferenceManager().setSharedPreferencesName(Settings.SETTING_PREF_NAME);
-        Settings.setIsNeedRefresh(false);
+        Settings.setIsNeedLoad(false);
         initViews();
     }
 
@@ -202,12 +202,12 @@ public class SettingActivityFragment extends PreferenceFragment {
            }else if(getString(R.string.key_sort_type).equals(preference.getKey())){
                sortType.setValue(o.toString());
                sortType.setSummary(sortType.getEntry());
-               Settings.setIsNeedRefresh(true);
+               Settings.setIsNeedLoad(true);
                return true;
            }else if(getString(R.string.key_sort_order).equals(preference.getKey())){
                sortOrder.setValue(o.toString());
                sortOrder.setSummary(sortOrder.getEntry());
-               Settings.setIsNeedRefresh(true);
+               Settings.setIsNeedLoad(true);
                return true;
            }else {
                return true;

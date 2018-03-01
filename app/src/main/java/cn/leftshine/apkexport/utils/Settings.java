@@ -18,16 +18,17 @@ public class Settings {
     private static String DEFAULT_EXPORT_PATH = Environment.getExternalStorageDirectory()+ File.separator+"APKExport";
     private static Context mContext;
     private static SharedPreferences sharedPreferences;
+    private static boolean isNeedLoad = false;
 
-    public static boolean isIsNeedRefresh() {
-        return isNeedRefresh;
+    public static boolean isIsNeedLoad() {
+        return isNeedLoad;
     }
 
-    public static void setIsNeedRefresh(boolean isNeedRefresh) {
-        Settings.isNeedRefresh = isNeedRefresh;
+    public static void setIsNeedLoad(boolean isNeedLoad) {
+        Settings.isNeedLoad = isNeedLoad;
     }
 
-    private static boolean isNeedRefresh = false;
+
     public static void init(Context context) {
         mContext = context;
         //context.getPreferenceManager().getSharedPreferencesName();
