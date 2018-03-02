@@ -152,9 +152,10 @@ public class AppFragment extends Fragment {
                     if(!mAppListView.isEnabled())
                         mAppListView.setEnabled(true);
                     List<AppInfo> appInfoList = (List<AppInfo>)msg.obj;
-                    mLists.clear();
-                    mLists.addAll(appInfoList);
-                    mAdapter.notifyDataSetChanged();
+                    //mLists.clear();
+                    //mLists.addAll(appInfoList);
+                    mAdapter.setDataList(appInfoList);
+                    //mAdapter.notifyDataSetChanged();
                     break;
                 case MessageCode.MSG_SHOW_LOAD_UI:
                     showLoadUI();
@@ -202,7 +203,7 @@ public class AppFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_main, container, false);
         initView(root);
-        //initData();
+        //loadWaitUI(true,false);
         return root;
     }
 
@@ -350,7 +351,7 @@ public class AppFragment extends Fragment {
                 while (true) {
                     if (isUIReady)
                         break;
-                    Log.i(TAG, "refresh: 等待界面初始化");
+                    Log.i(TAG, "loadWaitUI: 等待界面初始化");
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {

@@ -41,10 +41,10 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 
 	private static final String TAG = "AppInfoAdapter";
 	LayoutInflater mInflater;
-	SortComparator localSortComparator;
+	//SortComparator localSortComparator;
 	private List<AppInfo> mLists = new ArrayList<AppInfo>();
 	private List<AppInfo> backLists = new ArrayList<AppInfo>();
-	private CharacterParser characterParser;
+	//private CharacterParser characterParser;
 	MyFilter mFilter;
 	Context mContext;
 	Handler mHandler;
@@ -55,28 +55,28 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 		// TODO Auto-generated constructor stub
 		mContext=context;
 		mInflater = LayoutInflater.from(mContext);
-		localSortComparator = new SortComparator();
+		//localSortComparator = new SortComparator();
 		mLists = list;
 		backLists = mLists;
-		characterParser = CharacterParser.getInstance();
+		//characterParser = CharacterParser.getInstance();
 
 		mType = type;
-		mHandler =new FileHandler(mContext);
-		fileUtils =new FileUtils(mContext);
+		mHandler = new FileHandler(mContext);
+		fileUtils = new FileUtils(mContext);
 	}
 	public void setDataList(List<AppInfo> list) {
 		mLists = list;
 		notifyDataSetChanged();
 	}
 
-	public void add(AppInfo info) {
+/*	public void add(AppInfo info) {
 		if (info != null) {
 			mLists.add(info);
 			Collections.sort(mLists, localSortComparator);
 			notifyDataSetChanged();
 		}
 
-	}
+	}*/
 
 	@Override
 	public Filter getFilter() {
@@ -90,16 +90,18 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 			 //mAppListView.clearTextFilter();//搜索文本为空时，清除ListView的过滤
 			 Log.i(TAG, "onQueryTextChange: isEmpty");
 			 getFilter().filter(null);
+			 //notifyDataSetChanged();
 		 } else {
 			 //mAppListView.setFilterText(queryText);//设置过滤关键字
 			 //通过Adapter设置可以避免弹出提示区域
 			 getFilter().filter(queryText);
+			 //notifyDataSetChanged();
 		 }
 	 }
 
 
 
-	public class SortComparator implements Comparator<Object> {
+	/*public class SortComparator implements Comparator<Object> {
 		public SortComparator() {
 		}
 
@@ -112,7 +114,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 			Log.i(TAG, "compare: " + compare1);
 			return (compare1.compareTo(compare2));
 		}
-	}
+	}*/
 
 	@Override
 	public int getCount() {

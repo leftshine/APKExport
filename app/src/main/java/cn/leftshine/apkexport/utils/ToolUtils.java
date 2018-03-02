@@ -114,6 +114,11 @@ public class ToolUtils {
 
     }
     public  void getApp(Handler mHandler, int type) {
+        /*Message msg = Message.obtain();
+        Log.i(TAG, "TYPE_USER getApp:"+"completed");
+        msg.what =MessageCode.MSG_SHOW_LOAD_UI;
+        mHandler.sendMessage(msg);*/
+
         List<?> localList = mContext.getPackageManager().getInstalledPackages(0);
         Log.i(TAG, "getApp: type="+type);
         switch (type){
