@@ -39,38 +39,63 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:text="@string/custom_file_name_insert" />
 
-        <Button
-            android:id="@+id/btn_insert_N"
-            style="@style/Widget.AppCompat.Button.Small"
-            android:layout_width="wrap_content"
+        <HorizontalScrollView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fadeScrollbars="false"
+            android:fillViewport="false"
+            android:scrollbarAlwaysDrawHorizontalTrack="false"
+            android:scrollbarSize="2dp"
+            android:scrollbarStyle="insideOverlay">
 
-            android:text="@string/custom_file_name_n" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btn_insert_P"
-            style="@style/Widget.AppCompat.Button.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+                <Button
+                    android:id="@+id/btn_insert_N"
+                    style="@style/Widget.AppCompat.Button.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
 
-            android:text="@string/custom_file_name_P" />
+                    android:text="@string/custom_file_name_n" />
 
-        <Button
-            android:id="@+id/btn_insert_V"
-            style="@style/Widget.AppCompat.Button.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+                <Button
+                    android:id="@+id/btn_insert_V"
+                    style="@style/Widget.AppCompat.Button.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_file_name_v" />
 
-            android:text="@string/custom_file_name_v" />
+                <Button
+                    android:id="@+id/btn_insert_P"
+                    style="@style/Widget.AppCompat.Button.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
 
-        <Button
-            android:id="@+id/btn_insert_default"
-            style="@style/Widget.AppCompat.Button.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/custom_file_name_default" />
+                    android:text="@string/custom_file_name_P" />
+
+                <Button
+                    android:id="@+id/btn_insert_C"
+                    style="@style/Widget.AppCompat.Button.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_file_name_c" />
+
+                <Button
+                    android:id="@+id/btn_insert_default"
+                    style="@style/Widget.AppCompat.Button.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="@string/custom_file_name_default" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
     </LinearLayout>
 
     <LinearLayout

@@ -22,11 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.AboutActivity"
-            android:parentActivityName="activity.MainActivity"/>
-
+            android:parentActivityName="activity.MainActivity" />
         <activity
             android:name=".activity.SettingActivity"
             android:label="@string/title_activity_setting"
@@ -46,6 +44,32 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        //在manifest注册Activity时，加入category,使得你的App在分享这些类型的数据时会被系统调起
+        <activity
+            android:name=".activity.SystemShareActivity"
+            android:label="使用APKExport导出本APP">
+
+            //注册分享文字
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+            //注册分享单张图片
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="image/*"/>
+            </intent-filter>
+            //注册分享多张图片
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="image/*"/>
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>

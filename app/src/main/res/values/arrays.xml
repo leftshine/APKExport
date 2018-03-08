@@ -9,6 +9,7 @@
     <string-array name="copy_info_actions">
         <item>Copy App Name</item>
         <item>Copy Package Name</item>
+        <item>Copy Version Name</item>
         <item>Copy Version Code</item>
     </string-array>
 

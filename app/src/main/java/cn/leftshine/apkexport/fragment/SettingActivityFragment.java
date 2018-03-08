@@ -39,6 +39,7 @@ public class SettingActivityFragment extends PreferenceFragment {
     private Button btn_insert_N;
     private Button btn_insert_P;
     private Button btn_insert_V;
+    private Button btn_insert_C;
     private Button btn_insert_default;
     private Button btn_open_custom_path;
     private TextView txt_custom_filename_preview;
@@ -101,11 +102,13 @@ public class SettingActivityFragment extends PreferenceFragment {
                 btn_insert_N = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_N);
                 btn_insert_P = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_P);
                 btn_insert_V = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_V);
+                btn_insert_C = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_C);
                 btn_insert_default = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_default);
                 txt_custom_filename_preview = (TextView)dialogCustomFileNameformat.findViewById(R.id.txt_custom_filename_preview);
                 btn_insert_N.setOnClickListener(onClickListener);
                 btn_insert_P.setOnClickListener(onClickListener);
                 btn_insert_V.setOnClickListener(onClickListener);
+                btn_insert_C.setOnClickListener(onClickListener);
                 btn_insert_default.setOnClickListener(onClickListener);
                 txt_custom_filename_format.addTextChangedListener(textWatcher);
                 txt_custom_filename_format.setText(Settings.getCustomFileNameFormat());
@@ -136,6 +139,10 @@ public class SettingActivityFragment extends PreferenceFragment {
                     break;
                 case R.id.btn_insert_V:
                     insertText(txt_custom_filename_format,"#V");
+                    //txt_custom_filename_format.append("#V");
+                    break;
+                case R.id.btn_insert_C:
+                    insertText(txt_custom_filename_format,"#C");
                     //txt_custom_filename_format.append("#V");
                     break;
                 case R.id.btn_insert_default:
@@ -171,7 +178,8 @@ public class SettingActivityFragment extends PreferenceFragment {
             String thisAppName = AppUtils.getAppName(context);
             String thisPackageName = AppUtils.getPackageName(context);
             String thisVersionName = AppUtils.getVersionName(context);
-            String preview = str_custom_filename_format.replace("#N",thisAppName).replace("#P",thisPackageName).replace("#V",thisVersionName);
+            String thisVersionCode = AppUtils.getVersionCode(context);
+            String preview = str_custom_filename_format.replace("#N",thisAppName).replace("#P",thisPackageName).replace("#V",thisVersionName).replace("#C",thisVersionCode);
             txt_custom_filename_preview.setText(preview);
         }
     };

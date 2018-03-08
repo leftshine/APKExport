@@ -48,8 +48,9 @@ public class FileUtils {
         String mCurrentAppName = appInfo.appName;
         final String mCurrentAppPath = appInfo.appSourcDir;
         String mCurrentVersionName = appInfo.getVersionName();
+        String mCurrentVersionCode = String.valueOf(appInfo.versionCode);
         String customFileNameFormat  = Settings.getCustomFileNameFormat();
-        String customFileName = customFileNameFormat.replace("#N",mCurrentAppName).replace("#P",mCurrentPkgName).replace("#V",mCurrentVersionName);
+        String customFileName = customFileNameFormat.replace("#N",mCurrentAppName).replace("#P",mCurrentPkgName).replace("#V",mCurrentVersionName).replace("#C",mCurrentVersionCode);
         switch (mode){
             case MODE_ONLY_EXPORT:
                 //仅导出

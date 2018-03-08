@@ -17,8 +17,8 @@ public class AppInfo {
 	private int uid; // 
 	private int memSize;
 	private String processName;
-	private long firstInstallTime;
-	private long lastUpdateTime;
+	public long firstInstallTime;
+	public long lastUpdateTime;
 	private int installed =1;
 	//private String fileLastModifyTime;
 /*

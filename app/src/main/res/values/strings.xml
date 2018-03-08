@@ -54,11 +54,12 @@
 
     <string name="custom_file_name">Custom File Name Format</string>
     <string name="custom_file_name_summary">Click to set the filename format</string>
-    <string name="custom_file_name_description">#N as App Name\n#P as Package Name\n#V as Version Code</string>
+    <string name="custom_file_name_description">#N as App Name\n#P as Package Name\n#V as Version Name\n#C as Version Code</string>
     <string name="custom_file_name_insert">Insert: </string>
     <string name="custom_file_name_n" translatable="false">#N</string>
     <string name="custom_file_name_P" translatable="false">#P</string>
     <string name="custom_file_name_v" translatable="false">#V</string>
+    <string name="custom_file_name_c" translatable="false">#C</string>
     <string name="custom_file_name_default">#N-#P-#V</string>
     <string name="custom_filename_preview">Preview: </string>
 

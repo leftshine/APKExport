@@ -199,6 +199,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 								<item>复制应用名称</item>
         						<item>复制包名</item>
         						<item>复制版本号</item>
+        						<item>复制内部版本号</item>
 								 */
 										//ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
 										//ClipData clipData = ClipData.newPlainText(null, "");
@@ -215,6 +216,9 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 											case 2:
 												copy_str = info.getVersionName();
 												//clipData = ClipData.newPlainText(null, info.getVersionName());
+												break;
+											case 3:
+												copy_str = String.valueOf(info.getVersionCode());
 												break;
 										}
 										ClipData clipData = ClipData.newPlainText(null, copy_str);
