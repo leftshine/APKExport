@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">APKExport</string>
     <string name="action_settings">Settings</string>
-    <string name="action_about">About</string>
+    <string name="action_main">Open APKExport</string>
     <string name="action_search">Search</string>
     <string name="action_sort">Sort</string>
     <string name="app_installed_not">"No installed applications"</string>
@@ -48,6 +48,12 @@
     <string name="setting_autoClean_summaryOff">The apks exported will not be deleted</string>
     <string name="setting_autoClean_summaryOn">The apks exported will be deleted the next time you open the app</string>
 
+    <string name="setting_super_export_title">Super Export</string>
+    <string name="setting_export_direct_title">Direct Mode</string>
+    <string name="setting_export_direct_summaryOff">Use full-mode for super export</string>
+    <string name="setting_export_direct_summaryOn">Use direct-mode for super export </string>
+
+
     <string name="setting_show_local_apk_title">Show Local Apk Tab(take effect until the next launch)</string>
     <string name="setting_show_local_apk_summaryOff">"Local Apk" Tab Is Hidden</string>
     <string name="setting_show_local_apk_summaryOn">"Local Apk" Tab Is Displayed</string>
@@ -68,6 +74,11 @@
     <string name="setting_sort_type_title">Sort By...</string>
     <string name="setting_sort_order_title">Order</string>
 
+    <string name="setting_advance_group_title">Advance</string>
+    <string name="setting_restore_default_settings_title">Restore Default Settings</string>
+    <string name="setting_restore_default_settings_description">Ensure to Restore Default Settings?</string>
+
+    <string name="key_is_export_direct" translatable="false">is_export_direct</string>
     <string name="key_is_auto_clean" translatable="false">is_auto_clean</string>
     <string name="key_is_show_local_apk" translatable="false">is_show_local_apk</string>
     <string name="key_custom_filename_format" translatable="false">custom_filename_format</string>
@@ -75,6 +86,7 @@
     <string name="key_long_press_action" translatable="false">long_press_action</string>
     <string name="key_sort_type" translatable="false">sort_type</string>
     <string name="key_sort_order" translatable="false">sort_order</string>
+    <string name="key_restore_default_settings" translatable="false">restore_default_settings</string>
     <string name="choose_sort_type">Sort By...</string>
     <string name="ASC">ASC</string>
     <string name="DES">DES</string>
@@ -87,5 +99,21 @@
 
     <string name="copy_success">Copy_Success:%1$s</string>
     <string name="custom_export_path_summary" translatable="false">APKExport</string>
+    <string name="action_about">about</string>
+
+
+    <string name="version_name">Version Name</string>
+    <string name="version_code">Version Code</string>
+    <string name="export_file_name">File Name</string>
+    <string name="insert_app_name">APP Name</string>
+    <string name="insert_package_name">Package Name</string>
+    <string name="insert_version_name">Version Name</string>
+    <string name="insert_version_code">Version Code</string>
+    <string name="only_export">Only Export</string>
+    <string name="share_after_export">Export&amp;Share</string>
+    <string name="share_file_name_default">Default</string>
+
+    <string name="super_export">Super Export</string>
+
 
 </resources>

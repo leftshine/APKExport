@@ -176,7 +176,14 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 											mode = FileUtils.MODE_EXPORT_RENAME_SHARE;
 											break;
 									}
-									fileUtils.doExport(mHandler, mode, info);
+									String mCurrentPkgName = info.packageName;
+									String mCurrentAppName = info.appName;
+									String mCurrentAppPath = info.appSourcDir;
+									String mCurrentVersionName = info.getVersionName();
+									String mCurrentVersionCode = String.valueOf(info.versionCode);
+									String customFileNameFormat  = Settings.getCustomFileNameFormat();
+									String customFileName = customFileNameFormat.replace("#N",mCurrentAppName).replace("#P",mCurrentPkgName).replace("#V",mCurrentVersionName).replace("#C",mCurrentVersionCode)+".apk";
+									fileUtils.doExport(mHandler, mode,mCurrentAppPath, customFileName);
 
 								}
 							})
@@ -242,7 +249,14 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 								mode = FileUtils.MODE_EXPORT_RENAME_SHARE;
 								break;
 						}
-						fileUtils.doExport(mHandler, mode, info);
+						String mCurrentPkgName = info.packageName;
+						String mCurrentAppName = info.appName;
+						String mCurrentAppPath = info.appSourcDir;
+						String mCurrentVersionName = info.getVersionName();
+						String mCurrentVersionCode = String.valueOf(info.versionCode);
+						String customFileNameFormat  = Settings.getCustomFileNameFormat();
+						String customFileName = customFileNameFormat.replace("#N",mCurrentAppName).replace("#P",mCurrentPkgName).replace("#V",mCurrentVersionName).replace("#C",mCurrentVersionCode)+".apk";
+						fileUtils.doExport(mHandler, mode,mCurrentAppPath, customFileName);
 					}
 					//FileUtils.copyInfo(mContext,mHandler,info);
 					return true;

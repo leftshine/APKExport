@@ -8,8 +8,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import cn.leftshine.apkexport.R;
+import cn.leftshine.apkexport.activity.SystemShareActivity;
 import cn.leftshine.apkexport.utils.FileUtils;
 import cn.leftshine.apkexport.utils.MessageCode;
+import cn.leftshine.apkexport.utils.Settings;
 
 /**
  * Created by Administrator on 2018/1/30.
@@ -32,7 +34,6 @@ public class FileHandler extends Handler {
         }
         fileUtils = new FileUtils(context);
     }
-
     @Override
     public void handleMessage(Message msg) {
         switch (msg.what) {
@@ -48,6 +49,9 @@ public class FileHandler extends Handler {
                 if(mode == FileUtils.MODE_EXPORT_SHARE||mode == FileUtils.MODE_EXPORT_RENAME_SHARE) {
                     fileUtils.startShare(shareFilePath);
                 }
+                /*if(Settings.isExportDerect()){
+                    System.exit(0);
+                }*/
                 break;
             case MessageCode.MSG_COPY_PROGRESS:
                 Long lprogress = (Long) msg.obj;

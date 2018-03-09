@@ -57,12 +57,25 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:id="@+id/btn_insert_divider"
+                    style="@style/Widget.AppCompat.Button.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="-" />
+
+                <Button
                     android:id="@+id/btn_insert_N"
                     style="@style/Widget.AppCompat.Button.Small"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:text="@string/custom_file_name_n" />
+
+                <Button
+                    android:id="@+id/btn_insert_P"
+                    style="@style/Widget.AppCompat.Button.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_file_name_P" />
 
                 <Button
                     android:id="@+id/btn_insert_V"
@@ -70,14 +83,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/custom_file_name_v" />
-
-                <Button
-                    android:id="@+id/btn_insert_P"
-                    style="@style/Widget.AppCompat.Button.Small"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:text="@string/custom_file_name_P" />
 
                 <Button
                     android:id="@+id/btn_insert_C"

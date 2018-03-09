@@ -3,11 +3,12 @@
     <string name="app_name">APKExport-APK导出工具</string>
     <string name="action_settings">设置</string>
     <string name="action_about">关于</string>
+    <string name="action_main">打开APKExport</string>
     <string name="app_installed_not">未发现已安装程序</string>
-    <string name="packagename">包名</string>
+    <string name="packagename">包名：</string>
     <string name="appInfo">应用信息</string>
     <string name="appname">名称</string>
-    <string name="appsize">大小</string>
+    <string name="appsize">大小：</string>
     <string name="appversion">版本</string>
     <string name="search">搜索…</string>
     <string name="app_uninstall_success">应用卸载成功</string>
@@ -69,4 +70,23 @@
     <string name="copy_success">复制成功:%1$s</string>
     <string name="custom_export_path">自定义APK导出目录</string>
     <string name="setting_export_open">打开</string>
+
+    <string name="version_name">版本号：</string>
+    <string name="version_code">内部版本号：</string>
+    <string name="export_file_name">文件名：</string>
+    <string name="insert_app_name">名称</string>
+    <string name="insert_package_name">包名</string>
+    <string name="insert_version_name">版本号</string>
+    <string name="insert_version_code">内部版本号</string>
+    <string name="only_export">仅提取</string>
+    <string name="share_after_export">提取后分享</string>
+    <string name="share_file_name_default">默认</string>
+    <string name="setting_export_direct_title">快速模式</string>
+    <string name="setting_export_direct_summaryOff">超级导出将展示完整界面</string>
+    <string name="setting_export_direct_summaryOn">超级导出将直接导出并分享</string>
+    <string name="setting_super_export_title">超级导出</string>
+    <string name="setting_advance_group_title">高级</string>
+    <string name="setting_restore_default_settings_title">恢复默认设置</string>
+    <string name="setting_restore_default_settings_description">此操作会将所有设置恢复到默认状态，是否继续？</string>
+    <string name="super_export">提取该应用的APK</string>
 </resources>

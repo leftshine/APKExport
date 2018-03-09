@@ -1,17 +1,24 @@
 package cn.leftshine.apkexport.fragment;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,6 +26,8 @@ import android.widget.TextView;
 import com.github.angads25.filepicker.view.FilePickerPreference;
 
 import cn.leftshine.apkexport.R;
+import cn.leftshine.apkexport.activity.SettingActivity;
+import cn.leftshine.apkexport.activity.SystemShareActivity;
 import cn.leftshine.apkexport.utils.AppUtils;
 import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.view.ClearEditText;
@@ -30,17 +39,19 @@ public class SettingActivityFragment extends PreferenceFragment {
 
     private SwitchPreference prefIsAutoClean;
     private EditTextPreference prefCustomFileNameformat;
+    private Preference prefRestoreDefaultSettings;
     private ListPreference prefLongPressAction;
     private ListPreference sortType;
     private ListPreference sortOrder;
-    private static Dialog dialogCustomFileNameformat,dialogCustomExportPath;
+    private static Dialog dialogCustomFileNameformat,dialogCustomExportPath,dialogRestoreDefaultSettings;
     //private EditText txt_custom_filename_format;
     private ClearEditText txt_custom_filename_format,txt_custom_export_path;
+
     private Button btn_insert_N;
     private Button btn_insert_P;
     private Button btn_insert_V;
     private Button btn_insert_C;
-    private Button btn_insert_default;
+    private Button btn_insert_default,btn_insert_divider;
     private Button btn_open_custom_path;
     private TextView txt_custom_filename_preview;
     private String str_custom_filename_format,str_custom_export_path;
@@ -65,7 +76,9 @@ public class SettingActivityFragment extends PreferenceFragment {
     private void initViews() {
         prefIsAutoClean = (SwitchPreference)findPreference(getString(R.string.key_is_auto_clean));
         prefCustomFileNameformat= (EditTextPreference)findPreference(getString(R.string.key_custom_filename_format));
+        prefRestoreDefaultSettings = (Preference)findPreference(getString(R.string.key_restore_default_settings));
         prefCustomFileNameformat.setOnPreferenceClickListener(preferenceclickListener);
+        prefRestoreDefaultSettings.setOnPreferenceClickListener(preferenceclickListener);
         prefCustomFileNameformat.setOnPreferenceChangeListener(preferenceChangeListener);
         prefCustomFileNameformat.setSummary(Settings.getCustomFileNameFormat());
 
@@ -99,12 +112,14 @@ public class SettingActivityFragment extends PreferenceFragment {
                 dialogCustomFileNameformat = prefCustomFileNameformat.getDialog();
                 /*txt_custom_filename_format = (EditText)dialogCustomFileNameformat.findViewById(R.id.txt_custom_filename_format);*/
                 txt_custom_filename_format = (ClearEditText) dialogCustomFileNameformat.findViewById(R.id.txt_custom_filename_format);
+                btn_insert_divider =dialogCustomFileNameformat.findViewById(R.id.btn_insert_divider);
                 btn_insert_N = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_N);
                 btn_insert_P = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_P);
                 btn_insert_V = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_V);
                 btn_insert_C = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_C);
                 btn_insert_default = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_insert_default);
                 txt_custom_filename_preview = (TextView)dialogCustomFileNameformat.findViewById(R.id.txt_custom_filename_preview);
+                btn_insert_divider.setOnClickListener(onClickListener);
                 btn_insert_N.setOnClickListener(onClickListener);
                 btn_insert_P.setOnClickListener(onClickListener);
                 btn_insert_V.setOnClickListener(onClickListener);
@@ -113,7 +128,32 @@ public class SettingActivityFragment extends PreferenceFragment {
                 txt_custom_filename_format.addTextChangedListener(textWatcher);
                 txt_custom_filename_format.setText(Settings.getCustomFileNameFormat());
             }
-
+            if(preference.getKey().equals(getResources().getString(R.string.key_restore_default_settings)))
+            {
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.setting_restore_default_settings_title)
+                        .setMessage(R.string.setting_restore_default_settings_description)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Log.i("Settings", "restore_default_settings");
+                                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                                sharedPreferences.edit().clear().commit();
+                                getPreferenceScreen().removeAll();
+                                addPreferencesFromResource(cn.leftshine.apkexport.R.xml.preferences);
+                                initViews();
+                                //startActivity(new Intent(context, SettingActivity.class));
+                                //getActivity().finish();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Log.i("Settings", "cancel");
+                            }
+                        })
+                        .show();
+            }
             /*if(preference.getKey().equals(getResources().getString(R.string.key_custom_export_path)))
             {
                 dialogCustomExportPath = prefCustomExportPath.getDialog();
@@ -129,7 +169,10 @@ public class SettingActivityFragment extends PreferenceFragment {
         @Override
         public void onClick(View view) {
             switch (view.getId()){
-                case cn.leftshine.apkexport.R.id.btn_insert_N:
+                case R.id.btn_insert_divider:
+                    insertText(txt_custom_filename_format,"-");
+                    break;
+                case R.id.btn_insert_N:
                     insertText(txt_custom_filename_format,"#N");
                     //txt_custom_filename_format.append("#N");
                     break;
@@ -193,6 +236,10 @@ public class SettingActivityFragment extends PreferenceFragment {
                Settings.setCustomFileNameFormat(str_custom_filename_format);
                prefCustomFileNameformat.setSummary(Settings.getCustomFileNameFormat());
                return false;
+           /*}else if(getString(R.string.key_restore_default_settings).equals(preference.getKey())){
+               Log.i("Settings", "key_restore_default_settings");
+               return false;*/
+
            }else if(getString(R.string.key_custom_export_path).equals(preference.getKey())){
                //str_custom_export_path = txt_custom_export_path.getText().toString();
                String value=(String)o;

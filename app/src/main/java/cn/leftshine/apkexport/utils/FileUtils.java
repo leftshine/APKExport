@@ -43,23 +43,17 @@ public class FileUtils {
     }
 
     //导出操作
-    public void doExport(final Handler mHandler, final int mode, AppInfo appInfo){
-        String mCurrentPkgName = appInfo.packageName;
-        String mCurrentAppName = appInfo.appName;
-        final String mCurrentAppPath = appInfo.appSourcDir;
-        String mCurrentVersionName = appInfo.getVersionName();
-        String mCurrentVersionCode = String.valueOf(appInfo.versionCode);
-        String customFileNameFormat  = Settings.getCustomFileNameFormat();
-        String customFileName = customFileNameFormat.replace("#N",mCurrentAppName).replace("#P",mCurrentPkgName).replace("#V",mCurrentVersionName).replace("#C",mCurrentVersionCode);
+    public void doExport(final Handler mHandler, final int mode, final String mCurrentAppPath, String customFileName){
+        mCopyFileName = customFileName;
         switch (mode){
             case MODE_ONLY_EXPORT:
                 //仅导出
-                mCopyFileName = customFileName + ".apk";
+                //mCopyFileName = customFileName + ".apk";
                 doCopy(mHandler,mCurrentAppPath,mode);
                 break;
             case MODE_EXPORT_SHARE:
                 //导出后分享
-                mCopyFileName = customFileName + ".apk";
+                //mCopyFileName = customFileName + ".apk";
                 doCopy(mHandler,mCurrentAppPath,mode);
                 break;
             case MODE_EXPORT_RENAME_SHARE:
@@ -67,7 +61,7 @@ public class FileUtils {
                 //doRename();
                 View view = View.inflate(mContext,R.layout.dialog_edit,null);
                 final ClearEditText txtFileName = view.findViewById(R.id.txt_filename);
-                txtFileName.setText(customFileName + ".apk");
+                txtFileName.setText(mCopyFileName);
                 txtFileName.setSelection(0,customFileName.length());
                 new AlertDialog.Builder(mContext)
                         .setTitle(R.string.input_new_name)

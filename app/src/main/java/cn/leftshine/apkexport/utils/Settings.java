@@ -44,6 +44,14 @@ public class Settings {
         sharedPreferences.edit().putBoolean(mContext.getString(R.string.key_is_auto_clean), autoClean).apply();
     }
 
+    public static boolean isExportDerect() {
+        return sharedPreferences.getBoolean(mContext.getString(R.string.key_is_export_direct), false);
+    }
+
+    public static void setExportDerect(boolean exportDirect) {
+        sharedPreferences.edit().putBoolean(mContext.getString(R.string.key_is_export_direct), exportDirect).apply();
+    }
+
     public static boolean isShowLocalApk() {
         return sharedPreferences.getBoolean(mContext.getString(R.string.key_is_show_local_apk), true);
     }

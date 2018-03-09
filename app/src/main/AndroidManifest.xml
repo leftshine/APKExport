@@ -48,25 +48,25 @@
         //在manifest注册Activity时，加入category,使得你的App在分享这些类型的数据时会被系统调起
         <activity
             android:name=".activity.SystemShareActivity"
-            android:label="使用APKExport导出本APP">
+            android:label="@string/super_export">
 
-            //注册分享文字
+            //注册单选分享
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
                 <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="text/plain"/>
+                <data android:mimeType="*/*"/>
             </intent-filter>
-            //注册分享单张图片
+            <!--//注册分享单张图片
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <data android:mimeType="image/*"/>
-            </intent-filter>
-            //注册分享多张图片
+            </intent-filter>-->
+            //注册多选分享
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE"/>
                 <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="image/*"/>
+                <data android:mimeType="*/*"/>
             </intent-filter>
 
         </activity>
