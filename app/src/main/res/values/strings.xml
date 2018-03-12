@@ -25,9 +25,14 @@
     <string name="share_to">Share %1$s to...</string>
 
     <string name="copy_right" translatable="false">Copyrights © %1$d</string>
-    <string name="about_page_description">APKExport is an app that you can use to export apks form apps installed in the phone</string>
+    <string name="about_page_description">APKExport is an app that you can use to export apks form apps installed in the phone.\\nThe unique “Super Export” feature allows you to export other app’s apk when the apps share content to APKExport.</string>
     <string name="about_feedback_title">QQ Group: %1$s</string>
     <string name="about_feedback_tips">QQ group number has been copied to clipboard!</string>
+
+    <string name="about_email_contact">Contact Us: leftshine@139.com</string>
+    <string name="about_email_contact_subject">Feed back of %1$s</string>
+    <string name="about_email_contact_text">I just want to say：</string>
+
     <string name="about_version_title">Version: %1$s</string>
 
     <string name="auto_clean_success">Clean cache success </string>
@@ -102,6 +107,7 @@
     <string name="action_about">about</string>
 
 
+
     <string name="version_name">Version Name</string>
     <string name="version_code">Version Code</string>
     <string name="export_file_name">File Name</string>
@@ -114,6 +120,7 @@
     <string name="share_file_name_default">Default</string>
 
     <string name="super_export">Super Export</string>
+    <string name="tip_direct_share">Direct Mode Running...</string>
 
 
 </resources>

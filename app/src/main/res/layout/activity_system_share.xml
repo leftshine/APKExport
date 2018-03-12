@@ -185,11 +185,13 @@
             android:inputType="text"
             android:text="FileName" />
     </RelativeLayout>
+
     <LinearLayout
+        android:id="@+id/ly_insert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@+id/ly_export_filename">
+        android:layout_below="@+id/ly_export_filename"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -285,6 +287,16 @@
         android:layout_alignBottom="@+id/btn_export"
         android:layout_alignTop="@+id/btn_export"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/txt_tip_direct_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        android:text="@string/tip_direct_share"
+        android:textColor="@android:color/holo_blue_dark" />
 
 </RelativeLayout>
 

@@ -26,9 +26,6 @@ public class FileHandler extends Handler {
 
     public FileHandler(Context context) {
         this.context = context;
-        if(progressDialog == null){
-            progressDialog = new ProgressDialog(context);
-        }
         if (mToast == null) {
             mToast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
         }
@@ -39,7 +36,7 @@ public class FileHandler extends Handler {
         switch (msg.what) {
             case MessageCode.MSG_COPY_START:
                 String message = (String)msg.obj;
-                showProgressDialog(message);
+                showProgressDialog(context,message);
                 break;
             case MessageCode.MSG_COPY_COMPLETE:
                 closeProgressDialog();
@@ -49,9 +46,11 @@ public class FileHandler extends Handler {
                 if(mode == FileUtils.MODE_EXPORT_SHARE||mode == FileUtils.MODE_EXPORT_RENAME_SHARE) {
                     fileUtils.startShare(shareFilePath);
                 }
-                /*if(Settings.isExportDerect()){
-                    System.exit(0);
-                }*/
+                if(Settings.isExportDerect()){
+                    //System.exit(0);
+                    SystemShareActivity systemShareActivity = (SystemShareActivity)context;
+                    systemShareActivity.finish();
+                }
                 break;
             case MessageCode.MSG_COPY_PROGRESS:
                 Long lprogress = (Long) msg.obj;
@@ -63,7 +62,8 @@ public class FileHandler extends Handler {
         }
         super.handleMessage(msg);
     }
-    public static void showProgressDialog(String msg) {
+    public static void showProgressDialog(Context context, String msg) {
+        progressDialog = new ProgressDialog(context);
         progressDialog.setTitle(R.string.exporting);
         progressDialog.setMessage(msg);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条

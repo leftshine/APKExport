@@ -1,5 +1,6 @@
 package cn.leftshine.apkexport.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,14 +14,18 @@ import android.os.Message;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,11 +48,12 @@ public class SystemShareActivity extends AppCompatActivity {
     private AppInfo appInfo;
     private final static String TAG = "SystemShareActivity";
     private ImageView share_appInfo_icon;
-    private TextView share_appInfo_appName,share_appInfo_packageName,share_appInfo_appSize,share_appInfo_appVersionName,share_appInfo_appVersionCode;
+    private TextView share_appInfo_appName,share_appInfo_packageName,share_appInfo_appSize,share_appInfo_appVersionName,share_appInfo_appVersionCode,txt_tip_direct_share;
     private ClearEditText txt_share_filename;
     private Button btn_export,btn_export_share;
     private Button btn_insert_divider,btn_insert_N, btn_insert_P, btn_insert_V, btn_insert_C, btn_insert_default;
-
+    private RelativeLayout ly_export_filename;
+    private LinearLayout ly_insert;
     private Handler mHandler;
     private FileUtils fileUtils;
     private boolean isDirectShare=false;
@@ -59,21 +65,17 @@ public class SystemShareActivity extends AppCompatActivity {
         mHandler = new FileHandler(mContext);
         fileUtils = new FileUtils(mContext);
         isDirectShare = Settings.isExportDerect();
-        setContentView(R.layout.activity_system_share);
         getAppInfo();
+        setContentView(R.layout.activity_system_share);
         bindView();
         initView();
         if (isDirectShare) {
-            //setTheme(android.R.style.Theme_Translucent);
-            //moveTaskToBack(isTaskRoot());
-            /*new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    shareDirect();
-                }
-            }).start();*/
+            ly_export_filename.setVisibility(View.INVISIBLE);
+            ly_insert.setVisibility(View.INVISIBLE);
+            btn_export.setVisibility(View.GONE);
+            btn_export_share.setVisibility(View.GONE);
+            txt_tip_direct_share.setVisibility(View.VISIBLE);
             shareDirect();
-            //finish();
         }
         //Log.i(TAG, "getCallingPackage: "+getCallingPackage());
     }
@@ -101,6 +103,9 @@ public class SystemShareActivity extends AppCompatActivity {
         btn_insert_V = findViewById(R.id.btn_share_insert_V);
         btn_insert_C = findViewById(R.id.btn_share_insert_C);
         btn_insert_default = findViewById(R.id.btn_share_insert_default);
+        ly_insert = findViewById(R.id.ly_insert);
+        ly_export_filename = findViewById(R.id.ly_export_filename);
+        txt_tip_direct_share = findViewById(R.id.txt_tip_direct_share);
     }
     private void initView() {
         share_appInfo_icon.setImageDrawable(appInfo.appIcon);
@@ -121,6 +126,7 @@ public class SystemShareActivity extends AppCompatActivity {
         btn_insert_V.setOnClickListener(onClickListener);
         btn_insert_C.setOnClickListener(onClickListener);
         btn_insert_default.setOnClickListener(onClickListener);
+        txt_tip_direct_share.setVisibility(View.GONE);
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override

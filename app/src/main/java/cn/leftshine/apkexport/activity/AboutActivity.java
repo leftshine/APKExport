@@ -15,6 +15,7 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 import cn.leftshine.apkexport.R;
+import cn.leftshine.apkexport.utils.AppUtils;
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
 
@@ -31,8 +32,9 @@ public class AboutActivity extends AppCompatActivity {
                 .setDescription(description)
                 .setImage(R.mipmap.ic_launcher)
                 .addItem(getVersionElement())
-                .addItem(getFeedbackElement())
-                .addEmail("leftshine@139.com")
+                .addItem(getQQGroupElement())
+                //.addEmail("leftshine@139.com")
+                .addItem(getFeedBackElement())
                 .addWebsite("https://www.cnblogs.com/leftshine/")
                 //.addGitHub("tiann")
                 .addItem(getCopyRightsElement())
@@ -42,6 +44,7 @@ public class AboutActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //setContentView(R.layout.activity_about);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -82,13 +85,30 @@ public class AboutActivity extends AppCompatActivity {
         return version;
     }
 
-    Element getFeedbackElement() {
-
+    Element getFeedBackElement() {
         Element feedback = new Element();
-        final String qqGroup = "610047919";
-        feedback.setTitle(getResources().getString(R.string.about_feedback_title, qqGroup));
-
+        feedback.setTitle(getResources().getString(R.string.about_email_contact));
+        feedback.setIconDrawable(mehdi.sakout.aboutpage.R.drawable.about_icon_email);
         feedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:leftshine@139.com"));
+                intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.about_email_contact_subject,AppUtils.getAppName(AboutActivity.this)));
+                intent.putExtra(Intent.EXTRA_TEXT,getResources().getString(R.string.about_email_contact_text));
+                startActivity(intent);
+            }
+        });
+        return feedback;
+    }
+
+    Element getQQGroupElement() {
+
+        Element qgroup = new Element();
+        final String qqGroup = "610047919";
+        qgroup.setTitle(getResources().getString(R.string.about_feedback_title, qqGroup));
+        qgroup.setIconDrawable(R.drawable.qgroup_32);
+        qgroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                  /*ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
@@ -100,7 +120,7 @@ public class AboutActivity extends AppCompatActivity {
 
             }
         });
-        return feedback;
+        return qgroup;
     }
     /****************
      *

@@ -15,9 +15,14 @@
     <string name="app_uninstall_failed">应用卸载失败</string>
     <string name="exporting">正在导出……</string>
     <string name="export_completed">"导出成功，文件保存在 "</string>
-    <string name="about_page_description">APKExport 是一个APK导出工具，你可以将手机中已安装的应用以APK格式导出并分享给你的朋友。\\n特别是方便上传到QQ群，避免群文件出现大量的base.apk 。\\n有问题欢迎加群反馈。</string>
-    <string name="about_feedback_title">官方QQ群: %1$s（点击加群）</string>
+    <string name="about_page_description">APKExport 是一个APK导出工具，你可以将手机中已安装的应用以APK格式导出并分享给你的朋友。\\n特别是方便上传到QQ群，避免群文件出现大量的base.apk 。\\n特有的“超级提取”功能，能够在其它应用分享内容到APKExport时提取该应用的apk，方便快捷！</string>
+    <string name="about_feedback_title">官方QQ群：%1$s（点击加群）</string>
     <string name="about_feedback_tips">群号已复制到剪贴板！</string>
+
+    <string name="about_email_contact">反馈建议：leftshine@139.com</string>
+    <string name="about_email_contact_subject">%1$s 反馈建议</string>
+    <string name="about_email_contact_text">我想说：</string>
+
     <string name="about_version_title">版本：%1$s</string>
     <string name="loading">加载中...</string>
     <string name="Refreshing">"刷新列表..."</string>
@@ -82,6 +87,7 @@
     <string name="share_after_export">提取后分享</string>
     <string name="share_file_name_default">默认</string>
     <string name="setting_export_direct_title">快速模式</string>
+    <string name="tip_direct_share">快速模式执行中...</string>
     <string name="setting_export_direct_summaryOff">超级导出将展示完整界面</string>
     <string name="setting_export_direct_summaryOn">超级导出将直接导出并分享</string>
     <string name="setting_super_export_title">超级导出</string>
@@ -89,4 +95,5 @@
     <string name="setting_restore_default_settings_title">恢复默认设置</string>
     <string name="setting_restore_default_settings_description">此操作会将所有设置恢复到默认状态，是否继续？</string>
     <string name="super_export">提取该应用的APK</string>
+
 </resources>
