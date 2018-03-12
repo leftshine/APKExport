@@ -105,6 +105,7 @@
     <string name="copy_success">Copy_Success:%1$s</string>
     <string name="custom_export_path_summary" translatable="false">APKExport</string>
     <string name="action_about">about</string>
+    <string name="action_help">help</string>
 
 
 

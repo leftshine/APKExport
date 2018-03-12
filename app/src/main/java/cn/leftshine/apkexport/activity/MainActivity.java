@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -294,6 +295,15 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, SettingActivity.class));
             return true;
         }
+
+        if(id == R.id.action_help)
+        {
+            Uri uri = Uri.parse("http://leftshine.gitee.io/apkexport/pages/help/index.html");
+            Intent it = new Intent(Intent.ACTION_VIEW,uri);
+            startActivity(it);
+            return true;
+        }
+
         if(id == R.id.action_about)
         {
             startActivity(new Intent(MainActivity.this, AboutActivity.class));
