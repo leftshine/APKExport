@@ -230,8 +230,10 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 										}
 										ClipData clipData = ClipData.newPlainText(null, copy_str);
 										ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-										cm.setPrimaryClip(clipData);
-										Toast.makeText(mContext,mContext.getString(R.string.copy_success, copy_str),Toast.LENGTH_SHORT).show();
+										if (cm != null) {
+											cm.setPrimaryClip(clipData);
+											Toast.makeText(mContext,mContext.getString(R.string.copy_success, copy_str),Toast.LENGTH_SHORT).show();
+										}
 									}
 								})
 								.show();

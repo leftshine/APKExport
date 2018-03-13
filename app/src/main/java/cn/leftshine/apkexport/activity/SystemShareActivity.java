@@ -2,6 +2,8 @@ package cn.leftshine.apkexport.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -42,6 +44,8 @@ import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.utils.ToolUtils;
 import cn.leftshine.apkexport.view.ClearEditText;
 
+import static cn.leftshine.apkexport.utils.ToolUtils.DEFAULT_COPY_DATA;
+
 public class SystemShareActivity extends AppCompatActivity {
 
     private Context mContext;
@@ -52,7 +56,7 @@ public class SystemShareActivity extends AppCompatActivity {
     private ClearEditText txt_share_filename;
     private Button btn_export,btn_export_share;
     private Button btn_insert_divider,btn_insert_N, btn_insert_P, btn_insert_V, btn_insert_C, btn_insert_default;
-    private RelativeLayout ly_export_filename;
+    private RelativeLayout share_appInfo, ly_export_filename;
     private LinearLayout ly_insert;
     private Handler mHandler;
     private FileUtils fileUtils;
@@ -88,6 +92,7 @@ public class SystemShareActivity extends AppCompatActivity {
 
 
     private void bindView() {
+        share_appInfo = findViewById(R.id.share_appInfo);
         share_appInfo_icon = findViewById(R.id.share_appInfo_icon);
         share_appInfo_appName = findViewById(R.id.share_appInfo_appName);
         share_appInfo_packageName =findViewById(R.id.share_appInfo_packageName);
@@ -118,6 +123,7 @@ public class SystemShareActivity extends AppCompatActivity {
         String customFileName = customFileNameFormat.replace("#N",appInfo.appName).replace("#P",appInfo.packageName).replace("#V",appInfo.versionName).replace("#C",String.valueOf(appInfo.versionCode))+".apk";
         txt_share_filename.setText(customFileName);
 
+        share_appInfo.setOnLongClickListener(onLongClickListener);
         btn_export.setOnClickListener(onClickListener);
         btn_export_share.setOnClickListener(onClickListener);
         btn_insert_divider.setOnClickListener(onClickListener);
@@ -128,6 +134,59 @@ public class SystemShareActivity extends AppCompatActivity {
         btn_insert_default.setOnClickListener(onClickListener);
         txt_tip_direct_share.setVisibility(View.GONE);
     }
+    View.OnLongClickListener onLongClickListener = new View.OnLongClickListener(){
+
+        @Override
+        public boolean onLongClick(View view) {
+            switch (view.getId()){
+                case R.id.share_appInfo:
+                    new AlertDialog.Builder(mContext)
+                            .setTitle(R.string.choose_next_action)
+                            .setItems(R.array.copy_info_actions, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+								/*
+								<item>复制应用名称</item>
+        						<item>复制包名</item>
+        						<item>复制版本号</item>
+        						<item>复制内部版本号</item>
+								 */
+                                    //ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                                    //ClipData clipData = ClipData.newPlainText(null, "");
+                                    String copy_str = DEFAULT_COPY_DATA;
+                                    switch (i) {
+                                        case 0:
+                                            copy_str = appInfo.getAppName();
+                                            //clipData = ClipData.newPlainText(null, info.getAppName());
+                                            break;
+                                        case 1:
+                                            copy_str = appInfo.getPackageName();
+                                            //clipData = ClipData.newPlainText(null, info.getPackageName());
+                                            break;
+                                        case 2:
+                                            copy_str = appInfo.getVersionName();
+                                            //clipData = ClipData.newPlainText(null, info.getVersionName());
+                                            break;
+                                        case 3:
+                                            copy_str = String.valueOf(appInfo.getVersionCode());
+                                            break;
+                                    }
+                                    ClipData clipData = ClipData.newPlainText(null, copy_str);
+                                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                                    if (cm != null) {
+                                        cm.setPrimaryClip(clipData);
+                                        Toast.makeText(mContext,mContext.getString(R.string.copy_success, copy_str),Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }
+                            })
+                            .show();
+                    break;
+            }
+            return false;
+        }
+    };
+
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
