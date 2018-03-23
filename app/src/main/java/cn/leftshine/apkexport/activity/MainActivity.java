@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mContentVp;
 
     private List<String> tabIndicators;
-    private List<Fragment> tabFragments;
+    private List<AppFragment> tabFragments;
     private ContentPagerAdapter contentAdapter;
     int sortType = 0;
     private ScanSdFilesReceiver scanReceiver;
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         tabIndicators.add(getString(R.string.user_app));
         fragmentUserApp = AppFragment.newInstance(ToolUtils.TYPE_USER);
         tabFragments.add(fragmentUserApp);
-        fragmentUserApp.loadWaitUI(true,false);
+        //fragmentUserApp.loadWaitUI(true,false);
 
         tabIndicators.add(getString(R.string.system_app));
         fragmentSystemApp = AppFragment.newInstance(ToolUtils.TYPE_SYSTEM);
@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
         contentAdapter = new ContentPagerAdapter(getSupportFragmentManager(),tabFragments,tabIndicators);
         mContentVp.setAdapter(contentAdapter);
+        mContentVp.setOffscreenPageLimit(2);// 设置缓存页面，当前页面的相邻N各页面都会被缓存
         mContentVp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -170,8 +171,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                mContentVp.setCurrentItem(position);
                 currentFragment = (AppFragment)contentAdapter.getItem(position);
-                currentFragment.load(true,false);
+                //currentFragment.load(true,false);
                 //currentFragment.loadWaitUI();
             }
 
@@ -244,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
         if(Settings.isIsNeedLoad()){
             //currentFragment.refresh(true);
             currentFragment.loadWaitUI(true,false);
+            //allFragmentReload();
         }
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if(!cm.hasPrimaryClip())
@@ -370,6 +373,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                             Settings.setSortOrder("300");
                             //currentFragment.refresh(true);
+                            //allFragmentReload();
                             currentFragment.loadWaitUI(true,false);
                         }
                     })
@@ -402,6 +406,7 @@ public class MainActivity extends AppCompatActivity {
                             Settings.setSortOrder("301");
                             //currentFragment.refresh(true);
                             currentFragment.loadWaitUI(true,false);
+                            //allFragmentReload();
                         }
                     })
                     .show();
@@ -410,6 +415,13 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+/*    private void allFragmentReload() {
+        for(AppFragment fragment:tabFragments){
+            fragment.loadWaitUI(true,false);
+        }
+
+    }*/
 
     private class ScanSdFilesReceiver extends BroadcastReceiver {
         public void onReceive(Context context, Intent intent) {

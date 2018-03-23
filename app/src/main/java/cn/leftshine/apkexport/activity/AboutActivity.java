@@ -35,7 +35,9 @@ public class AboutActivity extends AppCompatActivity {
                 .addItem(getQQGroupElement())
                 //.addEmail("leftshine@139.com")
                 .addItem(getFeedBackElement())
-                .addWebsite("https://www.cnblogs.com/leftshine/")
+                //.addWebsite("https://www.cnblogs.com/leftshine/")
+                .addItem(getWebsiteElement(mehdi.sakout.aboutpage.R.drawable.about_icon_link,getResources().getString(R.string.about_website_title),"http://leftshine.gitee.io/apkexport/"))
+                .addItem(getWebsiteElement(R.drawable.donate,getResources().getString(R.string.about_donate_title),"http://leftshine.gitee.io/apkexport/pages/donate/index.html"))
                 //.addGitHub("tiann")
                 .addItem(getCopyRightsElement())
                 .create();
@@ -100,6 +102,22 @@ public class AboutActivity extends AppCompatActivity {
             }
         });
         return feedback;
+    }
+
+    Element getWebsiteElement(int icon, String title, final String url) {
+
+        Element websiteElement = new Element();
+        websiteElement.setTitle(title);
+        websiteElement.setIconDrawable(icon);
+        websiteElement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri uri = Uri.parse(url);
+                Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+                startActivity(intent);
+            }
+        });
+        return websiteElement;
     }
 
     Element getQQGroupElement() {

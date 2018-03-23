@@ -24,6 +24,9 @@
     <string name="about_email_contact_subject">%1$s 反馈建议</string>
     <string name="about_email_contact_text">我想说：</string>
 
+    <string name="about_website_title">访问应用主页</string>
+    <string name="about_donate_title">请我吃辣条</string>
+
     <string name="about_version_title">版本：%1$s</string>
     <string name="loading">加载中...</string>
     <string name="Refreshing">"刷新列表..."</string>

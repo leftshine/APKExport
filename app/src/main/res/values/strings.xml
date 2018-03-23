@@ -33,6 +33,9 @@
     <string name="about_email_contact_subject">Feed back of %1$s</string>
     <string name="about_email_contact_text">I just want to say：</string>
 
+    <string name="about_website_title">Visit Our Home Page Online</string>
+    <string name="about_donate_title">Want to offer me a cup of coffee?</string>
+
     <string name="about_version_title">Version: %1$s</string>
 
     <string name="auto_clean_success">Clean cache success </string>

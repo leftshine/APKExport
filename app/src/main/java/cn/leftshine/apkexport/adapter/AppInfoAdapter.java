@@ -22,15 +22,12 @@ import android.widget.Toast;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.handler.FileHandler;
 import cn.leftshine.apkexport.utils.AppInfo;
-import cn.leftshine.apkexport.utils.CharacterParser;
 import cn.leftshine.apkexport.utils.FileUtils;
 import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.utils.ToolUtils;
@@ -43,7 +40,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 	LayoutInflater mInflater;
 	//SortComparator localSortComparator;
 	private List<AppInfo> mLists = new ArrayList<AppInfo>();
-	private List<AppInfo> backLists = new ArrayList<AppInfo>();
+	private List<AppInfo> fullLists = new ArrayList<AppInfo>();
 	//private CharacterParser characterParser;
 	MyFilter mFilter;
 	Context mContext;
@@ -57,7 +54,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 		mInflater = LayoutInflater.from(mContext);
 		//localSortComparator = new SortComparator();
 		mLists = list;
-		backLists = mLists;
+		fullLists = mLists;
 		//characterParser = CharacterParser.getInstance();
 
 		mType = type;
@@ -66,6 +63,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 	}
 	public void setDataList(List<AppInfo> list) {
 		mLists = list;
+		fullLists = mLists;
 		notifyDataSetChanged();
 	}
 
@@ -451,10 +449,10 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 			List<AppInfo> list;
 
 			if (TextUtils.isEmpty(charSequence)) {//当过滤的关键字为空的时候，我们则显示所有的数据
-				list = backLists;
+				list = fullLists;
 			} else {//否则把符合条件的数据对象添加到集合中
 				list = new ArrayList<AppInfo>();
-				for (AppInfo appInfo : backLists) {
+				for (AppInfo appInfo : fullLists) {
 					if (appInfo.getAppName().toUpperCase().contains(charSequence.toString().toUpperCase()) || appInfo.getPackageName().toUpperCase().contains(charSequence.toString().toUpperCase())) {
 						Log.i(TAG, "performFiltering:" + appInfo.toString());
 						list.add(appInfo);
