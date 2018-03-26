@@ -46,7 +46,7 @@ public class FileHandler extends Handler {
                 if(mode == FileUtils.MODE_EXPORT_SHARE||mode == FileUtils.MODE_EXPORT_RENAME_SHARE) {
                     fileUtils.startShare(shareFilePath);
                 }
-                if(Settings.isExportDerect()){
+                if(context instanceof SystemShareActivity&&Settings.isExportDerect()){
                     //System.exit(0);
                     SystemShareActivity systemShareActivity = (SystemShareActivity)context;
                     systemShareActivity.finish();
