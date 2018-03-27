@@ -1,5 +1,6 @@
 package cn.leftshine.apkexport.utils;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.FileProvider;
+import android.support.v4.content.PermissionChecker;
 import android.util.Log;
 import android.view.View;
 
@@ -20,6 +22,8 @@ import java.io.FileOutputStream;
 
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.view.ClearEditText;
+
+import static cn.leftshine.apkexport.utils.PermisionUtils.*;
 
 /**
  * Created by Administrator on 2018/1/24.
@@ -88,14 +92,22 @@ public class FileUtils {
             mFolder.mkdir();
         }
         final String mCopypath = new File(mFolder.getAbsolutePath(), mCopyFileName).getPath();
-        //开启子线程
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //copyFile(mCurrentAppPath,mCopyFileName);
-                copyFile(mHandler,mCurrentAppPath,mCopypath,mode);
-            }
-        }).start();
+        //PermissionChecker.checkPermission(mContext,)
+        if(verifyStoragePermissions((Activity) mContext)){
+            //已获得权限
+            //开启子线程
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    //copyFile(mCurrentAppPath,mCopyFileName);
+                    copyFile(mHandler,mCurrentAppPath,mCopypath,mode);
+                }
+            }).start();
+        }else{
+            // 未获得权限
+            requestStoragePermissions((Activity) mContext);
+        }
+
     }
 
     /**

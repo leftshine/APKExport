@@ -17,8 +17,10 @@
     <string name="exporting">正在导出……</string>
     <string name="export_completed">"导出成功，文件保存在 "</string>
     <string name="about_page_description">APKExport 是一个APK导出工具，你可以将手机中已安装的应用以APK格式导出并分享给你的朋友。\\n特别是方便上传到QQ群，避免群文件出现大量的base.apk 。\\n特有的“超级提取”功能，能够在其它应用分享内容到APKExport时提取该应用的apk，方便快捷！</string>
-    <string name="about_feedback_title">官方QQ群：%1$s（点击加群）</string>
+    <string name="about_feedback_title">官方QQ群：%1$s（付费，点击加群）</string>
+    <string name="about_feedback_title2">官方QQ群：%1$s（点击加群）</string>
     <string name="about_feedback_tips">群号已复制到剪贴板！</string>
+    <string name="about_no_QQ_app">未安装手Q或安装的版本不支持跳转</string>
 
     <string name="about_email_contact">反馈建议：leftshine@139.com</string>
     <string name="about_email_contact_subject">%1$s 反馈建议</string>
@@ -100,9 +102,11 @@
     <string name="setting_restore_default_settings_description">此操作会将所有设置恢复到默认状态，是否继续？</string>
     <string name="super_export">提取该应用的APK</string>
 
-    <string name="storage_permission_dialog_content">导出APK文件需要读写存储器权限，如果不授予应用将无法正常使用</string>
+    <string name="storage_permission_dialog_content">扫描本地APK文件需要文件访问权限，如果不授予应用将无法正常使用</string>
     <string name="storage_permission_dialog_negative">就是不给</string>
     <string name="storage_permission_dialog_positive">好的，重新选择</string>
     <string name="storage_permission_dialog_go_setting">好的，去授权</string>
+    <string name="storage_permission_copy_dialog_content">执行导出操作需要文件访问权限，如果不授予应用将无法正常使用</string>
+    <string name="storage_permission_obtain_toast">成功取得文件访问权限，请重新执行相关操作</string>
 
 </resources>

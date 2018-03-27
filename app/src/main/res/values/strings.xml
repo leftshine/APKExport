@@ -26,15 +26,17 @@
 
     <string name="copy_right" translatable="false">Copyrights © %1$d</string>
     <string name="about_page_description">APKExport is an app that you can use to export apks form apps installed in the phone.\\nThe unique “Super Export” feature allows you to export other app’s apk when the apps share content to APKExport.</string>
-    <string name="about_feedback_title">QQ Group: %1$s</string>
+    <string name="about_feedback_title">QQ Group#1: %1$s</string>
+    <string name="about_feedback_title2">QQ Group#2: %1$s</string>
     <string name="about_feedback_tips">QQ group number has been copied to clipboard!</string>
+    <string name="about_no_QQ_app">Can not Launch QQ App</string>
 
     <string name="about_email_contact">Contact Us: leftshine@139.com</string>
     <string name="about_email_contact_subject">Feed back of %1$s</string>
     <string name="about_email_contact_text">I just want to say：</string>
 
-    <string name="about_website_title">Visit Our Home Page Online</string>
-    <string name="about_donate_title">Want to offer me a cup of coffee?</string>
+    <string name="about_website_title">Visit our home page online</string>
+    <string name="about_donate_title">Want to offer us a cup of coffee?</string>
 
     <string name="about_version_title">Version: %1$s</string>
 
@@ -63,7 +65,7 @@
 
 
     <string name="setting_show_local_apk_title">Show Local Apk Tab(take effect until the next launch)</string>
-    <string name="setting_show_local_apk_summaryOff">LOCAL-APK tab ss hidden</string>
+    <string name="setting_show_local_apk_summaryOff">LOCAL-APK tab is hidden</string>
     <string name="setting_show_local_apk_summaryOn">LOCAL-APK tab is displayed</string>
 
     <string name="custom_file_name">Custom File Name Format</string>
@@ -126,8 +128,11 @@
     <string name="super_export">Super Export</string>
     <string name="tip_direct_share">Direct Mode Running...</string>
 
-    <string name="storage_permission_dialog_content">Can Not Scan The APK Files Without Storage Permission</string>
+    <string name="storage_permission_dialog_content">Can not scan the APK files without storage permission</string>
     <string name="storage_permission_dialog_positive">OK, let me try again</string>
     <string name="storage_permission_dialog_go_setting">OK, Go to Setting</string>
     <string name="storage_permission_dialog_negative">No</string>
+    <string name="storage_permission_copy_dialog_content">Can not export APK files without the storage permission</string>
+    <string name="storage_permission_obtain_toast">Storage permission granted. Now you can go on.</string>
+
 </resources>

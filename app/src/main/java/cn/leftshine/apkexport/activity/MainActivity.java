@@ -1,6 +1,7 @@
 package cn.leftshine.apkexport.activity;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -9,10 +10,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -33,6 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -191,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //请出缓存
+    //清除缓存
     private boolean deleteCache() {
         //File mFolder = new File( Environment.getExternalStorageDirectory()+File.separator+"APKExport");
         File mFolder = new File(Settings.getCustomExportPath());
@@ -208,6 +212,66 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    //运行时权限请求结果
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        final Activity activity = this;
+        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 授予权限，继续操作
+                Toast.makeText(this,R.string.storage_permission_obtain_toast,Toast.LENGTH_SHORT).show();
+            } else {
+                if(isNeverAskStoragePermissions(activity)){
+                    //权限被拒绝，并勾选不再提示
+                    //解释原因，并且引导用户至设置页手动授权
+                    new AlertDialog.Builder(activity)
+                            .setCancelable(false)
+                            .setMessage(R.string.storage_permission_copy_dialog_content)
+                            .setPositiveButton(R.string.storage_permission_dialog_go_setting, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //isOnPermission = true;
+                                    //引导用户至设置页手动授权
+                                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    Uri uri = Uri.fromParts("package", activity.getApplicationContext().getPackageName(), null);
+                                    intent.setData(uri);
+                                    startActivity(intent);
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setNegativeButton(R.string.storage_permission_dialog_negative, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    //finish();
+                                }
+                            }).show();
+                }else {
+                    //权限被拒绝
+                    //Toast.makeText(this, "请求权限被拒绝", Toast.LENGTH_SHORT).show();
+                    new AlertDialog.Builder(activity)
+                            .setCancelable(false)
+                            .setMessage(R.string.storage_permission_copy_dialog_content)
+                            .setPositiveButton(R.string.storage_permission_dialog_positive, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    requestStoragePermissions(activity);
+                                }
+                            })
+                            .setNegativeButton(R.string.storage_permission_dialog_negative, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    //finish();
+                                }
+                            })
+                            .show();
+                }
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
     //对返回键进行监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

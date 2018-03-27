@@ -298,7 +298,7 @@ public class SettingActivityFragment extends PreferenceFragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == LOCAL_APK_REQUEST_EXTERNAL_STORAGE) {
+        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // 授予权限，继续操作
                 //Settings.setShowLocalApk(true);
@@ -326,8 +326,7 @@ public class SettingActivityFragment extends PreferenceFragment {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    Settings.setShowLocalApk(false);
-                                    initViews();
+                                    prefIsShowLocalApk.setChecked(false);
                                     //finish();
                                 }
                             }).show();
@@ -347,8 +346,7 @@ public class SettingActivityFragment extends PreferenceFragment {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    Settings.setShowLocalApk(false);
-                                    initViews();
+                                    prefIsShowLocalApk.setChecked(false);
                                     //finish();
                                 }
                             })

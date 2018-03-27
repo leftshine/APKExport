@@ -32,7 +32,8 @@ public class AboutActivity extends AppCompatActivity {
                 .setDescription(description)
                 .setImage(R.mipmap.ic_launcher)
                 .addItem(getVersionElement())
-                .addItem(getQQGroupElement())
+                .addItem(getQQGroupElement(getResources().getString(R.string.about_feedback_title, "610047919"),"kxVc87XQ3TzFECy3YhETolYKBS11-iE6"))
+                .addItem(getQQGroupElement(getResources().getString(R.string.about_feedback_title2, "427159859"),"MLFoNWi_oAOF5A77cv2ek8PnGTMKLIzv"))
                 //.addEmail("leftshine@139.com")
                 .addItem(getFeedBackElement())
                 //.addWebsite("https://www.cnblogs.com/leftshine/")
@@ -120,11 +121,10 @@ public class AboutActivity extends AppCompatActivity {
         return websiteElement;
     }
 
-    Element getQQGroupElement() {
+    Element getQQGroupElement(String title, final String key) {
 
         Element qgroup = new Element();
-        final String qqGroup = "610047919";
-        qgroup.setTitle(getResources().getString(R.string.about_feedback_title, qqGroup));
+        qgroup.setTitle(title);
         qgroup.setIconDrawable(R.drawable.qgroup_32);
         qgroup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +134,7 @@ public class AboutActivity extends AppCompatActivity {
                 clipboardManager.setPrimaryClip(ClipData.newPlainText(null, qqGroup));
             }
             Toast.makeText(v.getContext(), getResources().getString(R.string.about_feedback_tips), Toast.LENGTH_SHORT).show();*/
-                joinQQGroup("kxVc87XQ3TzFECy3YhETolYKBS11-iE6");
+                joinQQGroup(key);
 
             }
         });
@@ -157,6 +157,7 @@ public class AboutActivity extends AppCompatActivity {
             return true;
         } catch (Exception e) {
             // 未安装手Q或安装的版本不支持
+            Toast.makeText(this,R.string.about_no_QQ_app,Toast.LENGTH_SHORT).show();
             return false;
         }
     }
