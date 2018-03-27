@@ -100,4 +100,9 @@
     <string name="setting_restore_default_settings_description">此操作会将所有设置恢复到默认状态，是否继续？</string>
     <string name="super_export">提取该应用的APK</string>
 
+    <string name="storage_permission_dialog_content">导出APK文件需要读写存储器权限，如果不授予应用将无法正常使用</string>
+    <string name="storage_permission_dialog_negative">就是不给</string>
+    <string name="storage_permission_dialog_positive">好的，重新选择</string>
+    <string name="storage_permission_dialog_go_setting">好的，去授权</string>
+
 </resources>

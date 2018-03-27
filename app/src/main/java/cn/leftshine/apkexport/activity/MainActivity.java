@@ -46,7 +46,7 @@ import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.utils.ToolUtils;
 import cn.leftshine.apkexport.view.ZoomOutPageTransformer;
 
-import static cn.leftshine.apkexport.utils.PermisionUtils.verifyStoragePermissions;
+import static cn.leftshine.apkexport.utils.PermisionUtils.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        verifyStoragePermissions(this);
+        //verifyStoragePermissions(this);
         fileUtils =new FileUtils(this);
         setContentView(R.layout.activity_main);
         ly_app_bar = findViewById(R.id.ly_app_bar);
@@ -152,10 +152,17 @@ public class MainActivity extends AppCompatActivity {
         tabFragments.add(fragmentSystemApp);
 
         if(Settings.isShowLocalApk()) {
-            tabIndicators.add(getString(R.string.local_apk));
-            fragmentLocalApp = AppFragment.newInstance(ToolUtils.TYPE_LOCAL);
-            tabFragments.add(fragmentLocalApp);
-            FileUtils.notifyMediaScan();
+            if(verifyStoragePermissions(this)){
+                //已获得权限
+                tabIndicators.add(getString(R.string.local_apk));
+                fragmentLocalApp = AppFragment.newInstance(ToolUtils.TYPE_LOCAL);
+                tabFragments.add(fragmentLocalApp);
+                FileUtils.notifyMediaScan();
+            }else{
+                // 未获得权限
+                Settings.setShowLocalApk(false);
+                //requestStoragePermissions(this);
+            }
         }
 
         currentFragment = fragmentUserApp;

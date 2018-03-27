@@ -56,8 +56,8 @@ public class Settings {
         return sharedPreferences.getBoolean(mContext.getString(R.string.key_is_show_local_apk), true);
     }
 
-    public static void setShowLocalApk(boolean autoClean) {
-        sharedPreferences.edit().putBoolean(mContext.getString(R.string.key_is_show_local_apk), autoClean).apply();
+    public static void setShowLocalApk(boolean showLocalApk) {
+        sharedPreferences.edit().putBoolean(mContext.getString(R.string.key_is_show_local_apk), showLocalApk).apply();
     }
 
     public static String getCustomFileNameFormat() {

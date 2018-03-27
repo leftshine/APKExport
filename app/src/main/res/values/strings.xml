@@ -63,8 +63,8 @@
 
 
     <string name="setting_show_local_apk_title">Show Local Apk Tab(take effect until the next launch)</string>
-    <string name="setting_show_local_apk_summaryOff">"Local Apk" Tab Is Hidden</string>
-    <string name="setting_show_local_apk_summaryOn">"Local Apk" Tab Is Displayed</string>
+    <string name="setting_show_local_apk_summaryOff">LOCAL-APK tab ss hidden</string>
+    <string name="setting_show_local_apk_summaryOn">LOCAL-APK tab is displayed</string>
 
     <string name="custom_file_name">Custom File Name Format</string>
     <string name="custom_file_name_summary">Click to set the filename format</string>
@@ -107,8 +107,8 @@
 
     <string name="copy_success">Copy_Success:%1$s</string>
     <string name="custom_export_path_summary" translatable="false">APKExport</string>
-    <string name="action_about">about</string>
-    <string name="action_help">help</string>
+    <string name="action_about">About</string>
+    <string name="action_help">Help</string>
 
 
 
@@ -126,5 +126,8 @@
     <string name="super_export">Super Export</string>
     <string name="tip_direct_share">Direct Mode Running...</string>
 
-
+    <string name="storage_permission_dialog_content">Can Not Scan The APK Files Without Storage Permission</string>
+    <string name="storage_permission_dialog_positive">OK, let me try again</string>
+    <string name="storage_permission_dialog_go_setting">OK, Go to Setting</string>
+    <string name="storage_permission_dialog_negative">No</string>
 </resources>

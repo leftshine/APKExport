@@ -2,10 +2,13 @@ package cn.leftshine.apkexport.fragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -13,12 +16,12 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -26,18 +29,18 @@ import android.widget.TextView;
 import com.github.angads25.filepicker.view.FilePickerPreference;
 
 import cn.leftshine.apkexport.R;
-import cn.leftshine.apkexport.activity.SettingActivity;
-import cn.leftshine.apkexport.activity.SystemShareActivity;
 import cn.leftshine.apkexport.utils.AppUtils;
 import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.view.ClearEditText;
+
+import static cn.leftshine.apkexport.utils.PermisionUtils.*;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class SettingActivityFragment extends PreferenceFragment {
 
-    private SwitchPreference prefIsAutoClean;
+    private SwitchPreference prefIsAutoClean,prefIsShowLocalApk;
     private EditTextPreference prefCustomFileNameformat;
     private Preference prefRestoreDefaultSettings;
     private ListPreference prefLongPressAction;
@@ -56,6 +59,7 @@ public class SettingActivityFragment extends PreferenceFragment {
     private TextView txt_custom_filename_preview;
     private String str_custom_filename_format,str_custom_export_path;
     private Context context;
+    private Fragment fragment;
     private FilePickerPreference prefCustomExportPath;
 
 
@@ -67,6 +71,7 @@ public class SettingActivityFragment extends PreferenceFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this.getActivity();
+        fragment = this;
         addPreferencesFromResource(cn.leftshine.apkexport.R.xml.preferences);
         //getPreferenceManager().setSharedPreferencesName(Settings.SETTING_PREF_NAME);
         Settings.setIsNeedLoad(false);
@@ -74,6 +79,8 @@ public class SettingActivityFragment extends PreferenceFragment {
     }
 
     private void initViews() {
+        prefIsShowLocalApk =  (SwitchPreference)findPreference(getString(R.string.key_is_show_local_apk));
+        prefIsShowLocalApk.setOnPreferenceChangeListener(preferenceChangeListener);
         prefIsAutoClean = (SwitchPreference)findPreference(getString(R.string.key_is_auto_clean));
         prefCustomFileNameformat= (EditTextPreference)findPreference(getString(R.string.key_custom_filename_format));
         prefRestoreDefaultSettings = (Preference)findPreference(getString(R.string.key_restore_default_settings));
@@ -85,6 +92,7 @@ public class SettingActivityFragment extends PreferenceFragment {
         prefCustomExportPath = (FilePickerPreference)findPreference(getString(R.string.key_custom_export_path));
         //prefCustomExportPath.setOnPreferenceClickListener(preferenceclickListener);
         prefCustomExportPath.setOnPreferenceChangeListener(preferenceChangeListener);
+
         prefCustomExportPath.setSummary(Settings.getCustomExportPath());
 
         prefLongPressAction = (ListPreference)findPreference(getString(cn.leftshine.apkexport.R.string.key_long_press_action));
@@ -98,14 +106,19 @@ public class SettingActivityFragment extends PreferenceFragment {
         sortOrder = (ListPreference)findPreference(getString(cn.leftshine.apkexport.R.string.key_sort_order));
         sortOrder.setOnPreferenceChangeListener(preferenceChangeListener);
         sortOrder.setSummary(sortOrder.getEntry());
-
+        if (!verifyStoragePermissions(getActivity())) {
+            //未获得权限
+            prefIsShowLocalApk.setChecked(false);
+        }
     }
+
     Preference.OnPreferenceClickListener preferenceclickListener=new Preference.OnPreferenceClickListener() {
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
             // TODO Auto-generated method stub
             //Log.d("config","clickListener");
+
 
             if(preference.getKey().equals(getResources().getString(R.string.key_custom_filename_format)))
             {
@@ -230,6 +243,7 @@ public class SettingActivityFragment extends PreferenceFragment {
     Preference.OnPreferenceChangeListener preferenceChangeListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object o) {
+
            if(getString(R.string.key_custom_filename_format).equals(preference.getKey())) {
                String otr = o.toString();
                str_custom_filename_format = txt_custom_filename_format.getText().toString();
@@ -239,7 +253,19 @@ public class SettingActivityFragment extends PreferenceFragment {
            /*}else if(getString(R.string.key_restore_default_settings).equals(preference.getKey())){
                Log.i("Settings", "key_restore_default_settings");
                return false;*/
-
+           }else if(preference.getKey().equals(getResources().getString(R.string.key_is_show_local_apk))){
+               if((Boolean)o) {
+                   if (verifyStoragePermissions(getActivity())) {
+                       //已获得权限
+                       return true;
+                   } else {
+                       //Settings.setShowLocalApk(false);
+                       // 未获得权限
+                       requestStoragePermissions(fragment);
+                       return false;
+                   }
+               }
+               return true;
            }else if(getString(R.string.key_custom_export_path).equals(preference.getKey())){
                //str_custom_export_path = txt_custom_export_path.getText().toString();
                String value=(String)o;
@@ -269,6 +295,70 @@ public class SettingActivityFragment extends PreferenceFragment {
            }
         }
     };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == LOCAL_APK_REQUEST_EXTERNAL_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 授予权限，继续操作
+                //Settings.setShowLocalApk(true);
+                prefIsShowLocalApk.setChecked(true);
+            } else {
+                if(isNeverAskStoragePermissions(this)){
+                    //权限被拒绝，并勾选不再提示
+                    //解释原因，并且引导用户至设置页手动授权
+                    new AlertDialog.Builder(this.getActivity())
+                            .setCancelable(false)
+                            .setMessage(R.string.storage_permission_dialog_content)
+                            .setPositiveButton(R.string.storage_permission_dialog_go_setting, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //isOnPermission = true;
+                                    //引导用户至设置页手动授权
+                                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    Uri uri = Uri.fromParts("package", getActivity().getApplicationContext().getPackageName(), null);
+                                    intent.setData(uri);
+                                    startActivity(intent);
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setNegativeButton(R.string.storage_permission_dialog_negative, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    Settings.setShowLocalApk(false);
+                                    initViews();
+                                    //finish();
+                                }
+                            }).show();
+                }else {
+                    //权限被拒绝
+                    //Toast.makeText(this, "请求权限被拒绝", Toast.LENGTH_SHORT).show();
+                    new AlertDialog.Builder(this.getActivity())
+                            .setCancelable(false)
+                            .setMessage(R.string.storage_permission_dialog_content)
+                            .setPositiveButton(R.string.storage_permission_dialog_positive, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    requestStoragePermissions(fragment);
+                                }
+                            })
+                            .setNegativeButton(R.string.storage_permission_dialog_negative, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    Settings.setShowLocalApk(false);
+                                    initViews();
+                                    //finish();
+                                }
+                            })
+                            .show();
+                }
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 
     /**获取EditText光标所在的位置*/
     private int getEditTextCursorIndex(EditText mEditText){
