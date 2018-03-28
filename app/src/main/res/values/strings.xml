@@ -64,9 +64,9 @@
     <string name="setting_export_direct_summaryOn">Use direct-mode for super export </string>
 
 
-    <string name="setting_show_local_apk_title">Show Local Apk Tab(take effect until the next launch)</string>
-    <string name="setting_show_local_apk_summaryOff">LOCAL-APK tab is hidden</string>
-    <string name="setting_show_local_apk_summaryOn">LOCAL-APK tab is displayed</string>
+    <string name="setting_show_local_apk_title">Show Local Apk Tab</string>
+    <string name="setting_show_local_apk_summaryOff">Hide (Modify will take effect until the next launch)</string>
+    <string name="setting_show_local_apk_summaryOn">Display (Modift will take effect until the next launch)</string>
 
     <string name="custom_file_name">Custom File Name Format</string>
     <string name="custom_file_name_summary">Click to set the filename format</string>
@@ -133,6 +133,13 @@
     <string name="storage_permission_dialog_go_setting">OK, Go to Setting</string>
     <string name="storage_permission_dialog_negative">No</string>
     <string name="storage_permission_copy_dialog_content">Can not export APK files without the storage permission</string>
+    <string name="storage_permission_auto_clean_dialog_content">Can not delete APK files without the storage permission</string>
     <string name="storage_permission_obtain_toast">Storage permission granted. Now you can go on.</string>
+    <string name="tip_copy_failed">copy failed</string>
+    <string name="tip_share_failed">share failed</string>
+    <string name="tip_eamil_ActivityNotFoundException">No App found to send email</string>
+    <string name="tip_eamil_failed">email failed</string>
+    <string name="tip_auto_clean_closed">No storage permission,Auto-Clean Closed</string>
+    <string name="tip_local_apk_closed">No storage permission,Local Apk Tab Hidden</string>
 
 </resources>

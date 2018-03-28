@@ -15,6 +15,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.content.PermissionChecker;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -164,6 +165,7 @@ public class FileUtils {
         }
         catch (Exception e) {
             Log.e(TAG,"复制文件出错-e:"+e);
+            Toast.makeText(mContext,R.string.tip_copy_failed,Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
@@ -192,6 +194,7 @@ public class FileUtils {
             shareIntent.setType("application/vnd.android.package-archive");
             mContext.startActivity(Intent.createChooser(shareIntent,(mContext.getString(R.string.share_to, fileName))));
         }catch (Exception e){
+            Toast.makeText(mContext,R.string.tip_share_failed,Toast.LENGTH_SHORT).show();
             Log.e(TAG, "share failed: "+e);
         }
     }

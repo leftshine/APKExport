@@ -11,6 +11,8 @@ public class PermisionUtils {
 
     // Storage Permissions
     public static final int REQUEST_EXTERNAL_STORAGE = 1;
+    public static final int REQUEST_EXTERNAL_STORAGE_SHOWLOCALAPK = 2;
+    public static final int REQUEST_EXTERNAL_STORAGE_AUTOCLEAN = 3;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -37,6 +39,11 @@ public class PermisionUtils {
     public static void requestStoragePermissions(Fragment fragment) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             fragment.requestPermissions(PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+        }
+    }
+    public static void requestStoragePermissions(Fragment fragment,int requestCode) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            fragment.requestPermissions(PERMISSIONS_STORAGE, requestCode);
         }
     }
     public static void requestStoragePermissions(Activity activity) {

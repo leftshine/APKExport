@@ -109,7 +109,13 @@ public class MainActivity extends AppCompatActivity {
         });
         //getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         if(Settings.isAutoClean()) {
-            Snackbar.make(fab, deleteCache() ? getString(R.string.auto_clean_success) :getString(R.string.auto_clean_fail), Snackbar.LENGTH_LONG).show();
+            if(verifyStoragePermissions(this)) {
+                //Snackbar.make(fab, deleteCache() ? getString(R.string.auto_clean_success) : getString(R.string.auto_clean_fail), Snackbar.LENGTH_LONG).show();
+                deleteCache();
+            }else{
+                Settings.setAutoClean(false);
+                Toast.makeText(this,R.string.tip_auto_clean_closed,Toast.LENGTH_SHORT).show();
+            }
         }
 
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_MEDIA_SCANNER_STARTED);
@@ -165,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 // 未获得权限
                 Settings.setShowLocalApk(false);
+                Toast.makeText(this,R.string.tip_local_apk_closed,Toast.LENGTH_SHORT).show();
                 //requestStoragePermissions(this);
             }
         }
@@ -196,20 +203,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //清除缓存
-    private boolean deleteCache() {
+    private void deleteCache() {
         //File mFolder = new File( Environment.getExternalStorageDirectory()+File.separator+"APKExport");
-        File mFolder = new File(Settings.getCustomExportPath());
-        if (mFolder.exists()) {
-            if (mFolder.isDirectory())
-            {
-                for(File file : mFolder.listFiles())
-                {
-                    file.delete();
+        boolean isDeleteSucecss = false;
+        try {
+            File mFolder = new File(Settings.getCustomExportPath());
+            if (mFolder.exists()) {
+                if (mFolder.isDirectory() && mFolder.listFiles() != null) {
+                    for (File file : mFolder.listFiles()) {
+                        file.delete();
+                    }
+                    //return true;
+                    isDeleteSucecss = true;
                 }
-                return true;
             }
+        }catch (Exception e){
+            isDeleteSucecss = false;
         }
-        return false;
+        final boolean finalIsDeleteSucecss = isDeleteSucecss;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Snackbar.make(fab, finalIsDeleteSucecss ? getString(R.string.auto_clean_success) : getString(R.string.auto_clean_fail), Snackbar.LENGTH_LONG).show();
+            }
+        });
+        //return false;
     }
 
     //运行时权限请求结果

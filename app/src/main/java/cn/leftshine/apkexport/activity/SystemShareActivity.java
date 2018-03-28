@@ -10,9 +10,11 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,6 +46,9 @@ import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.utils.ToolUtils;
 import cn.leftshine.apkexport.view.ClearEditText;
 
+import static cn.leftshine.apkexport.utils.PermisionUtils.REQUEST_EXTERNAL_STORAGE;
+import static cn.leftshine.apkexport.utils.PermisionUtils.isNeverAskStoragePermissions;
+import static cn.leftshine.apkexport.utils.PermisionUtils.requestStoragePermissions;
 import static cn.leftshine.apkexport.utils.ToolUtils.DEFAULT_COPY_DATA;
 
 public class SystemShareActivity extends AppCompatActivity {
@@ -192,10 +197,16 @@ public class SystemShareActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.btn_export:
-                    fileUtils.doExport(mHandler, FileUtils.MODE_ONLY_EXPORT, appInfo.appSourcDir,txt_share_filename.getText().toString());
+                    String filename = txt_share_filename.getText().toString();
+                    if(!filename.endsWith(".apk"))
+                        filename = filename+".apk";
+                    fileUtils.doExport(mHandler, FileUtils.MODE_ONLY_EXPORT, appInfo.appSourcDir,filename);
                     break;
                 case R.id.btn_export_share:
-                    fileUtils.doExport(mHandler, FileUtils.MODE_EXPORT_SHARE, appInfo.appSourcDir,txt_share_filename.getText().toString());
+                    String filename2 = txt_share_filename.getText().toString();
+                    if(!filename2.endsWith(".apk"))
+                        filename2 = filename2+".apk";
+                    fileUtils.doExport(mHandler, FileUtils.MODE_EXPORT_SHARE, appInfo.appSourcDir,filename2);
                     break;
 
                 case R.id.btn_share_insert_divider:
@@ -214,7 +225,7 @@ public class SystemShareActivity extends AppCompatActivity {
                     insertText(txt_share_filename,String.valueOf(appInfo.versionCode));
                     break;
                 case R.id.btn_share_insert_default:
-                    insertText(txt_share_filename,appInfo.appName+"-"+appInfo.packageName+"-"+appInfo.versionName);
+                    insertText(txt_share_filename,appInfo.appName+"-"+appInfo.packageName+"-"+appInfo.versionName+".apk");
                     break;
             }
         }
@@ -322,5 +333,66 @@ public class SystemShareActivity extends AppCompatActivity {
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //运行时权限请求结果
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        final Activity activity = this;
+        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 授予权限，继续操作
+                Toast.makeText(this,R.string.storage_permission_obtain_toast,Toast.LENGTH_SHORT).show();
+            } else {
+                if(isNeverAskStoragePermissions(activity)){
+                    //权限被拒绝，并勾选不再提示
+                    //解释原因，并且引导用户至设置页手动授权
+                    new AlertDialog.Builder(activity)
+                            .setCancelable(false)
+                            .setMessage(R.string.storage_permission_copy_dialog_content)
+                            .setPositiveButton(R.string.storage_permission_dialog_go_setting, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //isOnPermission = true;
+                                    //引导用户至设置页手动授权
+                                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    Uri uri = Uri.fromParts("package", activity.getApplicationContext().getPackageName(), null);
+                                    intent.setData(uri);
+                                    startActivity(intent);
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setNegativeButton(R.string.storage_permission_dialog_negative, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    //finish();
+                                }
+                            }).show();
+                }else {
+                    //权限被拒绝
+                    //Toast.makeText(this, "请求权限被拒绝", Toast.LENGTH_SHORT).show();
+                    new AlertDialog.Builder(activity)
+                            .setCancelable(false)
+                            .setMessage(R.string.storage_permission_copy_dialog_content)
+                            .setPositiveButton(R.string.storage_permission_dialog_positive, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    requestStoragePermissions(activity);
+                                }
+                            })
+                            .setNegativeButton(R.string.storage_permission_dialog_negative, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    //finish();
+                                }
+                            })
+                            .show();
+                }
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }

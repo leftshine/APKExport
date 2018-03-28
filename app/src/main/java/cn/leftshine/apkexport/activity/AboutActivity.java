@@ -1,5 +1,7 @@
 package cn.leftshine.apkexport.activity;
 
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -20,10 +22,12 @@ import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
 
 public class AboutActivity extends AppCompatActivity {
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         String description = getString(R.string.about_page_description);
         if(!TextUtils.isEmpty(description) && description.indexOf("\\n") >= 0)
             description = description.replace("\\n", "\n");
@@ -95,11 +99,17 @@ public class AboutActivity extends AppCompatActivity {
         feedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setData(Uri.parse("mailto:leftshine@139.com"));
-                intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.about_email_contact_subject,AppUtils.getAppName(AboutActivity.this)));
-                intent.putExtra(Intent.EXTRA_TEXT,getResources().getString(R.string.about_email_contact_text));
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO);
+                    intent.setData(Uri.parse("mailto:leftshine@139.com"));
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.about_email_contact_subject, AppUtils.getAppName(AboutActivity.this)));
+                    intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.about_email_contact_text));
+                    startActivity(intent);
+                }catch (ActivityNotFoundException e){
+                    Toast.makeText(mContext,R.string.tip_eamil_ActivityNotFoundException,Toast.LENGTH_SHORT).show();
+                }catch(Exception e){
+                    Toast.makeText(mContext,R.string.tip_eamil_failed,Toast.LENGTH_SHORT).show();
+                }
             }
         });
         return feedback;

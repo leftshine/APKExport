@@ -82,6 +82,7 @@ public class SettingActivityFragment extends PreferenceFragment {
         prefIsShowLocalApk =  (SwitchPreference)findPreference(getString(R.string.key_is_show_local_apk));
         prefIsShowLocalApk.setOnPreferenceChangeListener(preferenceChangeListener);
         prefIsAutoClean = (SwitchPreference)findPreference(getString(R.string.key_is_auto_clean));
+        prefIsAutoClean.setOnPreferenceChangeListener(preferenceChangeListener);
         prefCustomFileNameformat= (EditTextPreference)findPreference(getString(R.string.key_custom_filename_format));
         prefRestoreDefaultSettings = (Preference)findPreference(getString(R.string.key_restore_default_settings));
         prefCustomFileNameformat.setOnPreferenceClickListener(preferenceclickListener);
@@ -109,6 +110,7 @@ public class SettingActivityFragment extends PreferenceFragment {
         if (!verifyStoragePermissions(getActivity())) {
             //未获得权限
             prefIsShowLocalApk.setChecked(false);
+            prefIsAutoClean.setChecked(false);
         }
     }
 
@@ -261,7 +263,20 @@ public class SettingActivityFragment extends PreferenceFragment {
                    } else {
                        //Settings.setShowLocalApk(false);
                        // 未获得权限
-                       requestStoragePermissions(fragment);
+                       requestStoragePermissions(fragment,REQUEST_EXTERNAL_STORAGE_SHOWLOCALAPK);
+                       return false;
+                   }
+               }
+               return true;
+           }else if(preference.getKey().equals(getResources().getString(R.string.key_is_auto_clean))){
+               if((Boolean)o) {
+                   if (verifyStoragePermissions(getActivity())) {
+                       //已获得权限
+                       return true;
+                   } else {
+                       //Settings.setShowLocalApk(false);
+                       // 未获得权限
+                       requestStoragePermissions(fragment,REQUEST_EXTERNAL_STORAGE_AUTOCLEAN);
                        return false;
                    }
                }
@@ -298,7 +313,7 @@ public class SettingActivityFragment extends PreferenceFragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
+        if (requestCode == REQUEST_EXTERNAL_STORAGE_SHOWLOCALAPK) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // 授予权限，继续操作
                 //Settings.setShowLocalApk(true);
@@ -339,7 +354,7 @@ public class SettingActivityFragment extends PreferenceFragment {
                             .setPositiveButton(R.string.storage_permission_dialog_positive, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    requestStoragePermissions(fragment);
+                                    requestStoragePermissions(fragment,REQUEST_EXTERNAL_STORAGE_SHOWLOCALAPK);
                                 }
                             })
                             .setNegativeButton(R.string.storage_permission_dialog_negative, new DialogInterface.OnClickListener() {
@@ -347,6 +362,61 @@ public class SettingActivityFragment extends PreferenceFragment {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                     prefIsShowLocalApk.setChecked(false);
+                                    //finish();
+                                }
+                            })
+                            .show();
+                }
+            }
+        }else if(requestCode == REQUEST_EXTERNAL_STORAGE_AUTOCLEAN) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 授予权限，继续操作
+                //Settings.setShowLocalApk(true);
+                prefIsAutoClean.setChecked(true);
+            } else {
+                if(isNeverAskStoragePermissions(this)){
+                    //权限被拒绝，并勾选不再提示
+                    //解释原因，并且引导用户至设置页手动授权
+                    new AlertDialog.Builder(this.getActivity())
+                            .setCancelable(false)
+                            .setMessage(R.string.storage_permission_auto_clean_dialog_content)
+                            .setPositiveButton(R.string.storage_permission_dialog_go_setting, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //isOnPermission = true;
+                                    //引导用户至设置页手动授权
+                                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    Uri uri = Uri.fromParts("package", getActivity().getApplicationContext().getPackageName(), null);
+                                    intent.setData(uri);
+                                    startActivity(intent);
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setNegativeButton(R.string.storage_permission_dialog_negative, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    prefIsAutoClean.setChecked(false);
+                                    //finish();
+                                }
+                            }).show();
+                }else {
+                    //权限被拒绝
+                    //Toast.makeText(this, "请求权限被拒绝", Toast.LENGTH_SHORT).show();
+                    new AlertDialog.Builder(this.getActivity())
+                            .setCancelable(false)
+                            .setMessage(R.string.storage_permission_auto_clean_dialog_content)
+                            .setPositiveButton(R.string.storage_permission_dialog_positive, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    requestStoragePermissions(fragment,REQUEST_EXTERNAL_STORAGE_AUTOCLEAN);
+                                }
+                            })
+                            .setNegativeButton(R.string.storage_permission_dialog_negative, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    prefIsAutoClean.setChecked(false);
                                     //finish();
                                 }
                             })

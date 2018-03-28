@@ -49,9 +49,9 @@
     <string name="setting_autoClean_summaryOff">已关闭，将保留导出的APK文件</string>
     <string name="setting_autoClean_summaryOn">已启用，将在每次启动时清空导出目录</string>
 
-    <string name="setting_show_local_apk_title">显示本地APK页(重启生效)</string>
-    <string name="setting_show_local_apk_summaryOff">本地APK页已隐藏</string>
-    <string name="setting_show_local_apk_summaryOn">本地APK页已显示</string>
+    <string name="setting_show_local_apk_title">显示本地APK页</string>
+    <string name="setting_show_local_apk_summaryOff">隐藏(修改将在应用重启后生效)</string>
+    <string name="setting_show_local_apk_summaryOn">显示(修改将在应用重启后生效)</string>
 
     <string name="custom_file_name">自定义文件名格式</string>
     <string name="custom_file_name_summary">点击设置自定义文件名</string>
@@ -107,6 +107,14 @@
     <string name="storage_permission_dialog_positive">好的，重新选择</string>
     <string name="storage_permission_dialog_go_setting">好的，去授权</string>
     <string name="storage_permission_copy_dialog_content">执行导出操作需要文件访问权限，如果不授予应用将无法正常使用</string>
+    <string name="storage_permission_auto_clean_dialog_content">执行清理操作需要文件访问权限，如果不授予应用将无法正常使用</string>
     <string name="storage_permission_obtain_toast">成功取得文件访问权限，请重新执行相关操作</string>
 
+    <string name="tip_copy_failed">导出过程异常，请重试</string>
+    <string name="tip_share_failed">分享过程异常，请重试</string>
+    <string name="tip_eamil_ActivityNotFoundException">未找到邮件发送程序</string>
+    <string name="tip_eamil_failed">启动邮件程序异常，请重试</string>
+
+    <string name="tip_auto_clean_closed">文件访问权限获取失败，自动清理已关闭</string>
+    <string name="tip_local_apk_closed">文件访问权限获取失败,本地APK页已隐藏</string>
 </resources>
