@@ -39,6 +39,12 @@
     <string name="about_donate_title">Want to offer us a cup of coffee?</string>
 
     <string name="about_version_title">Version: %1$s</string>
+    <string name="about_open_source_licenses_title">Open Source Licenses</string>
+    <string name="about_open_source_licenses_content" translatable="false">
+        android-about-page: <a href="https://github.com/medyo/android-about-page">MIT</a>
+
+        android-filepicker: <a href="https://github.com/Angads25/android-filepicker">Apache</a>
+    </string>
 
     <string name="auto_clean_success">Clean cache success </string>
     <string name="auto_clean_fail">Clean cache failed</string>

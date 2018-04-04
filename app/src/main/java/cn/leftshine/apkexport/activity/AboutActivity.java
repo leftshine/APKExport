@@ -2,24 +2,35 @@ package cn.leftshine.apkexport.activity;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.print.PrintAttributes;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
+
+import javax.xml.transform.Source;
 
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.utils.AppUtils;
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
+
+import static cn.leftshine.apkexport.utils.PermisionUtils.REQUEST_EXTERNAL_STORAGE_SHOWLOCALAPK;
+import static cn.leftshine.apkexport.utils.PermisionUtils.requestStoragePermissions;
 
 public class AboutActivity extends AppCompatActivity {
     private Context mContext;
@@ -44,7 +55,9 @@ public class AboutActivity extends AppCompatActivity {
                 .addItem(getWebsiteElement(mehdi.sakout.aboutpage.R.drawable.about_icon_link,getResources().getString(R.string.about_website_title),"http://leftshine.gitee.io/apkexport/"))
                 .addItem(getWebsiteElement(R.drawable.donate,getResources().getString(R.string.about_donate_title),"http://leftshine.gitee.io/apkexport/pages/donate/index.html"))
                 //.addGitHub("tiann")
+                .addItem(getOpenSourceLicensesElement())
                 .addItem(getCopyRightsElement())
+
                 .create();
 
         setContentView(aboutPage);
@@ -128,6 +141,40 @@ public class AboutActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        return websiteElement;
+    }
+
+    Element getOpenSourceLicensesElement() {
+        Element websiteElement = new Element();
+        websiteElement.setTitle(getResources().getString(R.string.about_open_source_licenses_title));
+        websiteElement.setIconDrawable(R.drawable.licenses);
+        websiteElement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextView tv = new TextView(mContext);
+                tv.setText(Html.fromHtml(" " +
+                        "android-about-page: <a href=\"https://github.com/medyo/android-about-page\">MIT</a>"+"<br>"+
+                        "android-filepicker: <a href=\"https://github.com/Angads25/android-filepicker\">Apache</a>"));
+                tv.setPadding(50,50,50,50);
+
+                tv.setMovementMethod(LinkMovementMethod.getInstance());
+                new AlertDialog.Builder(mContext)
+                        .setCancelable(true)
+                        .setTitle(R.string.about_open_source_licenses_title)
+                        .setView(tv)
+                        //.setMessage()
+                        //.setView(R.layout.custom_open_source_licenses_dialog)
+
+                        .setPositiveButton(android.R.string.ok,new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        })
+                        .show();
+            }
+        });
+
         return websiteElement;
     }
 

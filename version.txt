@@ -85,10 +85,15 @@ v2.06
 优化Android M其及以上API的运行时权限（需要权限时再请求）
 添加应用官方交流群
 
--隐藏本地APK页的提示修改，增加到设置修改开关的提示
--使用内置webview
--开关本地APK页后立即生效（重新初始化MainActivity）
+v2.07
+修改隐藏本地APK页的提示，增加到设置修改开关的提示
+修复因排序可能导致闪退的bug
+更新在线应用主页
+添加licenses
+
+
 -对于较大的文件（>200m）导出时检测是否已经有同名文件,并在设置添加开关
+-开关本地APK页后立即生效（重新初始化MainActivity）
 -修改架构，拆分为三个fragment都继承自AppFragment
 -更换listview为recycleView
 
