@@ -293,13 +293,13 @@ public class ToolUtils {
             String compare1 = characterParser.getSelling(appInfo1.appName).toUpperCase();
             String compare2 = characterParser.getSelling(appInfo2.appName).toUpperCase();
             //Log.i(TAG, "compare: " + compare1+":"+compare2);
-            if(compare1 == null && compare2 == null) {
+            if((compare1 == null || compare1.isEmpty()) && (compare2 == null|| compare2.isEmpty())) {
                 return 0;
             }
-            if(compare1 == null) {
+            if(compare1 == null || compare1.isEmpty()) {
                 return -1;
             }
-            if(compare2 == null) {
+            if(compare2 == null || compare2.isEmpty()) {
                 return 1;
             }
             if(compare1==compare2)
@@ -311,7 +311,8 @@ public class ToolUtils {
     public static final Comparator<AppInfo> SORT_BY_PACKAGENAME = new Comparator<AppInfo>() {
         @Override
         public int compare(AppInfo appInfo1, AppInfo appInfo2) {
-            CharacterParser characterParser = CharacterParser.getInstance();
+            CharacterParser characterParser = new CharacterParser();
+            //CharacterParser characterParser = CharacterParser.getInstance();
             String compare1 = characterParser.getSelling(appInfo1.packageName).toUpperCase();
             String compare2 = characterParser.getSelling(appInfo2.packageName).toUpperCase();
             //Log.i(TAG, "compare: " + compare1+":"+compare2);

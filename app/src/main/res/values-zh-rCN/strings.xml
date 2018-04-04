@@ -115,6 +115,6 @@
     <string name="tip_eamil_ActivityNotFoundException">未找到邮件发送程序</string>
     <string name="tip_eamil_failed">启动邮件程序异常，请重试</string>
 
-    <string name="tip_auto_clean_closed">文件访问权限获取失败，自动清理已关闭</string>
-    <string name="tip_local_apk_closed">文件访问权限获取失败,本地APK页已隐藏</string>
+    <string name="tip_auto_clean_closed">文件访问权限获取失败，自动清理已关闭，可前往设置开启</string>
+    <string name="tip_local_apk_closed">文件访问权限获取失败,本地APK页已隐藏,可前往设置开启</string>
 </resources>

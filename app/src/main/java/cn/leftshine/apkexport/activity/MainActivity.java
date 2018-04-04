@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         mContentVp.setPageTransformer(true, new ZoomOutPageTransformer());
         initContent();
         initTab();
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        //FragmentManager fragmentManager = getSupportFragmentManager();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
