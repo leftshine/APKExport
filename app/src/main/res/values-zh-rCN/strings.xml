@@ -22,7 +22,7 @@
     <string name="about_feedback_tips">群号已复制到剪贴板！</string>
     <string name="about_no_QQ_app">未安装手Q或安装的版本不支持跳转</string>
 
-    <string name="about_email_contact">反馈建议：leftshine@139.com</string>
+    <string name="about_email_contact">反馈建议：leftshine@foxmail.com</string>
     <string name="about_email_contact_subject">%1$s 反馈建议</string>
     <string name="about_email_contact_text">我想说：</string>
 

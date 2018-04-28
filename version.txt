@@ -91,11 +91,15 @@ v2.07
 更新在线应用主页
 添加licenses
 
+v2.08
+统一应用内图标风格
 
+-分享到百度云提示空白文件
+-更换listview为recycleView
+-添加批量操作（多选）功能（准备做成付费功能）
 -对于较大的文件（>200m）导出时检测是否已经有同名文件,并在设置添加开关
 -开关本地APK页后立即生效（重新初始化MainActivity）
 -修改架构，拆分为三个fragment都继承自AppFragment
--更换listview为recycleView
 
 
 

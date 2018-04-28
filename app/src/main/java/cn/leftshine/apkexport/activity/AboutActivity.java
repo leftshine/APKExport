@@ -52,8 +52,8 @@ public class AboutActivity extends AppCompatActivity {
                 //.addEmail("leftshine@139.com")
                 .addItem(getFeedBackElement())
                 //.addWebsite("https://www.cnblogs.com/leftshine/")
-                .addItem(getWebsiteElement(mehdi.sakout.aboutpage.R.drawable.about_icon_link,getResources().getString(R.string.about_website_title),"http://leftshine.gitee.io/apkexport/"))
-                .addItem(getWebsiteElement(R.drawable.donate,getResources().getString(R.string.about_donate_title),"http://leftshine.gitee.io/apkexport/pages/donate/index.html"))
+                .addItem(getWebsiteElement(R.drawable.ic_home_black_24dp,getResources().getString(R.string.about_website_title),"http://leftshine.gitee.io/apkexport/"))
+                .addItem(getWebsiteElement(R.drawable.ic_loyalty_black_24dp,getResources().getString(R.string.about_donate_title),"http://leftshine.gitee.io/apkexport/pages/donate/index.html"))
                 //.addGitHub("tiann")
                 .addItem(getOpenSourceLicensesElement())
                 .addItem(getCopyRightsElement())
@@ -108,13 +108,13 @@ public class AboutActivity extends AppCompatActivity {
     Element getFeedBackElement() {
         Element feedback = new Element();
         feedback.setTitle(getResources().getString(R.string.about_email_contact));
-        feedback.setIconDrawable(mehdi.sakout.aboutpage.R.drawable.about_icon_email);
+        feedback.setIconDrawable(R.drawable.ic_email_black_24dp);
         feedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     Intent intent = new Intent(Intent.ACTION_SENDTO);
-                    intent.setData(Uri.parse("mailto:leftshine@139.com"));
+                    intent.setData(Uri.parse("mailto:leftshine@foxmail.com"));
                     intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.about_email_contact_subject, AppUtils.getAppName(AboutActivity.this)));
                     intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.about_email_contact_text));
                     startActivity(intent);
@@ -147,7 +147,7 @@ public class AboutActivity extends AppCompatActivity {
     Element getOpenSourceLicensesElement() {
         Element websiteElement = new Element();
         websiteElement.setTitle(getResources().getString(R.string.about_open_source_licenses_title));
-        websiteElement.setIconDrawable(R.drawable.licenses);
+        websiteElement.setIconDrawable(R.drawable.ic_description_black_24dp);
         websiteElement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -182,7 +182,7 @@ public class AboutActivity extends AppCompatActivity {
 
         Element qgroup = new Element();
         qgroup.setTitle(title);
-        qgroup.setIconDrawable(R.drawable.qgroup_32);
+        qgroup.setIconDrawable(R.drawable.ic_chat_black_24dp);
         qgroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
