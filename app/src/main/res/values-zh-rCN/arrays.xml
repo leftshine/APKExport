@@ -11,6 +11,7 @@
         <item>复制包名</item>
         <item>复制版本号</item>
         <item>复制内部版本号</item>
+        <item>复制应用商店链接</item>
     </string-array>
 
     <string-array name="localAPK_actions">

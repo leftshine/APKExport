@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -225,11 +227,24 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 											case 3:
 												copy_str = String.valueOf(info.getVersionCode());
 												break;
+											case 4:
+												String appNameUrl = info.getAppName();
+												try {
+													appNameUrl= URLEncoder.encode(appNameUrl,"utf-8");
+												} catch (UnsupportedEncodingException e) {
+													e.printStackTrace();
+													Log.i(TAG, "URLEncode fail",e );
+												}
+												copy_str = "http://leftshine.gitee.io/apkexport/pages/share/market.html?appName="+appNameUrl+"&packageName="+info.getPackageName();
+
+												break;
 										}
+										Log.i(TAG, "copy_str"+copy_str);
 										ClipData clipData = ClipData.newPlainText(null, copy_str);
 										ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
 										if (cm != null) {
 											cm.setPrimaryClip(clipData);
+
 											Toast.makeText(mContext,mContext.getString(R.string.copy_success, copy_str),Toast.LENGTH_SHORT).show();
 										}
 									}

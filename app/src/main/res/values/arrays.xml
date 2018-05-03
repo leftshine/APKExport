@@ -11,6 +11,7 @@
         <item>Copy Package Name</item>
         <item>Copy Version Name</item>
         <item>Copy Version Code</item>
+        <item>Copy AppStore Link</item>
     </string-array>
 
     <string-array name="localAPK_actions">
