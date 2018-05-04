@@ -292,8 +292,8 @@ public class ToolUtils {
             CharacterParser characterParser = CharacterParser.getInstance();
             String compare1 = characterParser.getSelling(appInfo1.appName).toUpperCase();
             String compare2 = characterParser.getSelling(appInfo2.appName).toUpperCase();
-            //Log.i(TAG, "compare: " + compare1+":"+compare2);
-            if((compare1 == null || compare1.isEmpty()) && (compare2 == null|| compare2.isEmpty())) {
+            Log.i(TAG, "compare: " + compare1+" VS "+compare2+" = "+compare1.compareTo(compare2));
+            /*if((compare1 == null || compare1.isEmpty()) && (compare2 == null|| compare2.isEmpty())) {
                 return 0;
             }
             if(compare1 == null || compare1.isEmpty()) {
@@ -305,7 +305,14 @@ public class ToolUtils {
             if(compare1==compare2)
                 return 0;
             else
-                return (compare1.compareTo(compare2));
+                return (compare1.compareTo(compare2));*/
+            if(compare1.compareTo(compare2)>0)
+                return 1;
+            else if(compare1.compareTo(compare2)<0)
+                return -1;
+            else
+                return 0;
+
         }
     };
     public static final Comparator<AppInfo> SORT_BY_PACKAGENAME = new Comparator<AppInfo>() {
@@ -316,7 +323,7 @@ public class ToolUtils {
             String compare1 = characterParser.getSelling(appInfo1.packageName).toUpperCase();
             String compare2 = characterParser.getSelling(appInfo2.packageName).toUpperCase();
             //Log.i(TAG, "compare: " + compare1+":"+compare2);
-            if(compare1 == null && compare2 == null) {
+            /*if(compare1 == null && compare2 == null) {
                 return 0;
             }
             if(compare1 == null) {
@@ -328,7 +335,13 @@ public class ToolUtils {
             if(compare1==compare2)
                 return 0;
             else
-                return (compare1.compareTo(compare2));
+                return (compare1.compareTo(compare2));*/
+            if(compare1.compareTo(compare2)>0)
+                return 1;
+            else if(compare1.compareTo(compare2)<0)
+                return -1;
+            else
+                return 0;
         }
     };
     public static final Comparator<AppInfo> SORT_BY_SIZE = new Comparator<AppInfo>() {
@@ -337,7 +350,7 @@ public class ToolUtils {
             Long  compare1 = appInfo1.appSize;
             Long  compare2 = appInfo2.appSize;
             //Log.i(TAG, "compare: " + compare1);
-            if(compare1 == null && compare2 == null) {
+            /*if(compare1 == null && compare2 == null) {
                 return 0;
             }
             if(compare1 == null) {
@@ -351,7 +364,13 @@ public class ToolUtils {
           if(compare2==compare1)
               return 0;
           else
-              return -1;
+              return -1;*/
+            if(compare1.compareTo(compare2)>0)
+                return 1;
+            else if(compare1.compareTo(compare2)<0)
+                return -1;
+            else
+                return 0;
         }
     };
     public static final Comparator<AppInfo> SORT_BY_INSTALL = new Comparator<AppInfo>() {
@@ -360,7 +379,7 @@ public class ToolUtils {
             Long  compare1 = appInfo1.getFirstInstallTime();
             Long  compare2 = appInfo2.getFirstInstallTime();
             //Log.i(TAG, "compare: " + compare1);
-            if(compare1 == null && compare2 == null) {
+            /*if(compare1 == null && compare2 == null) {
                 return 0;
             }
             if(compare1 == null) {
@@ -374,7 +393,13 @@ public class ToolUtils {
             if(compare2==compare1)
                 return 0;
             else
+                return -1;*/
+            if(compare1.compareTo(compare2)>0)
+                return 1;
+            else if(compare1.compareTo(compare2)<0)
                 return -1;
+            else
+                return 0;
         }
     };
     public static final Comparator<AppInfo> SORT_BY_UPDATE = new Comparator<AppInfo>() {
@@ -383,7 +408,7 @@ public class ToolUtils {
             Long  compare1 = appInfo1.getLastUpdateTime();
             Long  compare2 = appInfo2.getLastUpdateTime();
             Log.i(TAG, "compare: " + compare1);
-            if(compare1 == null && compare2 == null) {
+            /*if(compare1 == null && compare2 == null) {
                 return 0;
             }
             if(compare1 == null) {
@@ -397,7 +422,13 @@ public class ToolUtils {
             if(compare2==compare1)
                 return 0;
             else
+                return -1;*/
+            if(compare1.compareTo(compare2)>0)
+                return 1;
+            else if(compare1.compareTo(compare2)<0)
                 return -1;
+            else
+                return 0;
         }
     };
 
@@ -409,7 +440,7 @@ public class ToolUtils {
             String compare1 = characterParser.getSelling(appInfo1.appName).toUpperCase();
             String compare2 = characterParser.getSelling(appInfo2.appName).toUpperCase();
             //Log.i(TAG, "compare: " + compare1+":"+compare2);
-            if(compare1 == null && compare2 == null) {
+            /*if(compare1 == null && compare2 == null) {
                 return 0;
             }
             if(compare1 == null) {
@@ -421,7 +452,13 @@ public class ToolUtils {
             if(compare1==compare2)
                 return 0;
             else
-                return (compare2.compareTo(compare1));
+                return (compare2.compareTo(compare1));*/
+            if(compare1.compareTo(compare2)<0)
+                return 1;
+            else if(compare1.compareTo(compare2)>0)
+                return -1;
+            else
+                return 0;
         }
     };
     public static final Comparator<AppInfo> SORT_BY_PACKAGENAME_DES = new Comparator<AppInfo>() {
@@ -431,7 +468,7 @@ public class ToolUtils {
             String compare1 = characterParser.getSelling(appInfo1.packageName).toUpperCase();
             String compare2 = characterParser.getSelling(appInfo2.packageName).toUpperCase();
             //Log.i(TAG, "compare: " + compare1+":"+compare2);
-            if(compare1 == null && compare2 == null) {
+            /*if(compare1 == null && compare2 == null) {
                 return 0;
             }
             if(compare1 == null) {
@@ -443,7 +480,13 @@ public class ToolUtils {
             if(compare1==compare2)
                 return 0;
             else
-                return (compare2.compareTo(compare1));
+                return (compare2.compareTo(compare1));*/
+            if(compare1.compareTo(compare2)<0)
+                return 1;
+            else if(compare1.compareTo(compare2)>0)
+                return -1;
+            else
+                return 0;
         }
     };
     public static final Comparator<AppInfo> SORT_BY_SIZE_DES = new Comparator<AppInfo>() {
@@ -452,7 +495,7 @@ public class ToolUtils {
             Long  compare1 = appInfo1.appSize;
             Long  compare2 = appInfo2.appSize;
             //Log.i(TAG, "compare: " + compare1);
-            if(compare1 == null && compare2 == null) {
+            /*if(compare1 == null && compare2 == null) {
                 return 0;
             }
             if(compare1 == null) {
@@ -466,7 +509,13 @@ public class ToolUtils {
             if(compare2==compare1)
                 return 0;
             else
+                return -1;*/
+            if(compare1.compareTo(compare2)<0)
+                return 1;
+            else if(compare1.compareTo(compare2)>0)
                 return -1;
+            else
+                return 0;
         }
     };
     public static final Comparator<AppInfo> SORT_BY_INSTALL_DES = new Comparator<AppInfo>() {
@@ -475,7 +524,7 @@ public class ToolUtils {
             Long  compare1 = appInfo1.getFirstInstallTime();
             Long  compare2 = appInfo2.getFirstInstallTime();
             //Log.i(TAG, "compare: " + compare1);
-            if(compare1 == null && compare2 == null) {
+            /*if(compare1 == null && compare2 == null) {
                 return 0;
             }
             if(compare1 == null) {
@@ -489,7 +538,13 @@ public class ToolUtils {
             if(compare2==compare1)
                 return 0;
             else
+                return -1;*/
+            if(compare1.compareTo(compare2)<0)
+                return 1;
+            else if(compare1.compareTo(compare2)>0)
                 return -1;
+            else
+                return 0;
         }
     };
     public static final Comparator<AppInfo> SORT_BY_UPDATE_DES = new Comparator<AppInfo>() {
@@ -498,7 +553,7 @@ public class ToolUtils {
             Long  compare1 = appInfo1.getLastUpdateTime();
             Long  compare2 = appInfo2.getLastUpdateTime();
             //Log.i(TAG, "compare: " + compare1);
-            if(compare1 == null && compare2 == null) {
+            /*if(compare1 == null && compare2 == null) {
                 return 0;
             }
             if(compare1 == null) {
@@ -512,7 +567,13 @@ public class ToolUtils {
             if(compare2==compare1)
                 return 0;
             else
+                return -1;*/
+            if(compare1.compareTo(compare2)<0)
+                return 1;
+            else if(compare1.compareTo(compare2)>0)
                 return -1;
+            else
+                return 0;
         }
     };
 
