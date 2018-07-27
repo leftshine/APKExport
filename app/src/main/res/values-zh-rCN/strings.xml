@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">APKExport</string>
+    <string name="app_name">APK导出</string>
     <string name="action_settings">设置</string>
     <string name="action_about">关于</string>
     <string name="action_help">帮助</string>
@@ -28,7 +28,7 @@
 
     <string name="about_website_title">访问应用主页</string>
     <string name="about_donate_title">请我吃辣条</string>
-    <string name="about_version_title">版本：%1$s</string>
+    <string name="about_version_title">版本：%1$s（点击检查更新）</string>
     <string name="about_open_source_licenses_title">Open Source Licenses</string>
 
     <string name="loading">加载中...</string>

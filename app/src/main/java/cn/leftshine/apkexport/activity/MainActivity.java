@@ -337,13 +337,15 @@ public class MainActivity extends AppCompatActivity {
             currentFragment.loadWaitUI(true,false);
             //allFragmentReload();
         }
+        /*
+        //神秘代码复制到剪贴板
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if(!cm.hasPrimaryClip())
         {
             ClipData clipData = ClipData.newPlainText(null, ToolUtils.DEFAULT_COPY_DATA);
             cm.setPrimaryClip(clipData);
         }
-
+        */
     }
 
     @Override
