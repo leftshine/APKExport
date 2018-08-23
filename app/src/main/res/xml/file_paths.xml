@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <external-path name="APKExport" path="." />
-    <root-path name="APKExport" path="." />
+    <external-path name="apkexport_external" path="." />
+    <root-path name="apkexport_root" path="." />
 </paths>

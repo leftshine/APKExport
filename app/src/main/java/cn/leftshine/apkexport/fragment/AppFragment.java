@@ -1,36 +1,31 @@
 package cn.leftshine.apkexport.fragment;
 
 import android.animation.ObjectAnimator;
-import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.ActionBar;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.net.wifi.aware.PublishConfig;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +35,7 @@ import cn.leftshine.apkexport.activity.MainActivity;
 import cn.leftshine.apkexport.adapter.AppInfoAdapter;
 import cn.leftshine.apkexport.utils.AppInfo;
 import cn.leftshine.apkexport.utils.MessageCode;
-import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.utils.ToolUtils;
-import static cn.leftshine.apkexport.utils.PermisionUtils.*;
 
 //import android.support.v4.app.Fragment;
 
@@ -78,7 +71,11 @@ public class AppFragment extends Fragment {
     //private Toolbar toolbar;
     private ObjectAnimator animtor;
     private MainActivity mainActivity;
+    //ModeCallback callback;
 
+    public AppInfoAdapter getmAdapter() {
+        return mAdapter;
+    }
 
     private Handler mHandler = new Handler() {
 
@@ -230,6 +227,11 @@ public class AppFragment extends Fragment {
         mAppStatus = (TextView) root.findViewById(R.id.have_app);
         mAppListView = (ListView) root.findViewById(R.id.app_listView);
         mAppListView.setTextFilterEnabled(true);
+        /*
+        mAppListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        callback = new ModeCallback();
+        mAppListView.setMultiChoiceModeListener(callback);
+        */
         //使listview支持appbar_scrolling_view_behavior，不适用于Lollipop以下版本
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mAppListView.setNestedScrollingEnabled(true);
@@ -503,6 +505,21 @@ public class AppFragment extends Fragment {
         if(type==ToolUtils.TYPE_LOCAL)
             refresh(false);
     }*/
+public void changeMultiSelectMode(boolean multipleMode){
+    /*if(multipleMode){
+        Toast.makeText(getActivity(),R.string.exit_multiple_mode,Toast.LENGTH_SHORT).show();
+    }else
+    {
+        Toast.makeText(getActivity(),R.string.enter_multiple_mode,Toast.LENGTH_SHORT).show();
+    }*/
+    //mAdapter.notifyDataSetChanged();
+    if(multipleMode){
+        mAdapter.notifyDataSetChanged();
+    }else{
+        mAdapter.unSelectAll();
+    }
+}
+
     class AppReceiver extends BroadcastReceiver {
 
         @Override
@@ -524,4 +541,70 @@ public class AppFragment extends Fragment {
             }
         }
     }
+
+    /*class ModeCallback implements AbsListView.MultiChoiceModeListener {
+        View actionBarView;
+        TextView selectedNum;
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            // TODO Auto-generated method stub
+            return true;
+        }
+
+        //退出多选模式时调用
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            // TODO Auto-generated method stub
+            mAppListView.clearChoices();
+        }
+
+        //进入多选模式调用，初始化ActionBar的菜单和布局
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // TODO Auto-generated method stub
+            getActivity().getMenuInflater().inflate(R.menu.menu_multiple_mode, menu);
+            if(actionBarView == null) {
+                actionBarView = LayoutInflater.from(getActivity()).inflate(R.layout.actionbar_view_multiple, null);
+                selectedNum = (TextView)actionBarView.findViewById(R.id.selected_num);
+            }
+            mode.setCustomView(actionBarView);
+            return true;
+        }
+
+        //ActionBar上的菜单项被点击时调用
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            // TODO Auto-generated method stub
+            switch(item.getItemId()) {
+                case R.id.select_all:
+                    for(int i = 0; i < mAdapter.getCount(); i++) {
+                        mAppListView.setItemChecked(i, true);
+                    }
+                    updateSelectedCount();
+                    mAdapter.notifyDataSetChanged();
+                    break;
+                case R.id.unselect_all:
+                    mAppListView.clearChoices();
+                    updateSelectedCount();
+                    mAdapter.notifyDataSetChanged();
+                    break;
+            }
+            return true;
+        }
+
+        //列表项的选中状态被改变时调用
+        @Override
+        public void onItemCheckedStateChanged(ActionMode mode, int position,
+                                              long id, boolean checked) {
+            // TODO Auto-generated method stub
+            updateSelectedCount();
+            mode.invalidate();
+            mAdapter.notifyDataSetChanged();
+        }
+
+        public void updateSelectedCount() {
+            int selectedCount = mAppListView.getCheckedItemCount();
+            selectedNum.setText(selectedCount + "");
+        }
+    }*/
 }

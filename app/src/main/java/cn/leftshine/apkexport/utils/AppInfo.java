@@ -20,6 +20,8 @@ public class AppInfo {
 	public long firstInstallTime;
 	public long lastUpdateTime;
 	private int installed =1;
+	private boolean isSelect;
+	private boolean isShowCheckBox;
 	//private String fileLastModifyTime;
 /*
 
@@ -123,5 +125,21 @@ public class AppInfo {
 
 	public void setInstalled(int installed) {
 		this.installed = installed;
+	}
+
+	public boolean isSelect() {
+		return isSelect;
+	}
+
+	public void setSelect(boolean select) {
+		isSelect = select;
+	}
+
+	public boolean isShowCheckBox() {
+		return isShowCheckBox;
+	}
+
+	public void setShowCheckBox(boolean showCheckBox) {
+		isShowCheckBox = showCheckBox;
 	}
 }

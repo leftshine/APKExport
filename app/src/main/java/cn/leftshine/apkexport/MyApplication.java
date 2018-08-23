@@ -9,7 +9,7 @@ import cn.leftshine.apkexport.utils.Settings;
  */
 
 public class MyApplication extends Application {
-    public void onCreate() {
+        public void onCreate() {
         super.onCreate();
         Settings.init(this);
     }

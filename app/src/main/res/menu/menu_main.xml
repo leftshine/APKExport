@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="cn.leftshine.apkexport.activity.MainActivity">
+
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search_white_24dp"
@@ -10,8 +11,13 @@
         app:showAsAction="always|collapseActionView" />
     <item
         android:id="@+id/action_sort"
-        android:icon="@drawable/ic_sort_white_24dp"
+        android:icon="@drawable/ic_sort_by_alpha_white_24dp"
         android:title="@string/action_sort"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_multi_select"
+        android:icon="@drawable/ic_playlist_add_check_white_24dp"
+        android:title="@string/action_multi_select"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_settings"

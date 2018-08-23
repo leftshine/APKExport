@@ -73,6 +73,7 @@
     <string name="choose_sort_type">选择排序方式</string>
     <string name="ASC">升序</string>
     <string name="DES">降序</string>
+    <string name="action_multi_select">多选</string>
     <string name="action_search">搜索</string>
     <string name="action_sort">排序</string>
     <string name="setting_general_title">通用</string>
@@ -118,4 +119,14 @@
 
     <string name="tip_auto_clean_closed">文件访问权限获取失败，自动清理已关闭，可前往设置开启</string>
     <string name="tip_local_apk_closed">文件访问权限获取失败,本地APK页已隐藏,可前往设置开启</string>
+
+    <string name="multi_select_num">已选中：</string>
+    <string name="multi_export">提取</string>
+    <string name="multi_share">分享</string>
+    <string name="multi_select_all">全选</string>
+    <string name="multi_unselect_all">清空</string>
+    <string name="multi_exit">退出多选模式</string>
+    <string name="enter_multiple_mode">进入多选模式</string>
+    <string name="exit_multiple_mode">退出多选模式</string>
+
 </resources>
