@@ -4,8 +4,6 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,12 +19,11 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -45,12 +42,17 @@ import java.util.List;
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.adapter.ContentPagerAdapter;
 import cn.leftshine.apkexport.fragment.AppFragment;
+import cn.leftshine.apkexport.utils.ActionModeCallbackMultiple;
 import cn.leftshine.apkexport.utils.FileUtils;
+import cn.leftshine.apkexport.utils.GlobalData;
 import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.utils.ToolUtils;
 import cn.leftshine.apkexport.view.ZoomOutPageTransformer;
 
-import static cn.leftshine.apkexport.utils.PermisionUtils.*;
+import static cn.leftshine.apkexport.utils.PermisionUtils.REQUEST_EXTERNAL_STORAGE;
+import static cn.leftshine.apkexport.utils.PermisionUtils.isNeverAskStoragePermissions;
+import static cn.leftshine.apkexport.utils.PermisionUtils.requestStoragePermissions;
+import static cn.leftshine.apkexport.utils.PermisionUtils.verifyStoragePermissions;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int FINISHED = 1;
     AppFragment fragmentUserApp;
     AppFragment fragmentSystemApp;
-    public AppFragment fragmentLocalApp;
+    AppFragment fragmentLocalApp;
     AppFragment currentFragment;
     public FloatingActionButton fab;
     boolean isExitSnackbarShown = false;
@@ -75,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private AppBarLayout ly_app_bar;
     private ObjectAnimator animtor;
+    private ActionMode mActionMode;
+    private ActionModeCallbackMultiple mCallback;
 
 
     @Override
@@ -123,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
         intentFilter.addDataScheme("file");
         scanReceiver = new ScanSdFilesReceiver();
         registerReceiver(scanReceiver, intentFilter);
+        mCallback = new ActionModeCallbackMultiple(this,getSupportActionBar(),tabFragments);
     }
 
     /*private void mediaScan(){
@@ -154,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabIndicators.add(getString(R.string.user_app));
         fragmentUserApp = AppFragment.newInstance(ToolUtils.TYPE_USER);
+
         tabFragments.add(fragmentUserApp);
         //fragmentUserApp.loadWaitUI(true,false);
 
@@ -191,6 +197,12 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 mContentVp.setCurrentItem(position);
                 currentFragment = (AppFragment)contentAdapter.getItem(position);
+                mCallback.setAdapter(currentFragment.getmAdapter());
+                if(GlobalData.isMultipleMode) {
+                    currentFragment.getmAdapter().updateSelectedCount();
+                    mActionMode.invalidate();
+                }
+                //currentFragment.getmAdapter().notifyDataSetChanged();
                 //currentFragment.load(true,false);
                 //currentFragment.loadWaitUI();
             }
@@ -232,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
 
     //运行时权限请求结果
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) { 
         final Activity activity = this;
         if (requestCode == REQUEST_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -294,7 +306,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            exit();
+            if(GlobalData.isMultipleMode){
+                mActionMode.finish();
+            }else{
+                exit();
+            }
+
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -383,6 +400,7 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        Log.i(TAG, "onOptionsItemSelected: id="+id);
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -401,6 +419,38 @@ public class MainActivity extends AppCompatActivity {
         if(id == R.id.action_about)
         {
             startActivity(new Intent(MainActivity.this, AboutActivity.class));
+            return true;
+        }
+        if (id == R.id.action_multi_select) {
+            if(GlobalData.isMultipleMode){
+                //退出多选模式
+                Toast.makeText(this,R.string.exit_multiple_mode,Toast.LENGTH_SHORT).show();
+                getSupportActionBar().show();
+                GlobalData.setMultipleMode(false);
+                for(int i=0;i<tabFragments.size();i++){
+                    if(tabFragments.get(i)!=null){
+                        tabFragments.get(i).changeMultiSelectMode(false);
+                    }
+                }
+            }else {
+                //进入多选模式
+                Toast.makeText(this,R.string.enter_multiple_mode,Toast.LENGTH_SHORT).show();
+                getSupportActionBar().hide();
+                //getSupportActionBar().setCustomView(R.layout.actionbar_view_multiple);
+
+                mCallback.setAdapter(currentFragment.getmAdapter());
+                mActionMode = startSupportActionMode(mCallback);
+
+                GlobalData.setMultipleMode(true);
+                for(int i=0;i<tabFragments.size();i++){
+                    if(tabFragments.get(i)!=null){
+                        tabFragments.get(i).changeMultiSelectMode(true);
+                    }
+                }
+            }
+
+            /*if(fragmentLocalApp!=null)
+                fragmentLocalApp.changeMultiSelectMode();*/
             return true;
         }
         if(id == R.id.action_sort){

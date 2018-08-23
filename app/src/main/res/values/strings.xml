@@ -2,6 +2,7 @@
     <string name="app_name">APKExport</string>
     <string name="action_settings">Settings</string>
     <string name="action_main">Open APKExport</string>
+    <string name="action_multi_select">Mutlit Select</string>
     <string name="action_search">Search</string>
     <string name="action_sort">Sort</string>
     <string name="app_installed_not">"No installed applications"</string>
@@ -146,5 +147,14 @@
     <string name="tip_eamil_failed">email failed</string>
     <string name="tip_auto_clean_closed">No storage permission,Auto-Clean Closed</string>
     <string name="tip_local_apk_closed">No storage permission,Local Apk Tab Hidden</string>
+
+    <string name="multi_select_num">Count: </string>
+    <string name="multi_export">Export</string>
+    <string name="multi_share">Share</string>
+    <string name="multi_select_all">All</string>
+    <string name="multi_unselect_all">Clear</string>
+    <string name="multi_exit">Exit Multiple Mode</string>
+    <string name="enter_multiple_mode">enter multiple mode</string>
+    <string name="exit_multiple_mode">exit multiplemode</string>
 
 </resources>

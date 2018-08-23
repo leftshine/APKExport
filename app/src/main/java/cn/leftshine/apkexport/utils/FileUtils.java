@@ -12,7 +12,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.FileProvider;
-import android.support.v4.content.PermissionChecker;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -20,11 +19,13 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.view.ClearEditText;
 
-import static cn.leftshine.apkexport.utils.PermisionUtils.*;
+import static cn.leftshine.apkexport.utils.PermisionUtils.requestStoragePermissions;
+import static cn.leftshine.apkexport.utils.PermisionUtils.verifyStoragePermissions;
 
 /**
  * Created by Administrator on 2018/1/24.
@@ -34,6 +35,8 @@ public class FileUtils {
     public static final int MODE_ONLY_EXPORT = 0;
     public static final int MODE_EXPORT_SHARE = 1;
     public static final int MODE_EXPORT_RENAME_SHARE = 2;
+    public static final int MODE_MULTI_EXPORT = 3;
+    public static final int MODE_MULTI_EXPORT_SHARE = 4;
 
     public static final int MODE_LOCAL_SHARE = 10;
     public static final int MODE_LOCAL_INSTALL = 11;
@@ -82,6 +85,9 @@ public class FileUtils {
                         .show();
                 /*InputMethodManager imm = (InputMethodManager)mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(txtFileName,0);*/
+                break;
+            case MODE_MULTI_EXPORT:
+                doCopy(mHandler,mCurrentAppPath,mode);
                 break;
         }
     }
@@ -134,11 +140,13 @@ public class FileUtils {
                 FileInputStream fis = new FileInputStream(oldFile);
                 FileOutputStream fos = new FileOutputStream(newFile);
                 int count;
-                Log.i(TAG, "copyFile start");
-                Message msgStart = Message.obtain();
-                msgStart.what = MessageCode.MSG_COPY_START;
-                msgStart.obj = newFile.getName();
-                mHandler.sendMessage(msgStart);
+                if(!(MODE_MULTI_EXPORT==mode||MODE_MULTI_EXPORT_SHARE==mode)) {
+                    Log.i(TAG, "copyFile start");
+                    Message msgStart = Message.obtain();
+                    msgStart.what = MessageCode.MSG_COPY_START;
+                    msgStart.obj = newFile.getName();
+                    mHandler.sendMessage(msgStart);
+                }
 
                 //文件太大的话，我觉得需要修改
                 byte[] buffer = new byte[256 * 1024];
@@ -177,9 +185,9 @@ public class FileUtils {
             String fileName = shareFilePath.substring(shareFilePath.lastIndexOf("/") + 1, shareFilePath.length());
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                /*安卓N开始使用FileProvider API，但原来的file://uri仍然可用
-                使用FileProvider API分享到百度云提示空文件（其实是百度云的问题），为了兼用更多设备，设置版本大于安卓O时才使用FileProvider API*/
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                *//*安卓N开始使用FileProvider API，但原来的file://uri仍然可用
+                使用FileProvider API分享到百度云提示空文件（其实是百度云的问题），为了兼用更多设备，设置版本大于安卓O时才使用FileProvider API*//*
                 Log.i(TAG, "版本大于 O ，开始使用 fileProvider 进行分享");
                 shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 Uri contentUri = FileProvider.getUriForFile(
@@ -193,7 +201,11 @@ public class FileUtils {
                 Uri fileUri = Uri.fromFile(shareFile);
                 Log.i(TAG, "fileUri："+fileUri);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
-            }
+            }*/
+            Log.i(TAG, "普通分享");
+            Uri fileUri = Uri.fromFile(shareFile);
+            Log.i(TAG, "fileUri："+fileUri);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
             // 指定发送内容的类型 (MIME type)
             shareIntent.setType("application/vnd.android.package-archive");
             //shareIntent.setType("*/*");
@@ -203,6 +215,40 @@ public class FileUtils {
             Log.e(TAG, "share failed: "+e);
         }
     }
+    public void startMultiShare(ArrayList<Uri> shareFiles, ArrayList<Uri> shareFilesForO) {
+        Log.i(TAG, "shareFiles:");
+        try {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                *//*安卓N开始使用FileProvider API，但原来的file://uri仍然可用
+                使用FileProvider API分享到百度云提示空文件（其实是百度云的问题），为了兼用更多设备，设置版本大于安卓O时才使用FileProvider API*//*
+                Log.i(TAG, "版本大于 O ，开始使用 fileProvider 进行分享");
+                shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                *//*Uri contentUri = FileProvider.getUriForFile(
+                        mContext
+                        , "cn.leftshine.apkexport.fileprovider"
+                        , shareFile);
+                Log.i(TAG, "contentUri："+contentUri);*//*
+                shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,shareFilesForO);
+            } else {
+                Log.i(TAG, "普通批量分享");
+                //shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+                shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,shareFiles);//Intent.EXTRA_STREAM同于传输文件流
+            }*/
+            Log.i(TAG, "普通批量分享");
+            //shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+            shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,shareFiles);//Intent.EXTRA_STREAM同于传输文件流
+            // 指定发送内容的类型 (MIME type)
+            //shareIntent.setType("application/vnd.android.package-archive");
+            shareIntent.setType("*/*");
+            mContext.startActivity(Intent.createChooser(shareIntent,(mContext.getString(R.string.share_to, "多个文件"))));
+        }catch (Exception e){
+            Toast.makeText(mContext,R.string.tip_share_failed,Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "share failed: "+e);
+        }
+    }
+
 //region
    /* public static void doLocalApk(Context context, Handler mHandler, int mode, AppInfo appInfo) {
         mContext=context;

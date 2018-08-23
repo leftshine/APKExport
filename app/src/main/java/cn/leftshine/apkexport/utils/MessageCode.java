@@ -18,4 +18,6 @@ public class MessageCode {
     public final static int MSG_INSTALLED_APP_DETAILS = 1;
     public final static int MSG_GET_APP = 0;
 
+    public final static int MSG_MULTI_EXPORT_TOTAL = 20001;
+
 }

@@ -5,13 +5,16 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -29,8 +32,11 @@ import java.util.List;
 
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.handler.FileHandler;
+import cn.leftshine.apkexport.handler.MultiFileHandler;
 import cn.leftshine.apkexport.utils.AppInfo;
 import cn.leftshine.apkexport.utils.FileUtils;
+import cn.leftshine.apkexport.utils.GlobalData;
+import cn.leftshine.apkexport.utils.MessageCode;
 import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.utils.ToolUtils;
 
@@ -43,12 +49,17 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 	//SortComparator localSortComparator;
 	private List<AppInfo> mLists = new ArrayList<AppInfo>();
 	private List<AppInfo> fullLists = new ArrayList<AppInfo>();
+	private List<AppInfo> selectedItems = new ArrayList<AppInfo>();
 	//private CharacterParser characterParser;
 	MyFilter mFilter;
 	Context mContext;
 	Handler mHandler;
+	Handler multiFileHandler;
 	FileUtils fileUtils;
 	int mType;
+	//ActionMode actionmode;
+
+
 
 	public AppInfoAdapter(Context context, List<AppInfo> list, int type) {
 		// TODO Auto-generated constructor stub
@@ -61,14 +72,92 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 
 		mType = type;
 		mHandler = new FileHandler(mContext);
+		multiFileHandler =new MultiFileHandler(mContext);
 		fileUtils = new FileUtils(mContext);
 	}
+
+	public int getmType() {
+		return mType;
+	}
+
+	/*	public void setActionmode(ActionMode actionmode) {
+            this.actionmode = actionmode;
+            actionBarView = actionmode.getCustomView();
+            selectedNum = (TextView)actionBarView.findViewById(R.id.selected_num);
+        }*/
 	public void setDataList(List<AppInfo> list) {
 		mLists = list;
 		fullLists = mLists;
 		notifyDataSetChanged();
 	}
+	//顺便把选中的item存到selectedItems中
+	public int getSelecteditemCount(){
+		selectedItems.clear();
+		int count=0;
+		for(int i = 0; i <getCount(); i++){
+			if (((AppInfo)getItem(i)).isSelect()){
+				selectedItems.add(((AppInfo)getItem(i)));
+				count++;
+			}
+		}
+		return count;
+	}
+	public void updateSelectedCount() {
+		//int selectedCount = listView.getCheckedItemCount();
+		int selectedCount = getSelecteditemCount();
+		View actionBarView = GlobalData.getActionmode().getCustomView();
+		TextView selectedNum = (TextView)actionBarView.findViewById(R.id.selected_num);
+		selectedNum.setText(selectedCount + "");
+	}
+	public void selectAll() {
+		for(int i = 0; i < getCount(); i++) {
+			((AppInfo)getItem(i)).setSelect(true);
+		}
+		updateSelectedCount();
+		notifyDataSetChanged();
+	}
+	public void unSelectAll() {
+		for(int i = 0; i < getCount(); i++) {
+			((AppInfo)getItem(i)).setSelect(false);
+		}
+		updateSelectedCount();
+		notifyDataSetChanged();
+	}
+	public void multiExport(int thenShare) {
+		if(selectedItems.size()>0) {
+			Log.i(TAG, "multi_copyFile start");
+			Message msgStart = Message.obtain();
+			msgStart.what = MessageCode.MSG_COPY_START;
+			msgStart.arg1 = selectedItems.size();
+			msgStart.arg2 = thenShare;
+			msgStart.obj = "批量导出进行中……";
+			multiFileHandler.sendMessage(msgStart);
+			for (int i = 0; i < selectedItems.size(); i++) {
+				AppInfo info = selectedItems.get(i);
 
+				String mCurrentPkgName = info.packageName;
+				String mCurrentAppName = info.appName;
+				String mCurrentAppPath = info.appSourcDir;
+				String mCurrentVersionName = info.getVersionName();
+				String mCurrentVersionCode = String.valueOf(info.versionCode);
+				String customFileNameFormat = Settings.getCustomFileNameFormat();
+				String customFileName = customFileNameFormat.replace("#N", mCurrentAppName).replace("#P", mCurrentPkgName).replace("#V", mCurrentVersionName).replace("#C", mCurrentVersionCode) + ".apk";
+				fileUtils.doExport(multiFileHandler, FileUtils.MODE_MULTI_EXPORT, mCurrentAppPath, customFileName);
+
+			}
+		}
+	}
+	public void multiShare(){
+		if(selectedItems.size()>0) {
+			ArrayList<Uri> shareFiles = new ArrayList<Uri>();
+			ArrayList<Uri> shareFilesForO = new ArrayList<Uri>();
+			for (int i = 0; i < selectedItems.size(); i++) {
+				AppInfo info = selectedItems.get(i);
+				shareFiles.add(Uri.fromFile(new File(info.appSourcDir)));
+			}
+			fileUtils.startMultiShare(shareFiles, shareFilesForO);
+		}
+	}
 /*	public void add(AppInfo info) {
 		if (info != null) {
 			mLists.add(info);
@@ -137,6 +226,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
+
 		if(ToolUtils.TYPE_USER == mType || ToolUtils.TYPE_SYSTEM == mType) {
 			AppViewHolder holder = null;
 			if (convertView == null || convertView.getTag() == null) {
@@ -153,41 +243,61 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 			holder.mAppName.setText(info.getAppName());
 			holder.mAppSize.setText(ToolUtils.getDataSize(info.getAppSize()));
 			holder.mAppVersionName.setText(info.getVersionName());
+			if(GlobalData.isMultipleMode){
+				holder.mCheckBox.setVisibility(View.VISIBLE);
+			}else{
+				holder.mCheckBox.setVisibility(View.GONE);
+			}
+			holder.mCheckBox.setChecked(info.isSelect());
+			/*holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+
+				@Override
+				public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+					info.setSelect(isChecked);
+					updateSelectedCount();
+				}
+			});*/
 		/*holder.mAppData.setText(ToolUtils.getDataSize(info.getAppCache()));
 		holder.mMemSize.setText(ToolUtils.getDataSize(info.getMemSize()));*/
 			holder.mAppitem.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					Log.i(TAG, "mAppitem onClick: ");
-					new AlertDialog.Builder(mContext)
-							.setTitle(R.string.choose_next_action)
-							.setItems(R.array.copy_actions, new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialogInterface, int i) {
-									int mode = i;
-									switch (i) {
-										case 0:
-											mode = FileUtils.MODE_ONLY_EXPORT;
-											break;
-										case 1:
-											mode = FileUtils.MODE_EXPORT_SHARE;
-											break;
-										case 2:
-											mode = FileUtils.MODE_EXPORT_RENAME_SHARE;
-											break;
-									}
-									String mCurrentPkgName = info.packageName;
-									String mCurrentAppName = info.appName;
-									String mCurrentAppPath = info.appSourcDir;
-									String mCurrentVersionName = info.getVersionName();
-									String mCurrentVersionCode = String.valueOf(info.versionCode);
-									String customFileNameFormat  = Settings.getCustomFileNameFormat();
-									String customFileName = customFileNameFormat.replace("#N",mCurrentAppName).replace("#P",mCurrentPkgName).replace("#V",mCurrentVersionName).replace("#C",mCurrentVersionCode)+".apk";
-									fileUtils.doExport(mHandler, mode,mCurrentAppPath, customFileName);
+					if (GlobalData.isMultipleMode) {
+						info.setSelect(!info.isSelect());
+						notifyDataSetChanged();
+						updateSelectedCount();
+					} else {
+						new AlertDialog.Builder(mContext)
+								.setTitle(R.string.choose_next_action)
+								.setItems(R.array.copy_actions, new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialogInterface, int i) {
+										int mode = i;
+										switch (i) {
+											case 0:
+												mode = FileUtils.MODE_ONLY_EXPORT;
+												break;
+											case 1:
+												mode = FileUtils.MODE_EXPORT_SHARE;
+												break;
+											case 2:
+												mode = FileUtils.MODE_EXPORT_RENAME_SHARE;
+												break;
+										}
+										String mCurrentPkgName = info.packageName;
+										String mCurrentAppName = info.appName;
+										String mCurrentAppPath = info.appSourcDir;
+										String mCurrentVersionName = info.getVersionName();
+										String mCurrentVersionCode = String.valueOf(info.versionCode);
+										String customFileNameFormat = Settings.getCustomFileNameFormat();
+										String customFileName = customFileNameFormat.replace("#N", mCurrentAppName).replace("#P", mCurrentPkgName).replace("#V", mCurrentVersionName).replace("#C", mCurrentVersionCode) + ".apk";
+										fileUtils.doExport(mHandler, mode, mCurrentAppPath, customFileName);
 
-								}
-							})
-							.show();
+									}
+								})
+								.show();
+					}
 				}
 			});
 			holder.mAppitem.setOnLongClickListener(new View.OnLongClickListener() {
@@ -294,66 +404,79 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 			holder.LocalApkSize.setText(ToolUtils.getDataSize(info.getAppSize()));
 			String timeFormat = new SimpleDateFormat("MM-dd hh:mm").format(new Date(info.getLastUpdateTime()));
 			holder.LocalApkdate.setText(timeFormat);
+			if(GlobalData.isMultipleMode){
+				holder.LocalApkCheckBox.setVisibility(View.VISIBLE);
+			}else{
+				holder.LocalApkCheckBox.setVisibility(View.GONE);
+			}
+			holder.LocalApkCheckBox.setChecked(info.isSelect());
 			holder.LocalApkitem.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
+
 					Log.i(TAG, "LocalApkitem onClick: ");
-					new AlertDialog.Builder(mContext)
-							.setTitle(R.string.choose_next_action)
-							.setItems(R.array.localAPK_actions, new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialogInterface, int i) {
+					if (GlobalData.isMultipleMode) {
+						info.setSelect(!info.isSelect());
+						notifyDataSetChanged();
+						updateSelectedCount();
+					} else {
+						new AlertDialog.Builder(mContext)
+								.setTitle(R.string.choose_next_action)
+								.setItems(R.array.localAPK_actions, new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialogInterface, int i) {
                                 /*<item>Share</item>
                                 <item>Install</item>
                                 <item>Rename</item>
                                 <item>Delete</item>*/
-									//int mode = i + MODE_LOCAL_SHARE;
-									switch (i){
-										case 0:
-											//mode = MODE_LOCAL_SHARE;
-											fileUtils.startShare(info.appSourcDir);
-											break;
-										case 1:
-											//mode = MODE_LOCAL_INSTALL;
-											fileUtils.install(info.appSourcDir,mContext);
-											break;
-										case 2:
-											//mode = MODE_LOCAL_RENAME;
-											final String oldName = info.appName;
-											fileUtils.rename(info.appSourcDir, new FileUtils.OnListDataChangedListener() {
-												@Override
-												public void OnListDataChanged(String newPath) {
-													File newFile = new File(newPath);
-													String newName= newFile.getName();
-													if(oldName!=newName) {
-														AppInfo newInfo = info;
-														newInfo.appName = newName;
-														info.setAppName(newName);
-														info.setAppSourcDir(newPath);
-														mLists.remove(position);
-														mLists.add(position, newInfo);
-														notifyDataSetChanged();
+										//int mode = i + MODE_LOCAL_SHARE;
+										switch (i) {
+											case 0:
+												//mode = MODE_LOCAL_SHARE;
+												fileUtils.startShare(info.appSourcDir);
+												break;
+											case 1:
+												//mode = MODE_LOCAL_INSTALL;
+												fileUtils.install(info.appSourcDir, mContext);
+												break;
+											case 2:
+												//mode = MODE_LOCAL_RENAME;
+												final String oldName = info.appName;
+												fileUtils.rename(info.appSourcDir, new FileUtils.OnListDataChangedListener() {
+													@Override
+													public void OnListDataChanged(String newPath) {
+														File newFile = new File(newPath);
+														String newName = newFile.getName();
+														if (oldName != newName) {
+															AppInfo newInfo = info;
+															newInfo.appName = newName;
+															info.setAppName(newName);
+															info.setAppSourcDir(newPath);
+															mLists.remove(position);
+															mLists.add(position, newInfo);
+															notifyDataSetChanged();
 
+														}
 													}
-												}
-											});
+												});
 
-											break;
-										case 3:
-											//mode = MODE_LOCAL_DELETE;
-											fileUtils.delete(info.appSourcDir, new FileUtils.OnListDataChangedListener() {
-												@Override
-												public void OnListDataChanged(String newPath) {
-													mLists.remove(position);
-													notifyDataSetChanged();
-												}
-											});
-											break;
+												break;
+											case 3:
+												//mode = MODE_LOCAL_DELETE;
+												fileUtils.delete(info.appSourcDir, new FileUtils.OnListDataChangedListener() {
+													@Override
+													public void OnListDataChanged(String newPath) {
+														mLists.remove(position);
+														notifyDataSetChanged();
+													}
+												});
+												break;
+										}
+										//FileUtils.doLocalApk(context,mHandler,mode,info);
 									}
-									//FileUtils.doLocalApk(context,mHandler,mode,info);
-								}
-							})
-							.show();
+								})
+								.show();
+					}
 				}
 			});
 			holder.LocalApkitem.setOnLongClickListener(new View.OnLongClickListener() {
@@ -417,9 +540,21 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 				}
 			});
 		}
+		/*if(isMultipleMode){
+			convertView.findViewById(R.id.appInfo_checkbox).setVisibility(View.VISIBLE);
+		}else{
+			convertView.findViewById(R.id.appInfo_checkbox).setVisibility(View.GONE);
+		}
+		//判断position位置是否被选中，改变颜色
+		if(mLists.get(position).isSelect()) {
+			convertView.setBackgroundColor(Color.RED);
+		} else {
+			convertView.setBackgroundColor(Color.TRANSPARENT);
+		}*/
 		return convertView;
 	}
-	
+
+
 	private class AppViewHolder {
 		private LinearLayout mAppitem;
 		private ImageView mAppIcon;
@@ -427,6 +562,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 		private TextView mAppName;
 		private TextView mAppSize;
 		private TextView mAppVersionName;
+		private CheckBox mCheckBox;
 		/*private TextView mAppData;
 		private TextView mMemSize;*/
 
@@ -437,6 +573,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 			mAppName = (TextView) view.findViewById(R.id.appInfo_appName);
 			mAppSize = (TextView) view.findViewById(R.id.appInfo_appSize);
 			mAppVersionName = (TextView) view.findViewById(R.id.appInfo_appVersionName);
+			mCheckBox=(CheckBox)view.findViewById(R.id.appInfo_checkbox);
             /*mAppData = (TextView) view.findViewById(R.id.appInfo_dataSize);
 			mMemSize = (TextView) view.findViewById(R.id.appInfo_memSize);*/
 		}
@@ -446,6 +583,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 		private LinearLayout LocalApkitem;
 		private ImageView LocalApkIcon;
 		private TextView LocalApkName,LocalApkSize,LocalApkdate;
+		CheckBox LocalApkCheckBox;
 
 		public ApkViewHolder(View view) {
 			LocalApkitem = (LinearLayout)view.findViewById(R.id.LocalApkInfo_item);
@@ -453,6 +591,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 			LocalApkName = (TextView) view.findViewById(R.id.LocalApkInfo_appName);
 			LocalApkSize = (TextView) view.findViewById(R.id.LocalApkInfo_appSize);
 			LocalApkdate = (TextView)view.findViewById(R.id.LocalApkInfo_date);
+			LocalApkCheckBox = (CheckBox)view.findViewById(R.id.LocalApkInfo_checkbox);
 		}
 	}
 	
