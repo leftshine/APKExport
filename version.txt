@@ -125,9 +125,7 @@ v2.2
 修复Android O上对百度云的兼容问题，现在可以上传到百度云了
 
 
-android O的分享问题，修改本地APK的分享
 -更换listview为recycleView
--添加批量操作（多选）功能（准备做成付费功能）
 -对于较大的文件（>200m）导出时检测是否已经有同名文件,并在设置添加开关
 -开关本地APK页后立即生效（重新初始化MainActivity）
 -修改架构，拆分为三个fragment都继承自AppFragment
