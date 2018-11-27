@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="copy_actions">
-        <item>Only Export</item>
-        <item>Share after Export</item>
-        <item>Share after Export with custom file name</item>
+        <item>Export</item>
+        <item>Export with custom file name</item>
+        <item>Share</item>
+        <item>Share with custom file name</item>
     </string-array>
 
     <string-array name="copy_info_actions">

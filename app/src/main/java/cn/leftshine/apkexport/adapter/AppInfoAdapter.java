@@ -273,15 +273,24 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 								.setItems(R.array.copy_actions, new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialogInterface, int i) {
+										/*
+										*<item>导出</item>
+										*<item>以自定义文件名导出</item>
+										*<item>分享</item>
+										*<item>以自定义文件名分享</item>
+										* */
 										int mode = i;
 										switch (i) {
 											case 0:
 												mode = FileUtils.MODE_ONLY_EXPORT;
 												break;
 											case 1:
-												mode = FileUtils.MODE_EXPORT_SHARE;
+												mode = FileUtils.MODE_ONLY_EXPORT_RENAME;
 												break;
 											case 2:
+												mode = FileUtils.MODE_EXPORT_SHARE;
+												break;
+											case 3:
 												mode = FileUtils.MODE_EXPORT_RENAME_SHARE;
 												break;
 										}

@@ -33,6 +33,7 @@ import static cn.leftshine.apkexport.utils.PermisionUtils.verifyStoragePermissio
 
 public class FileUtils {
     public static final int MODE_ONLY_EXPORT = 0;
+    public static final int MODE_ONLY_EXPORT_RENAME = 5;
     public static final int MODE_EXPORT_SHARE = 1;
     public static final int MODE_EXPORT_RENAME_SHARE = 2;
     public static final int MODE_MULTI_EXPORT = 3;
@@ -53,11 +54,31 @@ public class FileUtils {
     //导出操作
     public void doExport(final Handler mHandler, final int mode, final String mCurrentAppPath, String customFileName){
         mCopyFileName = customFileName;
+        View dialog_edit = View.inflate(mContext,R.layout.dialog_edit,null);
+        final ClearEditText txtFileName = dialog_edit.findViewById(R.id.txt_filename);
         switch (mode){
             case MODE_ONLY_EXPORT:
                 //仅导出
                 //mCopyFileName = customFileName + ".apk";
                 doCopy(mHandler,mCurrentAppPath,mode);
+                break;
+            case MODE_ONLY_EXPORT_RENAME:
+                //重命名导出
+                //doRename();
+                txtFileName.setText(mCopyFileName);
+                txtFileName.setSelection(0,customFileName.length());
+                new AlertDialog.Builder(mContext)
+                        .setTitle(R.string.input_new_name)
+                        .setView(dialog_edit)
+                        .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mCopyFileName = txtFileName.getText().toString();
+                                doCopy(mHandler,mCurrentAppPath,mode);
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel,null)
+                        .show();
                 break;
             case MODE_EXPORT_SHARE:
                 //导出后分享
@@ -67,13 +88,11 @@ public class FileUtils {
             case MODE_EXPORT_RENAME_SHARE:
                 //导出、重命名后分享
                 //doRename();
-                View view = View.inflate(mContext,R.layout.dialog_edit,null);
-                final ClearEditText txtFileName = view.findViewById(R.id.txt_filename);
                 txtFileName.setText(mCopyFileName);
                 txtFileName.setSelection(0,customFileName.length());
                 new AlertDialog.Builder(mContext)
                         .setTitle(R.string.input_new_name)
-                        .setView(view)
+                        .setView(dialog_edit)
                         .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {

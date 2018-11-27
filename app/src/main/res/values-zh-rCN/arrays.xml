@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="copy_actions">
-        <item>仅提取</item>
-        <item>提取后分享</item>
-        <item>以自定义文件名提取后分享</item>
+        <item>导出</item>
+        <item>以自定义文件名导出</item>
+        <item>分享</item>
+        <item>以自定义文件名分享</item>
     </string-array>
 
     <string-array name="copy_info_actions">
