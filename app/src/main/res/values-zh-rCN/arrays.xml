@@ -29,13 +29,15 @@
     </string-array>
 
     <string-array name="long_press_actions_name">
-        <item>仅提取</item>
-        <item>提取后分享</item>
-        <item>以自定义文件名提取后分享</item>
+        <item>导出</item>
+        <item>以自定义文件名导出</item>
+        <item>分享</item>
+        <item>以自定义文件名分享</item>
         <item>复制应用信息</item>
     </string-array>
     <string-array name="long_press_actions_value">
         <item>100</item>
+        <item>104</item>
         <item>101</item>
         <item>102</item>
         <item>103</item>

@@ -376,6 +376,9 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 							case "100":
 								mode = FileUtils.MODE_ONLY_EXPORT;
 								break;
+							case "104":
+								mode = FileUtils.MODE_ONLY_EXPORT_RENAME;
+								break;
 							case "101":
 								mode = FileUtils.MODE_EXPORT_SHARE;
 								break;
