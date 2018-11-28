@@ -108,16 +108,23 @@ public class FileUtils {
             case MODE_MULTI_EXPORT:
                 doCopy(mHandler,mCurrentAppPath,mode);
                 break;
+            case MODE_MULTI_EXPORT_SHARE:
+                doCopy(mHandler,mCurrentAppPath,mode);
+                break;
         }
     }
 
     private void doCopy(final Handler mHandler, final String mCurrentAppPath, final int mode) {
         //File mFolder = new File( Environment.getExternalStorageDirectory()+File.separator+"APKExport");
         File mFolder = new File(Settings.getCustomExportPath());
+        if((mode == MODE_EXPORT_SHARE||mode ==MODE_EXPORT_RENAME_SHARE||mode == MODE_MULTI_EXPORT_SHARE)&&!Settings.isShareWithExport()){
+            mFolder = new File (FileUtils.getDiskCacheDir(mContext));
+        }
         if (!mFolder.exists()) {
             mFolder.mkdir();
         }
         final String mCopypath = new File(mFolder.getAbsolutePath(), mCopyFileName).getPath();
+        Log.i(TAG, "doCopy: mCopypath="+mCopypath);
         //PermissionChecker.checkPermission(mContext,)
         if(verifyStoragePermissions((Activity) mContext)){
             //已获得权限
@@ -164,6 +171,7 @@ public class FileUtils {
                     Message msgStart = Message.obtain();
                     msgStart.what = MessageCode.MSG_COPY_START;
                     msgStart.obj = newFile.getName();
+                    msgStart.arg1 = mode;
                     mHandler.sendMessage(msgStart);
                 }
 
@@ -371,5 +379,16 @@ public class FileUtils {
         String[] paths = new String[]{Environment.getExternalStorageDirectory().toString()};
         String[] mimeTypes = new String[]{"application/vnd.android.package-archive"};
         MediaScannerConnection.scanFile(mContext,paths, mimeTypes, null);
+    }
+
+    public static String getDiskCacheDir(Context context) {
+        String cachePath = null;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                || !Environment.isExternalStorageRemovable()) {
+            cachePath = context.getExternalCacheDir().getPath();
+        } else {
+            cachePath = context.getCacheDir().getPath();
+        }
+        return cachePath;
     }
 }

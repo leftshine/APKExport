@@ -130,7 +130,15 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 			msgStart.what = MessageCode.MSG_COPY_START;
 			msgStart.arg1 = selectedItems.size();
 			msgStart.arg2 = thenShare;
-			msgStart.obj = "批量导出进行中……";
+			int mode;
+			if(thenShare==0) {
+				mode = FileUtils.MODE_MULTI_EXPORT;
+				msgStart.obj = mContext.getString(R.string.exporting);
+			}
+			else {
+				mode = FileUtils.MODE_MULTI_EXPORT_SHARE;
+				msgStart.obj = mContext.getString(R.string.prepare_for_share);
+			}
 			multiFileHandler.sendMessage(msgStart);
 			for (int i = 0; i < selectedItems.size(); i++) {
 				AppInfo info = selectedItems.get(i);
@@ -142,7 +150,8 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 				String mCurrentVersionCode = String.valueOf(info.versionCode);
 				String customFileNameFormat = Settings.getCustomFileNameFormat();
 				String customFileName = customFileNameFormat.replace("#N", mCurrentAppName).replace("#P", mCurrentPkgName).replace("#V", mCurrentVersionName).replace("#C", mCurrentVersionCode) + ".apk";
-				fileUtils.doExport(multiFileHandler, FileUtils.MODE_MULTI_EXPORT, mCurrentAppPath, customFileName);
+
+				fileUtils.doExport(multiFileHandler, mode, mCurrentAppPath, customFileName);
 
 			}
 		}

@@ -94,4 +94,12 @@ public class Settings {
         sharedPreferences.edit().putString(mContext.getString(R.string.key_sort_order),sortOrder).apply();
     }
 
+    public static Boolean isShareWithExport() {
+        return sharedPreferences.getBoolean(mContext.getString(R.string.key_is_share_with_export),false);
+    }
+    public static void setShareWithExport(Boolean b) {
+        //return sharedPreferences.getString(mContext.getString(R.string.key_sort_order),"300");
+        sharedPreferences.edit().putBoolean(mContext.getString(R.string.key_is_share_with_export),b).apply();
+    }
+
 }

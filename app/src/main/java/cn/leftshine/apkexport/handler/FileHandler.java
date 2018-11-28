@@ -23,6 +23,7 @@ public class FileHandler extends Handler {
     private static ProgressDialog progressDialog;
     private static Toast mToast;
     private FileUtils fileUtils;
+    private int mode;
 
     public FileHandler(Context context) {
         this.context = context;
@@ -35,16 +36,22 @@ public class FileHandler extends Handler {
     public void handleMessage(Message msg) {
         switch (msg.what) {
             case MessageCode.MSG_COPY_START:
+                mode = msg.arg1;
                 String message = (String)msg.obj;
-                showProgressDialog(context,message);
+                showProgressDialog(context,message,mode);
                 break;
             case MessageCode.MSG_COPY_COMPLETE:
                 closeProgressDialog();
                 String shareFilePath = msg.obj.toString();
-                showToast("导出完成，文件保存在:"+shareFilePath);
-                int mode = msg.arg1;
+                mode = msg.arg1;
+
                 if(mode == FileUtils.MODE_EXPORT_SHARE||mode == FileUtils.MODE_EXPORT_RENAME_SHARE) {
+                    if(Settings.isShareWithExport()){
+                        showToast(context.getString(R.string.tip_export_success) + shareFilePath);
+                    }
                     fileUtils.startShare(shareFilePath);
+                }else {
+                    showToast(context.getString(R.string.tip_export_success) + shareFilePath);
                 }
                 if(context instanceof SystemShareActivity&&Settings.isExportDerect()){
                     //System.exit(0);
@@ -62,9 +69,13 @@ public class FileHandler extends Handler {
         }
         super.handleMessage(msg);
     }
-    public static void showProgressDialog(Context context, String msg) {
+    public static void showProgressDialog(Context context, String msg, int mode) {
         progressDialog = new ProgressDialog(context);
-        progressDialog.setTitle(R.string.exporting);
+        if(Settings.isShareWithExport()||mode == FileUtils.MODE_ONLY_EXPORT||mode == FileUtils.MODE_ONLY_EXPORT_RENAME) {
+            progressDialog.setTitle(R.string.exporting);
+        }else{
+            progressDialog.setTitle(R.string.prepare_for_share);
+        }
         progressDialog.setMessage(msg);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条
         progressDialog.setCancelable(false);

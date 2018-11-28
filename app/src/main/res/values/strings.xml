@@ -20,7 +20,9 @@
     <string name="app_uninstall_failed">"Application uninstalled failed"</string>
 
     <string name="exporting">"Exporting…"</string>
+    <string name="prepare_for_share">"Prepare for share"</string>
     <string name="export_completed">"Export Completed! Apk File Saved As"</string>
+    <string name="title_multi_action">Multi Action</string>
     <string name="loading">"Loading..."</string>
     <string name="Refreshing">"Refreshing..."</string>
     <string name="share_to">Share %1$s to...</string>
@@ -58,12 +60,15 @@
 
     <string name="title_activity_setting">Settings</string>
     <string name="setting_general_title">General</string>
-    <string name="setting_export_title">Export</string>
+    <string name="setting_export_title">Share&amp;Export</string>
     <string name="setting_export_open">Open</string>
     <string name="custom_export_path">Custom Export Path</string>
     <string name="setting_autoClean_title">Auto Clean</string>
     <string name="setting_autoClean_summaryOff">The apks exported will not be deleted</string>
     <string name="setting_autoClean_summaryOn">The apks exported will be deleted the next time you open the app</string>
+    <string name="setting_shareWithExport_title">Share with Export</string>
+    <string name="setting_shareWithExport_summaryOff">The Apk will not be exported when share</string>
+    <string name="setting_shareWithExport_summaryOn">The Apk will be exported when share</string>
 
     <string name="setting_super_export_title">Super Export</string>
     <string name="setting_export_direct_title">Direct Mode</string>
@@ -97,6 +102,7 @@
 
     <string name="key_is_export_direct" translatable="false">is_export_direct</string>
     <string name="key_is_auto_clean" translatable="false">is_auto_clean</string>
+    <string name="key_is_share_with_export" translatable="false">is_share_with_export</string>
     <string name="key_is_show_local_apk" translatable="false">is_show_local_apk</string>
     <string name="key_custom_filename_format" translatable="false">custom_filename_format</string>
     <string name="key_custom_export_path" translatable="false">custom_export_path</string>
@@ -143,6 +149,8 @@
     <string name="storage_permission_obtain_toast">Storage permission granted. Now you can go on.</string>
     <string name="tip_copy_failed">copy failed</string>
     <string name="tip_share_failed">share failed</string>
+    <string name="tip_export_success">Export complete，file save at: </string>
+    <string name="tip_multi_export_success">Multi export complete，file save at: </string>
     <string name="tip_eamil_ActivityNotFoundException">No App found to send email</string>
     <string name="tip_eamil_failed">email failed</string>
     <string name="tip_auto_clean_closed">No storage permission,Auto-Clean Closed</string>

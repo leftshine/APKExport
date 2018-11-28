@@ -15,7 +15,9 @@
     <string name="app_uninstall_success">应用卸载成功</string>
     <string name="app_uninstall_failed">应用卸载失败</string>
     <string name="exporting">正在导出……</string>
+    <string name="prepare_for_share">准备分享……</string>
     <string name="export_completed">"导出成功，文件保存在 "</string>
+    <string name="title_multi_action">批量操作</string>
     <string name="about_page_description">APKExport 是一个APK导出工具，你可以将手机中已安装的应用以APK格式导出并分享给你的朋友。\\n特别是方便上传到QQ群，避免群文件出现大量的base.apk 。\\n特有的“超级提取”功能，能够在其它应用分享内容到APKExport时提取该应用的apk，方便快捷！</string>
     <string name="about_feedback_title">官方QQ群：%1$s（付费，点击加群）</string>
     <string name="about_feedback_title2">官方QQ群：%1$s（点击加群）</string>
@@ -49,6 +51,9 @@
     <string name="setting_autoClean_title">自动清理</string>
     <string name="setting_autoClean_summaryOff">已关闭，将保留导出的APK文件</string>
     <string name="setting_autoClean_summaryOn">已启用，将在每次启动时清空导出目录</string>
+    <string name="setting_shareWithExport_title">分享时导出</string>
+    <string name="setting_shareWithExport_summaryOff">已关闭，分享时不会导出文件</string>
+    <string name="setting_shareWithExport_summaryOn">已开启，分享时将会同时导出文件</string>
 
     <string name="setting_show_local_apk_title">显示本地APK页</string>
     <string name="setting_show_local_apk_summaryOff">隐藏(修改将在应用重启后生效)</string>
@@ -77,7 +82,7 @@
     <string name="action_search">搜索</string>
     <string name="action_sort">排序</string>
     <string name="setting_general_title">通用</string>
-    <string name="setting_export_title">导出</string>
+    <string name="setting_export_title">分享与导出</string>
     <string name="confirm_delete">确认删除？</string>
 
     <string name="copy_success">复制成功:%1$s</string>
@@ -114,6 +119,8 @@
 
     <string name="tip_copy_failed">导出过程异常，请重试</string>
     <string name="tip_share_failed">分享过程异常，请重试</string>
+    <string name="tip_export_success">导出完成，文件保存在:</string>
+    <string name="tip_multi_export_success">批量导出完成，文件保存在:</string>
     <string name="tip_eamil_ActivityNotFoundException">未找到邮件发送程序</string>
     <string name="tip_eamil_failed">启动邮件程序异常，请重试</string>
 

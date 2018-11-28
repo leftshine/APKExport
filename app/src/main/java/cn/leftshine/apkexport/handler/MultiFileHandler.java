@@ -66,7 +66,10 @@ public class MultiFileHandler extends Handler {
                 shareFilesForO.add(contentUri);
                 if(multicur==multiTotal&&multiTotal>0){
                     closeProgressDialog();
-                    showToast("批量导出完成，文件保存在:"+Settings.getCustomExportPath());
+                    if(Settings.isShareWithExport()) {
+                        showToast(context.getString(R.string.tip_multi_export_success) + Settings.getCustomExportPath());
+                    }
+                    //showToast("批量导出完成，文件保存在:"+Settings.getCustomExportPath());
                     if(thenShare == 1) {
                         fileUtils.startMultiShare(shareFiles,shareFilesForO);
                     }
@@ -93,7 +96,7 @@ public class MultiFileHandler extends Handler {
     }
     public static void showProgressDialog(Context context, String msg, int multiTotal) {
         progressDialog = new ProgressDialog(context);
-        progressDialog.setTitle(R.string.exporting);
+        progressDialog.setTitle(R.string.title_multi_action);
         progressDialog.setMessage(msg);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条
         progressDialog.setMax(multiTotal);
