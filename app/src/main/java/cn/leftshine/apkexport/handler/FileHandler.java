@@ -28,7 +28,7 @@ public class FileHandler extends Handler {
     public FileHandler(Context context) {
         this.context = context;
         if (mToast == null) {
-            mToast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
+            mToast = Toast.makeText(context, "", Toast.LENGTH_LONG);
         }
         fileUtils = new FileUtils(context);
     }
@@ -64,6 +64,10 @@ public class FileHandler extends Handler {
                 Log.i(TAG, "MSG_COPY_PROGRESS: "+lprogress.intValue());
                 setProgressDialogProgress(lprogress.intValue());
                 break;
+
+            case MessageCode.MSG_COPY_ERROR:
+                String path = (String)msg.obj;
+                Toast.makeText(context,context.getString(R.string.tip_copy_failed)+path,Toast.LENGTH_SHORT).show();
             default:
                 break;
         }

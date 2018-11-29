@@ -157,7 +157,7 @@
     <string name="storage_permission_copy_dialog_content">Can not export APK files without the storage permission</string>
     <string name="storage_permission_auto_clean_dialog_content">Can not delete APK files without the storage permission</string>
     <string name="storage_permission_obtain_toast">Storage permission granted. Now you can go on.</string>
-    <string name="tip_copy_failed">copy failed</string>
+    <string name="tip_copy_failed">copy failed:</string>
     <string name="tip_share_failed">share failed</string>
     <string name="tip_export_success">Export complete，file save at: </string>
     <string name="tip_multi_export_success">Multi export complete，file save at: </string>

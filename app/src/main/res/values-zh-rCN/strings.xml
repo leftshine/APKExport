@@ -18,7 +18,7 @@
     <string name="prepare_for_share">准备分享……</string>
     <string name="export_completed">"导出成功，文件保存在 "</string>
     <string name="title_multi_action">批量操作</string>
-    <string name="about_page_description">APKExport 是一个APK导出工具，你可以将手机中已安装的应用以APK格式导出并分享给你的朋友。\\n特别是方便上传到QQ群，避免群文件出现大量的base.apk 。\\n特有的“超级提取”功能，能够在其它应用分享内容到APKExport时提取该应用的apk，方便快捷！</string>
+    <string name="about_page_description">APKExport 是一个APK导出工具，你可以将手机中已安装的应用以APK格式导出并分享给你的朋友。\\n特别是方便上传到QQ群，避免群文件出现大量的base.apk 。\\n特有的“超级导出”功能，能够在其它应用分享内容到APKExport时导出该应用的apk，方便快捷！</string>
     <string name="about_feedback_title">官方QQ群：%1$s（付费，点击加群）</string>
     <string name="about_feedback_title2">官方QQ群：%1$s（点击加群）</string>
     <string name="about_feedback_tips">群号已复制到剪贴板！</string>
@@ -100,8 +100,8 @@
     <string name="insert_package_name">包名</string>
     <string name="insert_version_name">版本号</string>
     <string name="insert_version_code">内部版本号</string>
-    <string name="only_export">仅提取</string>
-    <string name="share_after_export">提取后分享</string>
+    <string name="only_export">仅导出</string>
+    <string name="share_after_export">导出后分享</string>
     <string name="share_file_name_default">默认</string>
     <string name="setting_export_direct_title">快速模式</string>
     <string name="tip_direct_share">快速模式执行中...</string>
@@ -114,7 +114,7 @@
     <string name="setting_clean_export_dir_title">清理导出目录</string>
     <string name="setting_clean_export_dir_summery">占用空间：</string>
     <string name="setting_clean_export_dir_summery_clean_Running">清理进行中…请稍后返回查看</string>
-    <string name="super_export">提取该应用的APK</string>
+    <string name="super_export">导出该应用的APK</string>
 
     <string name="storage_permission_dialog_content">扫描本地APK文件需要文件访问权限，如果不授予应用将无法正常使用</string>
     <string name="storage_permission_dialog_negative">就是不给</string>
@@ -124,7 +124,7 @@
     <string name="storage_permission_auto_clean_dialog_content">执行清理操作需要文件访问权限，如果不授予应用将无法正常使用</string>
     <string name="storage_permission_obtain_toast">成功取得文件访问权限，请重新执行相关操作</string>
 
-    <string name="tip_copy_failed">导出过程异常，请重试</string>
+    <string name="tip_copy_failed">导出过程异常：</string>
     <string name="tip_share_failed">分享过程异常，请重试</string>
     <string name="tip_export_success">导出完成，文件保存在:</string>
     <string name="tip_multi_export_success">批量导出完成，文件保存在:</string>
@@ -135,7 +135,7 @@
     <string name="tip_local_apk_closed">文件访问权限获取失败,本地APK页已隐藏,可前往设置开启</string>
 
     <string name="multi_select_num">已选中：</string>
-    <string name="multi_export">提取</string>
+    <string name="multi_export">导出</string>
     <string name="multi_share">分享</string>
     <string name="multi_select_all">全选</string>
     <string name="multi_unselect_all">清空</string>

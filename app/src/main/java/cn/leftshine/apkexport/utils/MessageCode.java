@@ -10,6 +10,7 @@ public class MessageCode {
     public final static int MSG_COPY_COMPLETE = 10002;
     public final static int MSG_COPY_PROGRESS = 10003;
     public final static int MSG_GET_APP_COMPLETED =10004;
+    public final static int MSG_COPY_ERROR =10005;
     public static final int MSG_COPY_START = 1005;
     public static final int MSG_REFRESH_START = 1006;
     public static final int MSG_LOAD_START = 1007;

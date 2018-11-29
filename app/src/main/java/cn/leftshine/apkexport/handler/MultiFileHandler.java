@@ -34,6 +34,7 @@ public class MultiFileHandler extends Handler {
     private static int thenShare;
     private  ArrayList<Uri>  shareFiles =new ArrayList<Uri>();
     private  ArrayList<Uri>  shareFilesForO=new ArrayList<Uri>();
+    private int mode;
 
     public MultiFileHandler(Context context) {
         this.context = context;
@@ -54,6 +55,7 @@ public class MultiFileHandler extends Handler {
                 showProgressDialog(context,message,multiTotal);
                 break;
             case MessageCode.MSG_COPY_COMPLETE:
+                mode = msg.arg1;
                 multicur++;
                 int multiProgress = multicur;
                 setProgressDialogProgress(multiProgress);
@@ -66,7 +68,7 @@ public class MultiFileHandler extends Handler {
                 shareFilesForO.add(contentUri);
                 if(multicur==multiTotal&&multiTotal>0){
                     closeProgressDialog();
-                    if(Settings.isShareWithExport()) {
+                    if(Settings.isShareWithExport()||mode == FileUtils.MODE_MULTI_EXPORT) {
                         showToast(context.getString(R.string.tip_multi_export_success) + Settings.getCustomExportPath());
                     }
                     //showToast("批量导出完成，文件保存在:"+Settings.getCustomExportPath());
@@ -89,6 +91,13 @@ public class MultiFileHandler extends Handler {
                 Log.i(TAG, "MSG_COPY_PROGRESS: "+lprogress.intValue());
                 setProgressDialogProgress(lprogress.intValue());
                 break;*/
+
+            case MessageCode.MSG_COPY_ERROR:
+                multicur++;
+                String path = (String)msg.obj;
+                Toast.makeText(context,context.getString(R.string.tip_copy_failed)+path,Toast.LENGTH_SHORT).show();
+                break;
+
             default:
                 break;
         }

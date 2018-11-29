@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.view.ClearEditText;
@@ -54,7 +55,8 @@ public class FileUtils {
 
     //导出操作
     public void doExport(final Handler mHandler, final int mode, final String mCurrentAppPath, String customFileName){
-        mCopyFileName = customFileName;
+        mCopyFileName = filenameFilter(customFileName);
+        Log.i(TAG, "doExport: customFileName="+customFileName+"\nmCopyFileName="+mCopyFileName);
         View dialog_edit = View.inflate(mContext,R.layout.dialog_edit,null);
         final ClearEditText txtFileName = dialog_edit.findViewById(R.id.txt_filename);
         switch (mode){
@@ -156,7 +158,7 @@ public class FileUtils {
         try {
             File oldFile = new File(oldPath);
             File newFile = new File(newPath);
-            Log.i(TAG, "oldFile："+oldFile+"\nnewFile："+newFile);
+            //Log.i(TAG, "oldFile："+oldFile+"\nnewFile："+newFile);
             if (oldFile.exists()) { //文件存在时
                 long totalSize = oldFile.length();
                 long copiedSize = 0;
@@ -168,7 +170,7 @@ public class FileUtils {
                 FileOutputStream fos = new FileOutputStream(newFile);
                 int count;
                 if(!(MODE_MULTI_EXPORT==mode||MODE_MULTI_EXPORT_SHARE==mode)) {
-                    Log.i(TAG, "copyFile start");
+                    Log.i(TAG, "copyFile start:"+newFile);
                     Message msgStart = Message.obtain();
                     msgStart.what = MessageCode.MSG_COPY_START;
                     msgStart.obj = newFile.getName();
@@ -183,7 +185,7 @@ public class FileUtils {
                     fos.write(buffer, 0, count);
                     copiedSize += count;
                     Message msgProgress = Message.obtain();
-                    Log.i(TAG, "copiedSize:totalSize "+copiedSize+":"+totalSize);
+                    //Log.i(TAG, "copiedSize:totalSize "+copiedSize+":"+totalSize);
                     msgProgress.obj = copiedSize * 100 / totalSize ;//progress的值为0到100，因此得到的百分数要乘以100;
                     msgProgress.what = MessageCode.MSG_COPY_PROGRESS;
                     mHandler.sendMessage(msgProgress);
@@ -191,7 +193,7 @@ public class FileUtils {
                 fis.close();
                 fos.flush();
                 fos.close();
-                Log.i(TAG, "copyFile complete");
+                Log.i(TAG, "copyFile complete:"+newFile);
                 Message msgComplete = Message.obtain();
                 msgComplete.arg1 = mode;
                 msgComplete.what = MessageCode.MSG_COPY_COMPLETE;
@@ -200,8 +202,12 @@ public class FileUtils {
             }
         }
         catch (Exception e) {
-            Log.e(TAG,"复制文件出错-e:"+e);
-            Toast.makeText(mContext,R.string.tip_copy_failed,Toast.LENGTH_SHORT).show();
+            Log.e(TAG,"复制文件出错:\noldPath="+oldPath+"\nnewPath="+newPath+"\ne:"+e);
+            Message msgError = Message.obtain();
+            msgError.what = MessageCode.MSG_COPY_ERROR;
+            msgError.obj = newPath;
+            mHandler.sendMessage(msgError);
+            //Toast.makeText(mContext,R.string.tip_copy_failed,Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
@@ -577,5 +583,13 @@ public class FileUtils {
         }
         return fileSizeLong;
     }
+    /**
+     * 过滤文件名非法字符
+     */
+    private static Pattern FilePattern = Pattern.compile("[\\\\/:*?\"<>|]");
+    public static String filenameFilter(String str) {
+        return str==null?null:FilePattern.matcher(str).replaceAll(" ");
+    }
+
 
 }
