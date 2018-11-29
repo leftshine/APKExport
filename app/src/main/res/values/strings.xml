@@ -68,8 +68,8 @@
     <string name="setting_autoClean_title">Auto Clean</string>
     <string name="setting_autoClean_cacheDir_title">Clean up cache when launch</string>
     <string name="setting_autoClean_exportDir_title">Clean up export directory  when launch</string>
-    <!--<string name="setting_autoClean_summaryOff">The apks exported will not be deleted</string>
-    <string name="setting_autoClean_summaryOn">The apks exported will be deleted the next time you open the app</string>-->
+    <string name="setting_autoClean_summaryOff">The apks exported will not be deleted</string>
+    <string name="setting_autoClean_summaryOn">The apks exported will be deleted the next time you open the app</string>
     <string name="setting_shareWithExport_title">Share with Export</string>
     <string name="setting_shareWithExport_summaryOff">The Apk will not be exported when share</string>
     <string name="setting_shareWithExport_summaryOn">The Apk will be exported when share</string>
@@ -143,8 +143,8 @@
     <string name="insert_package_name">Package Name</string>
     <string name="insert_version_name">Version Name</string>
     <string name="insert_version_code">Version Code</string>
-    <string name="only_export">Only Export</string>
-    <string name="share_after_export">Export&amp;Share</string>
+    <string name="only_export">Export</string>
+    <string name="share_after_export">Share</string>
     <string name="share_file_name_default">Default</string>
 
     <string name="super_export">Super Export</string>

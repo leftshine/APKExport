@@ -100,8 +100,8 @@
     <string name="insert_package_name">包名</string>
     <string name="insert_version_name">版本号</string>
     <string name="insert_version_code">内部版本号</string>
-    <string name="only_export">仅导出</string>
-    <string name="share_after_export">导出后分享</string>
+    <string name="only_export">导出</string>
+    <string name="share_after_export">分享</string>
     <string name="share_file_name_default">默认</string>
     <string name="setting_export_direct_title">快速模式</string>
     <string name="tip_direct_share">快速模式执行中...</string>
