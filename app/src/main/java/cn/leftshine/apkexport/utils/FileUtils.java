@@ -381,6 +381,11 @@ public class FileUtils {
         MediaScannerConnection.scanFile(mContext,paths, mimeTypes, null);
     }
 
+    /**
+     * * 获取应用缓存目录 * *
+     *
+     * @param context
+     */
     public static String getDiskCacheDir(Context context) {
         String cachePath = null;
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
@@ -391,4 +396,36 @@ public class FileUtils {
         }
         return cachePath;
     }
+
+    /**
+     * * 清除应用缓存 * *
+     *
+     * @param context
+     */
+    public static void cleanCacheDir(Context context) {
+        deleteFilesByDirectory(new File(getDiskCacheDir(context)));
+    }
+
+    /**
+     * * 清除应用导出目录 * *
+     *
+     * @param context
+     */
+    public static void cleanExportDir(Context context) {
+        deleteFilesByDirectory(new File(Settings.getCustomExportPath()));
+    }
+    /**
+     * * 删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件，将不做处理 * *
+     *
+     * @param directory
+     */
+    private static void deleteFilesByDirectory(File directory) {
+        Log.i(TAG, "deleteFilesByDirectory: "+directory);
+        if (directory != null && directory.exists() && directory.isDirectory()) {
+            for (File item : directory.listFiles()) {
+                item.delete();
+            }
+        }
+    }
+
 }

@@ -36,12 +36,20 @@ public class Settings {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     }
 
-    public static boolean isAutoClean() {
-        return sharedPreferences.getBoolean(mContext.getString(R.string.key_is_auto_clean), false);
+    public static boolean isAutoCleanCacheDir() {
+        return sharedPreferences.getBoolean(mContext.getString(R.string.key_is_auto_clean_cacheDir), true);
     }
 
-    public static void setAutoClean(boolean autoClean) {
-        sharedPreferences.edit().putBoolean(mContext.getString(R.string.key_is_auto_clean), autoClean).apply();
+    public static void setAutoCleanCacheDir(boolean autoClean) {
+        sharedPreferences.edit().putBoolean(mContext.getString(R.string.key_is_auto_clean_cacheDir), autoClean).apply();
+    }
+
+    public static boolean isAutoCleanExportDir() {
+        return sharedPreferences.getBoolean(mContext.getString(R.string.key_is_auto_clean_exportDir), false);
+    }
+
+    public static void setAutoCleanExportDir(boolean autoClean) {
+        sharedPreferences.edit().putBoolean(mContext.getString(R.string.key_is_auto_clean_exportDir), autoClean).apply();
     }
 
     public static boolean isExportDerect() {

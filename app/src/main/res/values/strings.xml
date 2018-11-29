@@ -49,8 +49,10 @@
         android-filepicker: <a href="https://github.com/Angads25/android-filepicker">Apache</a>
     </string>
 
-    <string name="auto_clean_success">Clean cache success </string>
-    <string name="auto_clean_fail">Clean cache failed</string>
+    <string name="auto_clean_running">Auto-Clean Running…</string>
+    <string name="clean_running">Cleanup Running…</string>
+    <string name="auto_clean_success">Clean up the export directory: success</string>
+    <string name="auto_clean_fail">Clean up the export directory: fail</string>
     <string name="one_more_click_to_exit">One more click to exit</string>
 
     <string name="user_app">User App</string>
@@ -64,8 +66,10 @@
     <string name="setting_export_open">Open</string>
     <string name="custom_export_path">Custom Export Path</string>
     <string name="setting_autoClean_title">Auto Clean</string>
-    <string name="setting_autoClean_summaryOff">The apks exported will not be deleted</string>
-    <string name="setting_autoClean_summaryOn">The apks exported will be deleted the next time you open the app</string>
+    <string name="setting_autoClean_cacheDir_title">Clean up cache when launch</string>
+    <string name="setting_autoClean_exportDir_title">Clean up export directory  when launch</string>
+    <!--<string name="setting_autoClean_summaryOff">The apks exported will not be deleted</string>
+    <string name="setting_autoClean_summaryOn">The apks exported will be deleted the next time you open the app</string>-->
     <string name="setting_shareWithExport_title">Share with Export</string>
     <string name="setting_shareWithExport_summaryOff">The Apk will not be exported when share</string>
     <string name="setting_shareWithExport_summaryOn">The Apk will be exported when share</string>
@@ -99,9 +103,11 @@
     <string name="setting_advance_group_title">Advance</string>
     <string name="setting_restore_default_settings_title">Restore Default Settings</string>
     <string name="setting_restore_default_settings_description">Ensure to Restore Default Settings?</string>
+    <string name="setting_clean_export_dir_title">Clean up export directory</string>
 
     <string name="key_is_export_direct" translatable="false">is_export_direct</string>
-    <string name="key_is_auto_clean" translatable="false">is_auto_clean</string>
+    <string name="key_is_auto_clean_cacheDir" translatable="false">is_auto_clean_cacheDir</string>
+    <string name="key_is_auto_clean_exportDir" translatable="false">is_auto_clean_exportDir</string>
     <string name="key_is_share_with_export" translatable="false">is_share_with_export</string>
     <string name="key_is_show_local_apk" translatable="false">is_show_local_apk</string>
     <string name="key_custom_filename_format" translatable="false">custom_filename_format</string>
@@ -110,6 +116,8 @@
     <string name="key_sort_type" translatable="false">sort_type</string>
     <string name="key_sort_order" translatable="false">sort_order</string>
     <string name="key_restore_default_settings" translatable="false">restore_default_settings</string>
+    <string name="key_clean_cacheDir" translatable="false">clean_cache_dir</string>
+    <string name="key_clean_ExportDir" translatable="false">clean_export_dir</string>
     <string name="choose_sort_type">Sort By...</string>
     <string name="ASC">ASC</string>
     <string name="DES">DES</string>
@@ -153,7 +161,7 @@
     <string name="tip_multi_export_success">Multi export complete，file save at: </string>
     <string name="tip_eamil_ActivityNotFoundException">No App found to send email</string>
     <string name="tip_eamil_failed">email failed</string>
-    <string name="tip_auto_clean_closed">No storage permission,Auto-Clean Closed</string>
+    <string name="tip_auto_clean_closed">No storage permission,auto clean for export directory closed</string>
     <string name="tip_local_apk_closed">No storage permission,Local Apk Tab Hidden</string>
 
     <string name="multi_select_num">Count: </string>

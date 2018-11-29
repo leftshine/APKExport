@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int STARTED = 0;
     private static final int FINISHED = 1;
+    private static final int CLEAN_CACHE_DIR = 0;
+    private static final int CLEAN_EXPORT_DIR = 1;
+
     AppFragment fragmentUserApp;
     AppFragment fragmentSystemApp;
     AppFragment fragmentLocalApp;
@@ -111,16 +114,21 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(view, R.string.Refreshing, Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
+
+        deleteCache();
         //getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        if(Settings.isAutoClean()) {
+        /*if(Settings.isAutoCleanExportDir()) {
             if(verifyStoragePermissions(this)) {
                 //Snackbar.make(fab, deleteCache() ? getString(R.string.auto_clean_success) : getString(R.string.auto_clean_fail), Snackbar.LENGTH_LONG).show();
-                deleteCache();
+                deleteCache(CLEAN_EXPORT_DIR);
             }else{
-                Settings.setAutoClean(false);
+                Settings.setAutoCleanExportDir(false);
                 Toast.makeText(this,R.string.tip_auto_clean_closed,Toast.LENGTH_SHORT).show();
             }
         }
+        if(Settings.isAutoCleanCacheDir()){
+            deleteCache(CLEAN_CACHE_DIR);
+        }*/
 
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_MEDIA_SCANNER_STARTED);
         intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
@@ -216,7 +224,22 @@ public class MainActivity extends AppCompatActivity {
 
     //清除缓存
     private void deleteCache() {
-        //File mFolder = new File( Environment.getExternalStorageDirectory()+File.separator+"APKExport");
+        Snackbar.make(fab, getString(R.string.auto_clean_running), Snackbar.LENGTH_LONG).show();
+
+        if(Settings.isAutoCleanExportDir()) {
+            if(verifyStoragePermissions(this)) {
+                //Snackbar.make(fab, deleteCache() ? getString(R.string.auto_clean_success) : getString(R.string.auto_clean_fail), Snackbar.LENGTH_LONG).show();
+                FileUtils.cleanExportDir(this);
+            }else{
+                Settings.setAutoCleanExportDir(false);
+                Toast.makeText(this,R.string.tip_auto_clean_closed,Toast.LENGTH_SHORT).show();
+            }
+        }
+        if(Settings.isAutoCleanCacheDir()){
+            FileUtils.cleanCacheDir(this);
+        }
+
+        /*//File mFolder = new File( Environment.getExternalStorageDirectory()+File.separator+"APKExport");
         boolean isDeleteSucecss = false;
         try {
             File mFolder = new File(Settings.getCustomExportPath());
@@ -229,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
                     isDeleteSucecss = true;
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             isDeleteSucecss = false;
         }
         final boolean finalIsDeleteSucecss = isDeleteSucecss;
@@ -238,7 +261,10 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 Snackbar.make(fab, finalIsDeleteSucecss ? getString(R.string.auto_clean_success) : getString(R.string.auto_clean_fail), Snackbar.LENGTH_LONG).show();
             }
-        });
+        });*/
+
+
+
         //return false;
     }
 
