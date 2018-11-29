@@ -399,6 +399,13 @@ public class FileUtils {
     }
 
     /**
+     * * 获取应用导出目录大小 * *
+     */
+    public static String getExportDirSize() {
+        return getAutoFileOrFilesSize(Settings.getCustomExportPath());
+    }
+
+    /**
      * * 清除应用缓存 * *
      *
      * @param context

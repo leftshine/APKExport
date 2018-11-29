@@ -224,11 +224,12 @@ public class MainActivity extends AppCompatActivity {
 
     //清除缓存
     private void deleteCache() {
-        Snackbar.make(fab, getString(R.string.auto_clean_running), Snackbar.LENGTH_LONG).show();
+        //Snackbar.make(fab, getString(R.string.auto_clean_running), Snackbar.LENGTH_LONG).show();
 
         if(Settings.isAutoCleanExportDir()) {
             if(verifyStoragePermissions(this)) {
                 //Snackbar.make(fab, deleteCache() ? getString(R.string.auto_clean_success) : getString(R.string.auto_clean_fail), Snackbar.LENGTH_LONG).show();
+                Snackbar.make(fab, getString(R.string.auto_clean_running), Snackbar.LENGTH_LONG).show();
                 FileUtils.cleanExportDir(this);
             }else{
                 Settings.setAutoCleanExportDir(false);

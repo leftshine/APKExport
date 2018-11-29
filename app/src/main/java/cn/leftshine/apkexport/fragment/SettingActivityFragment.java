@@ -91,6 +91,7 @@ public class SettingActivityFragment extends PreferenceFragment {
         prefRestoreDefaultSettings = (Preference)findPreference(getString(R.string.key_restore_default_settings));
         prefCleanExportDir = findPreference(getString(R.string.key_clean_ExportDir));
         prefCleanExportDir.setOnPreferenceClickListener(preferenceclickListener);
+        prefCleanExportDir.setSummary(getString(R.string.setting_clean_export_dir_summery)+FileUtils.getExportDirSize());
         prefCustomFileNameformat.setOnPreferenceClickListener(preferenceclickListener);
         prefRestoreDefaultSettings.setOnPreferenceClickListener(preferenceclickListener);
         prefCustomFileNameformat.setOnPreferenceChangeListener(preferenceChangeListener);
@@ -178,8 +179,10 @@ public class SettingActivityFragment extends PreferenceFragment {
             if(preference.getKey().equals(getResources().getString(R.string.key_clean_ExportDir))){
                 if (verifyStoragePermissions(getActivity())) {
                     //已获得权限
-                    Toast.makeText(context,R.string.clean_running,Toast.LENGTH_SHORT);
+                    //Toast.makeText(context,R.string.clean_running,Toast.LENGTH_SHORT);
                     FileUtils.cleanExportDir(context);
+                    FileUtils.cleanCacheDir(context);
+                    prefCleanExportDir.setSummary(R.string.setting_clean_export_dir_summery_clean_Running);
                 } else {
                     //Settings.setShowLocalApk(false);
                     // 未获得权限
@@ -445,8 +448,10 @@ public class SettingActivityFragment extends PreferenceFragment {
         }else if(requestCode ==REQUEST_EXTERNAL_STORAGE_CLEAN_EXPORT_DIR){
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // 授予权限，继续操作
-                Toast.makeText(context,R.string.clean_running,Toast.LENGTH_SHORT);
+                //Toast.makeText(context,R.string.clean_running,Toast.LENGTH_SHORT);
                 FileUtils.cleanExportDir(context);
+                FileUtils.cleanCacheDir(context);
+                prefCleanExportDir.setSummary(R.string.setting_clean_export_dir_summery_clean_Running);
             } else {
                 if (isNeverAskStoragePermissions(this)) {
                     //权限被拒绝，并勾选不再提示

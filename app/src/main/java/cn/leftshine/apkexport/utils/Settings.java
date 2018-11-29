@@ -37,7 +37,8 @@ public class Settings {
     }
 
     public static boolean isAutoCleanCacheDir() {
-        return sharedPreferences.getBoolean(mContext.getString(R.string.key_is_auto_clean_cacheDir), true);
+        //return sharedPreferences.getBoolean(mContext.getString(R.string.key_is_auto_clean_cacheDir), true);
+        return true;
     }
 
     public static void setAutoCleanCacheDir(boolean autoClean) {

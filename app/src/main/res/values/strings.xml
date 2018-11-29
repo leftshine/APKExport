@@ -104,6 +104,8 @@
     <string name="setting_restore_default_settings_title">Restore Default Settings</string>
     <string name="setting_restore_default_settings_description">Ensure to Restore Default Settings?</string>
     <string name="setting_clean_export_dir_title">Clean up export directory</string>
+    <string name="setting_clean_export_dir_summery">size: </string>
+    <string name="setting_clean_export_dir_summery_clean_Running">Cleanup Running…</string>
 
     <string name="key_is_export_direct" translatable="false">is_export_direct</string>
     <string name="key_is_auto_clean_cacheDir" translatable="false">is_auto_clean_cacheDir</string>
