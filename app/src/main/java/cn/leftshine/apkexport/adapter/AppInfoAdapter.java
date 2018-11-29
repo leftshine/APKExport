@@ -250,7 +250,8 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 			holder.mAppIcon.setImageDrawable(info.getAppIcon());
 			holder.mPackageName.setText(info.getPackageName());
 			holder.mAppName.setText(info.getAppName());
-			holder.mAppSize.setText(ToolUtils.getDataSize(info.getAppSize()));
+			holder.mAppSize.setText(FileUtils.FormatFileSize(info.getAppSize()));
+			//Log.i(TAG, "showSize: appName="+info.getAppName()+"appSize="+info.appSize+"showSize="+FileUtils.FormatFileSize(info.getAppSize()));
 			holder.mAppVersionName.setText(info.getVersionName());
 			if(GlobalData.isMultipleMode){
 				holder.mCheckBox.setVisibility(View.VISIBLE);
@@ -422,7 +423,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 			//Log.i(TAG, "getItem:"+info1.getAppName()+"mLists.get(position):"+info.getAppName());
 			holder.LocalApkIcon.setImageDrawable(info.getAppIcon());
 			holder.LocalApkName.setText(info.getAppName());
-			holder.LocalApkSize.setText(ToolUtils.getDataSize(info.getAppSize()));
+			holder.LocalApkSize.setText(FileUtils.FormatFileSize(info.getAppSize()));
 			String timeFormat = new SimpleDateFormat("MM-dd hh:mm").format(new Date(info.getLastUpdateTime()));
 			holder.LocalApkdate.setText(timeFormat);
 			if(GlobalData.isMultipleMode){

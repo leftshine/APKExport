@@ -121,7 +121,7 @@ public class SystemShareActivity extends AppCompatActivity {
         share_appInfo_icon.setImageDrawable(appInfo.appIcon);
         share_appInfo_appName.setText(appInfo.appName);
         share_appInfo_packageName.setText(appInfo.packageName);
-        share_appInfo_appSize.setText(ToolUtils.getDataSize(appInfo.appSize));
+        share_appInfo_appSize.setText(FileUtils.FormatFileSize(appInfo.appSize));
         share_appInfo_appVersionName.setText(appInfo.versionName);
         share_appInfo_appVersionCode.setText(String.valueOf(appInfo.versionCode));
         String customFileNameFormat  = Settings.getCustomFileNameFormat();
