@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ToolUtils {
+    final static boolean DBG = false;
     public static final String DEFAULT_COPY_DATA = "gUC65D40b9";
     private final static String TAG = "ToolUtils";
     public static final String TYPE = "type";
@@ -121,7 +122,7 @@ public class ToolUtils {
                             localAppInfo.setFirstInstallTime(localPackageInfo.firstInstallTime);
                             localAppInfo.setLastUpdateTime(localPackageInfo.lastUpdateTime);
                             //getRunningAppProcessInfo(localAppInfo);
-                            Log.i(TAG, "getAppOf TYPE_USER "+localAppInfo.getAppName());
+                            if(DBG) Log.d(TAG, "getAppOf TYPE_USER "+localAppInfo.getAppName());
                             userAppInfoList.add(localAppInfo);
                         /*Message msg = mHandler.obtainMessage(MessageCode.MSG_GET_APP, localAppInfo);
                         // mHandler.sendEmptyMessage(0);
@@ -164,7 +165,7 @@ public class ToolUtils {
                             localAppInfo.versionCode = localPackageInfo.versionCode;
                             localAppInfo.appIcon = localPackageInfo.applicationInfo.loadIcon(mContext.getPackageManager());
                             //getRunningAppProcessInfo(localAppInfo);
-                            Log.i(TAG, "getAppOf TYPE_SYSTEM " + localAppInfo.getAppName());
+                            if(DBG) Log.d(TAG, "getAppOf TYPE_SYSTEM " + localAppInfo.getAppName());
                             systemAppInfoList.add(localAppInfo);
                         /*Message msg = mHandler.obtainMessage(MessageCode.MSG_GET_APP, localAppInfo);
                         // mHandler.sendEmptyMessage(0);
@@ -265,7 +266,7 @@ public class ToolUtils {
             CharacterParser characterParser = CharacterParser.getInstance();
             String compare1 = characterParser.getSelling(appInfo1.appName).toUpperCase();
             String compare2 = characterParser.getSelling(appInfo2.appName).toUpperCase();
-            Log.i(TAG, "compare: " + compare1+" VS "+compare2+" = "+compare1.compareTo(compare2));
+            if(DBG) Log.d(TAG, "compare: " + compare1+" VS "+compare2+" = "+compare1.compareTo(compare2));
             /*if((compare1 == null || compare1.isEmpty()) && (compare2 == null|| compare2.isEmpty())) {
                 return 0;
             }

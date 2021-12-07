@@ -123,7 +123,15 @@
             android:title="@string/setting_autoClean_exportDir_title" />
     </PreferenceCategory>-->
 
-    <PreferenceCategory android:title="@string/setting_advance_group_title">
+    <PreferenceCategory android:title="@string/setting_advance_group_title"
+        android:key="@string/key_advance">
+
+        <Preference
+            android:key="@string/key_all_files_access_permission"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/setting_all_files_access_permission_summary"
+            android:title="@string/setting_all_files_access_permission_title" />
 
         <Preference
             android:key="@string/key_clean_ExportDir"

@@ -9,11 +9,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.support.annotation.NonNull;
@@ -44,7 +47,8 @@ public class SettingActivityFragment extends PreferenceFragment {
 
     private SwitchPreference prefIsAutoCleanExportDir,prefIsAutoCleanCacheDir,prefIsShowLocalApk;
     private EditTextPreference prefCustomFileNameformat;
-    private Preference prefRestoreDefaultSettings,prefCleanExportDir;
+    private Preference prefRestoreDefaultSettings,prefCleanExportDir,prefGrantAllFfilesAccessPermission;
+    private PreferenceCategory prefCategoryAdvance;
     private ListPreference prefLongPressAction;
     private ListPreference sortType;
     private ListPreference sortOrder;
@@ -88,10 +92,20 @@ public class SettingActivityFragment extends PreferenceFragment {
         prefIsAutoCleanCacheDir = (SwitchPreference)findPreference(getString(R.string.key_is_auto_clean_exportDir));
         prefIsAutoCleanCacheDir.setOnPreferenceChangeListener(preferenceChangeListener);
         prefCustomFileNameformat= (EditTextPreference)findPreference(getString(R.string.key_custom_filename_format));
+
+        //高级设置
+        prefCategoryAdvance = ((PreferenceCategory)findPreference(getString(R.string.key_advance)));
         prefRestoreDefaultSettings = (Preference)findPreference(getString(R.string.key_restore_default_settings));
         prefCleanExportDir = findPreference(getString(R.string.key_clean_ExportDir));
         prefCleanExportDir.setOnPreferenceClickListener(preferenceclickListener);
         prefCleanExportDir.setSummary(getString(R.string.setting_clean_export_dir_summery)+FileUtils.getExportDirSize());
+        prefGrantAllFfilesAccessPermission = findPreference(getString(R.string.key_all_files_access_permission));
+        if (Build.VERSION.SDK_INT < 30 && prefCategoryAdvance != null) {
+            prefCategoryAdvance.removePreference(prefGrantAllFfilesAccessPermission);
+        }else{
+            prefGrantAllFfilesAccessPermission.setOnPreferenceClickListener(preferenceclickListener);
+        }
+
         prefCustomFileNameformat.setOnPreferenceClickListener(preferenceclickListener);
         prefRestoreDefaultSettings.setOnPreferenceClickListener(preferenceclickListener);
         prefCustomFileNameformat.setOnPreferenceChangeListener(preferenceChangeListener);
@@ -150,6 +164,13 @@ public class SettingActivityFragment extends PreferenceFragment {
                 txt_custom_filename_format.addTextChangedListener(textWatcher);
                 txt_custom_filename_format.setText(Settings.getCustomFileNameFormat());
             }
+
+            if(preference.getKey().equals(getResources().getString(R.string.key_all_files_access_permission))){
+                Intent intent = new Intent("android.settings.MANAGE_APP_ALL_FILES_ACCESS_PERMISSION");
+                intent.setData(Uri.parse("package:" + context.getPackageName()));
+                startActivityForResult(intent, 10001);
+            }
+
             if(preference.getKey().equals(getResources().getString(R.string.key_restore_default_settings)))
             {
                 new AlertDialog.Builder(context)

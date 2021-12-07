@@ -47,7 +47,7 @@ public class AboutActivity extends AppCompatActivity {
                 .setDescription(description)
                 .setImage(R.mipmap.ic_launcher)
                 .addItem(getVersionElement())
-                .addItem(getQQGroupElement(getResources().getString(R.string.about_feedback_title, "610047919"),"kxVc87XQ3TzFECy3YhETolYKBS11-iE6"))
+                //.addItem(getQQGroupElement(getResources().getString(R.string.about_feedback_title, "610047919"),"kxVc87XQ3TzFECy3YhETolYKBS11-iE6"))
                 .addItem(getQQGroupElement(getResources().getString(R.string.about_feedback_title2, "427159859"),"MLFoNWi_oAOF5A77cv2ek8PnGTMKLIzv"))
                 //.addEmail("leftshine@139.com")
                 .addItem(getFeedBackElement())
