@@ -40,7 +40,7 @@
         </activity>
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="cn.leftshine.apkexport.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -48,11 +48,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-        //在manifest注册Activity时，加入category,使得你的App在分享这些类型的数据时会被系统调起
+<!--        //在manifest注册Activity时，加入category,使得你的App在分享这些类型的数据时会被系统调起-->
         <activity
             android:name=".activity.SystemShareActivity"
             android:label="@string/super_export">
-            //注册单选分享
+<!--            //注册单选分享-->
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -68,7 +68,7 @@
                 <data android:mimeType="image/*"/>
             </intent-filter>
             -->
-            //注册多选分享
+<!--            //注册多选分享-->
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
 

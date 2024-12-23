@@ -11,20 +11,18 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Binder;
 import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.core.view.MenuItemCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.SearchView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,15 +33,12 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.List;
 
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.handler.FileHandler;
 import cn.leftshine.apkexport.utils.AppInfo;
 import cn.leftshine.apkexport.utils.FileUtils;
-import cn.leftshine.apkexport.utils.MessageCode;
 import cn.leftshine.apkexport.utils.Settings;
-import cn.leftshine.apkexport.utils.ToolUtils;
 import cn.leftshine.apkexport.view.ClearEditText;
 
 import static cn.leftshine.apkexport.utils.PermisionUtils.REQUEST_EXTERNAL_STORAGE;

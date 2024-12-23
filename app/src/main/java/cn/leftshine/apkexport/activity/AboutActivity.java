@@ -8,9 +8,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.print.PrintAttributes;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -22,14 +22,11 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
-import javax.xml.transform.Source;
-
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.utils.AppUtils;
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
 
-import static cn.leftshine.apkexport.utils.PermisionUtils.REQUEST_EXTERNAL_STORAGE_SHOWLOCALAPK;
 import static cn.leftshine.apkexport.utils.PermisionUtils.requestStoragePermissions;
 
 public class AboutActivity extends AppCompatActivity {
