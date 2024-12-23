@@ -102,7 +102,7 @@ public class AboutActivity extends AppCompatActivity {
         version.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri uri = Uri.parse("https://www.coolapk.com/apk/176960");
+                Uri uri = Uri.parse("https://gitee.com/leftshine/APKExport/releases");
                 Intent intent = new Intent(Intent.ACTION_VIEW,uri);
                 startActivity(intent);
             }
