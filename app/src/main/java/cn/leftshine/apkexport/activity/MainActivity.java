@@ -436,7 +436,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(id == R.id.action_help)
         {
-            Uri uri = Uri.parse("http://leftshine.gitee.io/apkexport/pages/help/index.html");
+            Uri uri = Uri.parse("https://leftshine.gitlab.io/apkexport/help/index.html");
             Intent it = new Intent(Intent.ACTION_VIEW,uri);
             startActivity(it);
             return true;
