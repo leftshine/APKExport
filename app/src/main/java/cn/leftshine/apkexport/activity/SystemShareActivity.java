@@ -238,32 +238,34 @@ public class SystemShareActivity extends AppCompatActivity {
         String callingPackageName = "";
         //getCallerProcessName();
         try{
-            callingPackageName = (reflectGetReferrer()==null||"".equals(reflectGetReferrer())) ? getCallingPackage() : reflectGetReferrer();
+            callingPackageName = (reflectGetReferrer() == null || "".equals(reflectGetReferrer())) ? getCallingPackage() : reflectGetReferrer();
         }catch (Exception e){
-            callingPackageName = "";
+            e.printStackTrace();
+            callingPackageName = null;
         }
-        if(callingPackageName==null||"".equals(callingPackageName)){
+        Log.i(TAG, "callingPackageName: " + callingPackageName);
+        if(callingPackageName == null || "".equals(callingPackageName)){
             Toast.makeText(mContext,"运气不好，获取应用信息失败",Toast.LENGTH_SHORT).show();
-        }else {
-            PackageManager pm = mContext.getPackageManager();
-            ApplicationInfo applicationInfo = null;
-            try {
-                applicationInfo = pm.getApplicationInfo(callingPackageName, 0);
-                appInfo = new AppInfo();
-                appInfo.appSourcDir = applicationInfo.publicSourceDir;
-                appInfo.appIcon = applicationInfo.loadIcon(pm);
-                appInfo.appName = applicationInfo.loadLabel(pm).toString();
-                PackageInfo packageInfo = pm.getPackageArchiveInfo(appInfo.appSourcDir, PackageManager.GET_ACTIVITIES);
-                appInfo.packageName = packageInfo.packageName;
+            callingPackageName = this.getPackageName();
+        }
+        PackageManager pm = mContext.getPackageManager();
+        ApplicationInfo applicationInfo = null;
+        try {
+            applicationInfo = pm.getApplicationInfo(callingPackageName, 0);
+            appInfo = new AppInfo();
+            appInfo.appSourcDir = applicationInfo.publicSourceDir;
+            appInfo.appIcon = applicationInfo.loadIcon(pm);
+            appInfo.appName = applicationInfo.loadLabel(pm).toString();
+            PackageInfo packageInfo = pm.getPackageArchiveInfo(appInfo.appSourcDir, PackageManager.GET_ACTIVITIES);
+            appInfo.packageName = packageInfo.packageName;
 
-                appInfo.versionName = packageInfo.versionName;
-                appInfo.versionCode = packageInfo.versionCode;
-                File localFile1 = new File(appInfo.appSourcDir);
-                if (localFile1 != null)
-                    appInfo.appSize = (int) (localFile1.length());
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
+            appInfo.versionName = packageInfo.versionName;
+            appInfo.versionCode = packageInfo.versionCode;
+            File localFile1 = new File(appInfo.appSourcDir);
+            if (localFile1 != null)
+                appInfo.appSize = (int) (localFile1.length());
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -293,7 +295,7 @@ public class SystemShareActivity extends AppCompatActivity {
             e.printStackTrace();
             Log.e(TAG, "reflectGetReferrer: fail");
         }
-        return "";
+        return null;
     }
 
     @Override
