@@ -219,9 +219,9 @@ public class FileUtils {
             String fileName = shareFilePath.substring(shareFilePath.lastIndexOf("/") + 1, shareFilePath.length());
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
-            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                *//*安卓N开始使用FileProvider API，但原来的file://uri仍然可用
-                使用FileProvider API分享到百度云提示空文件（其实是百度云的问题），为了兼用更多设备，设置版本大于安卓O时才使用FileProvider API*//*
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                //安卓N开始使用FileProvider API，但原来的file://uri仍然可用
+                //使用FileProvider API分享到百度云提示空文件（其实是百度云的问题），为了兼用更多设备，设置版本大于安卓O时才使用FileProvider API
                 Log.i(TAG, "版本大于 O ，开始使用 fileProvider 进行分享");
                 shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 Uri contentUri = FileProvider.getUriForFile(
@@ -229,20 +229,15 @@ public class FileUtils {
                         , "cn.leftshine.apkexport.fileprovider"
                         , shareFile);
                 Log.i(TAG, "contentUri："+contentUri);
+                shareIntent.setType("application/vnd.android.package-archive");
                 shareIntent.putExtra(Intent.EXTRA_STREAM,contentUri);
             } else {
                 Log.i(TAG, "普通分享");
                 Uri fileUri = Uri.fromFile(shareFile);
                 Log.i(TAG, "fileUri："+fileUri);
+                shareIntent.setType("application/vnd.android.package-archive");
                 shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
-            }*/
-            Log.i(TAG, "普通分享");
-            Uri fileUri = Uri.fromFile(shareFile);
-            Log.i(TAG, "fileUri："+fileUri);
-            shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
-            // 指定发送内容的类型 (MIME type)
-            shareIntent.setType("application/vnd.android.package-archive");
-            //shareIntent.setType("*/*");
+            }
             mContext.startActivity(Intent.createChooser(shareIntent,(mContext.getString(R.string.share_to, fileName))));
         }catch (Exception e){
             Toast.makeText(mContext,R.string.tip_share_failed,Toast.LENGTH_SHORT).show();
