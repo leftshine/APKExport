@@ -460,6 +460,10 @@ public class AppFragment extends Fragment {
 
     //endregion
     public void doSearch(String queryText) {
+        if (mAdapter == null) {
+            Log.e(TAG, "mAdapter is null");
+            return;
+        }
         mAdapter.doSearch(queryText);
     }
 

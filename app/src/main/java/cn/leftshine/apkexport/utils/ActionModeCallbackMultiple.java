@@ -41,7 +41,7 @@ public class ActionModeCallbackMultiple implements ActionMode.Callback{
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
         // TODO Auto-generated method stub
-        if(ToolUtils.TYPE_LOCAL==adapter.getmType()){
+        if(adapter == null || ToolUtils.TYPE_LOCAL==adapter.getmType()){
             menu.findItem(R.id.multi_export).setVisible(false);
         }else{
             menu.findItem(R.id.multi_export).setVisible(true);
