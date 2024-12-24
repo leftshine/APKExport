@@ -110,18 +110,24 @@ public class CharacterParser {
     }
 
     /** * 词组解析 * * @param chs * @return */
+    // todo：may not use anymore，delete whole file later
     public String getSelling(String chs) {
         String key, value;
+        String out = "unknown";
         buffer = new StringBuilder();
         for (int i = 0; i < chs.length(); i++) {
             key = chs.substring(i, i + 1);
-            if (key.getBytes().length >= 2) {
+            int length = key.getBytes().length;
+            //Log.i(TAG, "key.getBytes().length: "+length);
+            if (length >= 2) {
                 value = (String) convert(key);
                 if (value == null) {
-                    value = "unknown";
+                    value = "";
                 }
-            } else {
+            } else if (length == 1){
                 value = key;
+            } else {
+                value = "";
             }
             try {
                 buffer.append(value);
@@ -130,7 +136,13 @@ public class CharacterParser {
                 Log.e(TAG, "getSelling: fail,e="+e);
             }
         }
-        return buffer.toString();
+        try {
+            out = buffer.toString();
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e(TAG, "getSelling: fail,e="+e);
+        }
+        return out;
     }
 
     public String getSpelling() {
