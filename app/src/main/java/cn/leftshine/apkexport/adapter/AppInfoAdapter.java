@@ -364,7 +364,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 													e.printStackTrace();
 													Log.i(TAG, "URLEncode fail",e );
 												}
-												copy_str = "https://leftshine.gitee.io/apkexport/pages/share/market.html?appName="+appNameUrl+"&packageName="+info.getPackageName();
+												copy_str = "https://leftshine.gitlab.io/apkexport/share/market.html?appName="+appNameUrl+"&packageName="+info.getPackageName();
 
 												break;
 										}

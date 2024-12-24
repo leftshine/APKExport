@@ -18,7 +18,8 @@ import java.util.List;
 
 public class ToolUtils {
     final static boolean DBG = false;
-    public static final String DEFAULT_COPY_DATA = "gUC65D40b9";
+    public static final String HOME_PAGE_URL = "https://leftshine.gitlab.io/apkexport/";
+    public static final String DEFAULT_COPY_DATA = HOME_PAGE_URL;
     private final static String TAG = "ToolUtils";
     public static final String TYPE = "type";
     public final static int TYPE_USER = 0;

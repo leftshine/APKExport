@@ -32,7 +32,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
 
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.handler.FileHandler;
@@ -169,6 +171,16 @@ public class SystemShareActivity extends AppCompatActivity {
                                             break;
                                         case 3:
                                             copy_str = String.valueOf(appInfo.getVersionCode());
+                                            break;
+                                        case 4:
+                                            String appNameUrl = appInfo.getAppName();
+                                            try {
+                                                appNameUrl= URLEncoder.encode(appNameUrl,"utf-8");
+                                            } catch (UnsupportedEncodingException e) {
+                                                e.printStackTrace();
+                                                Log.i(TAG, "URLEncode fail",e );
+                                            }
+                                            copy_str = "https://leftshine.gitlab.io/apkexport/share/market.html?appName="+appNameUrl+"&packageName="+appInfo.getPackageName();
                                             break;
                                     }
                                     ClipData clipData = ClipData.newPlainText(null, copy_str);
