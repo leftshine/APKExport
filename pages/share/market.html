@@ -80,10 +80,10 @@
     </head>
     <body>
         <div>
-        	<p id="share_tip">由于平台规则限制</p>
-            <h1>该功能临时关闭</h1>
+        	<p id="share_tip">好友给你分享了</p>
+            <h1>APKExport</h1>
             
-            <!-- <a class="download-btn" id="url" href="">在应用商店中打开</a> -->
+            <a class="download-btn" id="url" href="">在应用商店中打开</a>
             <h2 style="font-size:16px;margin-left:20px;margin-right:20px;margin-top:20px;">
                 由于微信限制，请点击右上角菜单，在浏览器中打开
             </h2>
@@ -91,7 +91,7 @@
             <div class="bottom-wrapper">
                 <img src="../images/apkexport.png" style="display:inline-block;float:left;width:40px;margin:10px;"/>
                 <p>APKExport-应用导出工具</p>
-                <a class="download-btn" id="detail" href="https://www.coolapk.com/apk/176960">下载</a>
+                <a class="download-btn" id="detail" href="https://gitee.com/leftshine/APKExport/releases">下载</a>
                 <a class="download-btn" id="download" href="../index.html">详情</a>
             </div>
         </div>
@@ -111,9 +111,9 @@
                 //console.log(appName);
                 //console.log(packageName);
                 if(packageName) {
-                    // $('body').append('<iframe src="market://details?id=' + packageName +'" style="display:none"></iframe>')
-                    // $('#url').attr('href','market://details?id=' + packageName);
-                    // $('h1').html(appName);
+                    $('body').append('<iframe src="market://details?id=' + packageName +'" style="display:none"></iframe>')
+                    $('#url').attr('href','market://details?id=' + packageName);
+                    $('h1').html(appName);
                     $('#share_tip').css("display", "block");
                 }
                 if (wtk.browser.isWechat) {
