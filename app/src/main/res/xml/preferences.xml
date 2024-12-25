@@ -31,7 +31,7 @@
 
         <EditTextPreference
             android:defaultValue="#N-#P-#V"
-            android:dialogLayout="@layout/custom_file_name_dialog_layout"
+
             android:key="@string/key_custom_filename_format"
             android:selectAllOnFocus="true"
             android:singleLine="true"

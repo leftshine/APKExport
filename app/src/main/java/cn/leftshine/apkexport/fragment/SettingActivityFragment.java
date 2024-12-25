@@ -103,7 +103,7 @@ public class SettingActivityFragment extends PreferenceFragment {
         }else{
             prefGrantAllFfilesAccessPermission.setOnPreferenceClickListener(preferenceclickListener);
         }
-
+        //prefCustomFileNameformat.setDialogLayoutResource(R.layout.custom_file_name_dialog_layout);
         prefCustomFileNameformat.setOnPreferenceClickListener(preferenceclickListener);
         prefRestoreDefaultSettings.setOnPreferenceClickListener(preferenceclickListener);
         prefCustomFileNameformat.setOnPreferenceChangeListener(preferenceChangeListener);
@@ -143,7 +143,8 @@ public class SettingActivityFragment extends PreferenceFragment {
 
             if(preference.getKey().equals(getResources().getString(R.string.key_custom_filename_format)))
             {
-                dialogCustomFileNameformat = prefCustomFileNameformat.getDialog();
+                dialogCustomFileNameformat = ((EditTextPreference)preference).getDialog();
+                dialogCustomFileNameformat.setContentView(R.layout.custom_file_name_dialog_layout);
                 /*txt_custom_filename_format = (EditText)dialogCustomFileNameformat.findViewById(R.id.txt_custom_filename_format);*/
                 txt_custom_filename_format = (ClearEditText) dialogCustomFileNameformat.findViewById(R.id.txt_custom_filename_format);
                 btn_insert_divider =dialogCustomFileNameformat.findViewById(R.id.btn_insert_divider);
@@ -161,6 +162,25 @@ public class SettingActivityFragment extends PreferenceFragment {
                 btn_insert_default.setOnClickListener(onClickListener);
                 txt_custom_filename_format.addTextChangedListener(textWatcher);
                 txt_custom_filename_format.setText(Settings.getCustomFileNameFormat());
+
+                Button btn_submit = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_custom_file_name_submit);
+                Button btn_cancel = (Button)dialogCustomFileNameformat.findViewById(R.id.btn_custom_file_name_cancel);
+                btn_submit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        str_custom_filename_format = txt_custom_filename_format.getText().toString();
+                        Settings.setCustomFileNameFormat(str_custom_filename_format);
+                        prefCustomFileNameformat.setSummary(Settings.getCustomFileNameFormat());
+                        dialogCustomFileNameformat.dismiss();
+                    }
+                });
+
+                btn_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogCustomFileNameformat.dismiss();
+                    }
+                });
             }
 
             if(preference.getKey().equals(getResources().getString(R.string.key_all_files_access_permission))){
