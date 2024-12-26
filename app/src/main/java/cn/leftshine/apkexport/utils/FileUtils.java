@@ -119,7 +119,11 @@ public class FileUtils {
 
     private void doCopy(final Handler mHandler, final String mCurrentAppPath, final int mode) {
         //File mFolder = new File( Environment.getExternalStorageDirectory()+File.separator+"APKExport");
-        File mFolder = new File(Settings.getCustomExportPath());
+        String customExportPath = Settings.getCustomExportPath();
+        if (!customExportPath.endsWith(File.separator)) {
+            customExportPath = customExportPath + File.separator;
+        }
+        File mFolder = new File(customExportPath);
         if((mode == MODE_EXPORT_SHARE||mode ==MODE_EXPORT_RENAME_SHARE||mode == MODE_MULTI_EXPORT_SHARE)&&!Settings.isShareWithExport()){
             mFolder = new File (FileUtils.getDiskCacheDir(mContext));
         }
