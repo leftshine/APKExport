@@ -249,32 +249,27 @@ public class FileUtils {
         }
     }
     public void startMultiShare(ArrayList<Uri> shareFiles, ArrayList<Uri> shareFilesForO) {
-        Log.i(TAG, "shareFiles:");
+        Log.i(TAG, "shareFiles:"+shareFiles);
+        Log.i(TAG, "shareFilesForO:"+shareFilesForO);
         try {
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
-            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                *//*安卓N开始使用FileProvider API，但原来的file://uri仍然可用
-                使用FileProvider API分享到百度云提示空文件（其实是百度云的问题），为了兼用更多设备，设置版本大于安卓O时才使用FileProvider API*//*
-                Log.i(TAG, "版本大于 O ，开始使用 fileProvider 进行分享");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // 安卓N开始使用FileProvider API，但原来的file://uri仍然可用
+                //使用FileProvider API分享到百度云提示空文件（其实是百度云的问题），为了兼用更多设备，设置版本大于安卓O时才使用FileProvider API
+                Log.i(TAG, "版本大于 O ，开始使用 fileProvider 进行批量分享");
                 shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                *//*Uri contentUri = FileProvider.getUriForFile(
-                        mContext
-                        , "cn.leftshine.apkexport.fileprovider"
-                        , shareFile);
-                Log.i(TAG, "contentUri："+contentUri);*//*
-                shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,shareFilesForO);
+                shareIntent.setType("application/vnd.android.package-archive");
+                //shareIntent.setType("*/*");
+                shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, shareFilesForO);
             } else {
                 Log.i(TAG, "普通批量分享");
+                // 指定发送内容的类型 (MIME type)
+                shareIntent.setType("application/vnd.android.package-archive");
+                //shareIntent.setType("*/*");
                 //shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
                 shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,shareFiles);//Intent.EXTRA_STREAM同于传输文件流
-            }*/
-            Log.i(TAG, "普通批量分享");
-            //shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
-            shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,shareFiles);//Intent.EXTRA_STREAM同于传输文件流
-            // 指定发送内容的类型 (MIME type)
-            //shareIntent.setType("application/vnd.android.package-archive");
-            shareIntent.setType("*/*");
+            }
             mContext.startActivity(Intent.createChooser(shareIntent,(mContext.getString(R.string.share_to, "多个文件"))));
         }catch (Exception e){
             Toast.makeText(mContext,R.string.tip_share_failed,Toast.LENGTH_SHORT).show();
