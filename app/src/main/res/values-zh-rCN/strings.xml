@@ -126,6 +126,8 @@
     <string name="storage_permission_auto_clean_dialog_content">执行清理操作需要文件访问权限，如果不授予应用将无法正常使用</string>
     <string name="storage_permission_obtain_toast">成功取得文件访问权限，请重新执行相关操作</string>
 
+    <string name="installed_permission_dialog_content">显示已安装应用需要获取应用列表权限，如果不授予将无法正常显示已安装应用</string>
+
     <string name="tip_copy_failed">导出过程异常：</string>
     <string name="tip_share_failed">分享过程异常，请重试</string>
     <string name="tip_export_success">导出完成，文件保存在:</string>

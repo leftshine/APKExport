@@ -48,9 +48,14 @@ import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.utils.ToolUtils;
 import cn.leftshine.apkexport.view.ZoomOutPageTransformer;
 
+import static cn.leftshine.apkexport.utils.PermisionUtils.REQUEST_CODE_GET_INSTALLED_APPS;
+import static cn.leftshine.apkexport.utils.PermisionUtils.REQUEST_CODE_GET_INSTALLED_APPS_CURRENT;
 import static cn.leftshine.apkexport.utils.PermisionUtils.REQUEST_EXTERNAL_STORAGE;
+import static cn.leftshine.apkexport.utils.PermisionUtils.isNeverAskInstalledPermissions;
 import static cn.leftshine.apkexport.utils.PermisionUtils.isNeverAskStoragePermissions;
+import static cn.leftshine.apkexport.utils.PermisionUtils.requestInstalledAppsPermissions;
 import static cn.leftshine.apkexport.utils.PermisionUtils.requestStoragePermissions;
+import static cn.leftshine.apkexport.utils.PermisionUtils.verifyInstalledAppsPermissions;
 import static cn.leftshine.apkexport.utils.PermisionUtils.verifyStoragePermissions;
 
 public class MainActivity extends AppCompatActivity {
@@ -103,6 +108,9 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!verifyInstalledAppsPermissions(currentFragment.getActivity())) {
+                    requestInstalledAppsPermissions(currentFragment.getActivity(), false);
+                }
                 ObjectAnimator anim = ObjectAnimator.ofFloat(view, "rotation", 0f, 360f);
                 anim.setDuration(500);
                 anim.start();
@@ -161,6 +169,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initContent(){
+        if (!verifyInstalledAppsPermissions((Activity) this)) {
+            requestInstalledAppsPermissions((Activity) this, true);
+        }
+
         tabIndicators = new ArrayList<>();
         tabFragments = new ArrayList<>();
 
@@ -270,8 +282,69 @@ public class MainActivity extends AppCompatActivity {
 
     //运行时权限请求结果
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) { 
+    public void onRequestPermissionsResult(final int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         final Activity activity = this;
+        Log.i(TAG, "onRequestPermissionsResult: requestCode=" + requestCode + ", permissions:" + permissions +", grantResults:" + grantResults);
+        if (requestCode == REQUEST_CODE_GET_INSTALLED_APPS || requestCode == REQUEST_CODE_GET_INSTALLED_APPS_CURRENT) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 授予权限，继续操作
+                //Toast.makeText(this,R.string.storage_permission_obtain_toast,Toast.LENGTH_SHORT).show();
+                if (requestCode == REQUEST_CODE_GET_INSTALLED_APPS_CURRENT) {
+                    currentFragment.loadWaitUI(true, true);
+                } else {
+                    for (AppFragment fragment : tabFragments){
+                        fragment.loadWaitUI(true, true);
+                    }
+                }
+            } else {
+                if(isNeverAskInstalledPermissions(activity)){
+                    //权限被拒绝，并勾选不再提示
+                    //解释原因，并且引导用户至设置页手动授权
+                    new AlertDialog.Builder(activity)
+                            .setCancelable(false)
+                            .setMessage(R.string.installed_permission_dialog_content)
+                            .setPositiveButton(R.string.storage_permission_dialog_go_setting, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //isOnPermission = true;
+                                    //引导用户至设置页手动授权
+                                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    Uri uri = Uri.fromParts("package", activity.getApplicationContext().getPackageName(), null);
+                                    intent.setData(uri);
+                                    startActivity(intent);
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setNegativeButton(R.string.storage_permission_dialog_negative, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    //finish();
+                                }
+                            }).show();
+                }else {
+                    //权限被拒绝
+                    //Toast.makeText(this, "请求权限被拒绝", Toast.LENGTH_SHORT).show();
+                    new AlertDialog.Builder(activity)
+                            .setCancelable(false)
+                            .setMessage(R.string.installed_permission_dialog_content)
+                            .setPositiveButton(R.string.storage_permission_dialog_positive, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    requestInstalledAppsPermissions(activity, requestCode == REQUEST_CODE_GET_INSTALLED_APPS);
+                                }
+                            })
+                            .setNegativeButton(R.string.storage_permission_dialog_negative, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    //finish();
+                                }
+                            })
+                            .show();
+                }
+            }
+        }
         if (requestCode == REQUEST_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // 授予权限，继续操作

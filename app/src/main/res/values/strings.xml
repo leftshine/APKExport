@@ -178,5 +178,6 @@
     <string name="multi_exit">Exit Multiple Mode</string>
     <string name="enter_multiple_mode">enter multiple mode</string>
     <string name="exit_multiple_mode">exit multiplemode</string>
+    <string name="installed_permission_dialog_content">To display the list of installed apps, the app requires permission to access the application list. If this permission is not granted, the installed apps cannot be displayed properly.</string>
 
 </resources>
