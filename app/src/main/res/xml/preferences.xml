@@ -47,17 +47,23 @@
             android:summary="@string/custom_export_path_summary"
             android:title="@string/custom_export_path" />-->
 
-        <com.github.angads25.filepicker.view.FilePickerPreference
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+<!--        <com.github.angads25.filepicker.view.FilePickerPreference-->
+<!--            xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--            android:key="@string/key_custom_export_path"-->
+<!--            android:title="@string/custom_export_path"-->
+<!--            android:summary="@string/custom_export_path_summary"-->
+<!--            android:defaultValue="/sdcard:/mnt"-->
+<!--            app:error_dir="/mnt"-->
+<!--            app:root_dir="/mnt"-->
+<!--            app:selection_mode="single_mode"-->
+<!--            app:selection_type="dir_select"-->
+<!--            app:extensions="apk"/>-->
+        <Preference
             android:key="@string/key_custom_export_path"
-            android:title="@string/custom_export_path"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
             android:summary="@string/custom_export_path_summary"
-            android:defaultValue="/sdcard:/mnt"
-            app:error_dir="/mnt"
-            app:root_dir="/mnt"
-            app:selection_mode="single_mode"
-            app:selection_type="dir_select"
-            app:extensions="apk"/>
+            android:title="@string/custom_export_path" />
 
         <!--<com.github.angads25.filepicker.view.FilePickerPreference
             xmlns:app="http://schemas.android.com/apk/res-auto"

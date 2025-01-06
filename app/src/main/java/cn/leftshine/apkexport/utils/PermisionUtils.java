@@ -55,6 +55,13 @@ public class PermisionUtils {
             fragment.requestPermissions(PERMISSIONS_STORAGE, requestCode);
         }
     }
+
+    public static void requestStoragePermissions(Activity activity,int requestCode) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, requestCode);
+        }
+    }
+
     public static void requestStoragePermissions(Activity activity) {
         ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
     }

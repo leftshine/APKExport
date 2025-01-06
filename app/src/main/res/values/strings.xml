@@ -160,6 +160,8 @@
     <string name="storage_permission_dialog_negative">No</string>
     <string name="storage_permission_copy_dialog_content">Can not export APK files without the storage permission</string>
     <string name="storage_permission_auto_clean_dialog_content">Can not delete APK files without the storage permission</string>
+    <string name="storage_permission_custom_export_path_dialog_content">Can not custom path without the storage permission</string>
+    <string name="installed_permission_dialog_content">To display the list of installed apps, the app requires permission to access the application list. If this permission is not granted, the installed apps cannot be displayed properly.</string>
     <string name="storage_permission_obtain_toast">Storage permission granted. Now you can go on.</string>
     <string name="tip_copy_failed">copy failed:</string>
     <string name="tip_share_failed">share failed</string>
@@ -178,6 +180,6 @@
     <string name="multi_exit">Exit Multiple Mode</string>
     <string name="enter_multiple_mode">enter multiple mode</string>
     <string name="exit_multiple_mode">exit multiplemode</string>
-    <string name="installed_permission_dialog_content">To display the list of installed apps, the app requires permission to access the application list. If this permission is not granted, the installed apps cannot be displayed properly.</string>
+    <string name="dialog_title_select_dir">Select a Directory</string>
 
 </resources>

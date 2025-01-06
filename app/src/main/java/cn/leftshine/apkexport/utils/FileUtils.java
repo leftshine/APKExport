@@ -53,6 +53,16 @@ public class FileUtils {
         mContext = context;
     }
 
+    public static void createIfNotExist(String dir) {
+        if (!dir.endsWith(File.separator)) {
+            dir = dir + File.separator;
+        }
+        File folder = new File(dir);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+    }
+
     //导出操作
     public void doExport(final Handler mHandler, final int mode, final String mCurrentAppPath, String customFileName){
         mCopyFileName = filenameFilter(customFileName);
@@ -132,21 +142,15 @@ public class FileUtils {
         }
         final String mCopypath = new File(mFolder.getAbsolutePath(), mCopyFileName).getPath();
         Log.i(TAG, "doCopy: mCopypath="+mCopypath);
-        //PermissionChecker.checkPermission(mContext,)
-        if(verifyStoragePermissions((Activity) mContext)){
-            //已获得权限
-            //开启子线程
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    //copyFile(mCurrentAppPath,mCopyFileName);
-                    copyFile(mHandler,mCurrentAppPath,mCopypath,mode);
-                }
-            }).start();
-        }else{
-            // 未获得权限
-            requestStoragePermissions((Activity) mContext);
-        }
+
+        //开启子线程
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //copyFile(mCurrentAppPath,mCopyFileName);
+                copyFile(mHandler,mCurrentAppPath,mCopypath,mode);
+            }
+        }).start();
 
     }
 
@@ -396,6 +400,47 @@ public class FileUtils {
             cachePath = context.getCacheDir().getPath();
         }
         return cachePath;
+    }
+
+    /**
+     * * 获取公共下载目录 * *
+     *
+     * @param
+     */
+    public static String getPublicDownloadDir() {
+        String path = null;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                || !Environment.isExternalStorageRemovable()) {
+            path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+        } else {
+            path =  Environment.getDownloadCacheDirectory().toString();
+        }
+        return path;
+    }
+
+    /**
+     * * 获取文件选择器起始目录 * *
+     *
+     * @param
+     */
+    public static String getFilePickerParentDir() {
+        String path = null;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                || !Environment.isExternalStorageRemovable()) {
+            path = Environment.getExternalStorageDirectory().toString();
+        } else {
+            path =  Environment.getDownloadCacheDirectory().toString();
+        }
+        return path;
+    }
+
+    /**
+     * * 获取推荐保存目录 * *
+     *
+     * @param
+     */
+    public static String getFilePickerRecommendedDir() {
+        return getFilePickerParentDir() + File.separator + "APKExport";
     }
 
     /**

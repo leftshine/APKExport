@@ -15,7 +15,7 @@ import cn.leftshine.apkexport.R;
 
 public class Settings {
     //public String SETTING_PREF_NAME="pref_settings";
-    private static String DEFAULT_EXPORT_PATH = Environment.getExternalStorageDirectory()+ File.separator+"APKExport";
+    private static String mDefaultExportPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
     private static Context mContext;
     private static SharedPreferences sharedPreferences;
     private static boolean isNeedLoad = false;
@@ -34,6 +34,8 @@ public class Settings {
         //context.getPreferenceManager().getSharedPreferencesName();
         //sharedPreferences = mContext.getSharedPreferences(Context.MODE_PRIVATE);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        // /storage/emulated/0/Android/data/cn.leftshine.apkexport/cache/
+        mDefaultExportPath = FileUtils.getDiskCacheDir(mContext);
     }
 
     public static boolean isAutoCleanCacheDir() {
@@ -77,7 +79,7 @@ public class Settings {
         sharedPreferences.edit().putString(mContext.getString(R.string.key_custom_filename_format), customFileNameFormat).apply();
     }
     public static String getCustomExportPath() {
-        return sharedPreferences.getString(mContext.getString(R.string.key_custom_export_path),DEFAULT_EXPORT_PATH);
+        return sharedPreferences.getString(mContext.getString(R.string.key_custom_export_path), mDefaultExportPath);
     }
 
     public static void setCustomExportPath(String customFileNameFormat) {

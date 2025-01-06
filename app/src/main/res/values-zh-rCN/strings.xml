@@ -118,15 +118,15 @@
     <string name="setting_all_files_access_permission_summary">导出异常时可尝试授予该权限</string>
     <string name="super_export">导出该应用的APK</string>
 
-    <string name="storage_permission_dialog_content">扫描本地APK文件需要文件访问权限，如果不授予应用将无法正常使用</string>
+    <string name="storage_permission_dialog_content">扫描本地APK文件需要文件访问权限，如果不授予应用将无法扫描本地APK</string>
     <string name="storage_permission_dialog_negative">就是不给</string>
     <string name="storage_permission_dialog_positive">好的，重新选择</string>
     <string name="storage_permission_dialog_go_setting">好的，去授权</string>
     <string name="storage_permission_copy_dialog_content">执行导出操作需要文件访问权限，如果不授予应用将无法正常使用</string>
-    <string name="storage_permission_auto_clean_dialog_content">执行清理操作需要文件访问权限，如果不授予应用将无法正常使用</string>
-    <string name="storage_permission_obtain_toast">成功取得文件访问权限，请重新执行相关操作</string>
-
+    <string name="storage_permission_auto_clean_dialog_content">执行清理操作需要文件访问权限，如果不授予请手动清理</string>
+    <string name="storage_permission_custom_export_path_dialog_content">自定义导出目录需要文件访问权限,如果不授予将使用默认目录</string>
     <string name="installed_permission_dialog_content">显示已安装应用需要获取应用列表权限，如果不授予将无法正常显示已安装应用</string>
+    <string name="storage_permission_obtain_toast">成功取得文件访问权限，请重新执行相关操作</string>
 
     <string name="tip_copy_failed">导出过程异常：</string>
     <string name="tip_share_failed">分享过程异常，请重试</string>
@@ -146,5 +146,6 @@
     <string name="multi_exit">退出多选模式</string>
     <string name="enter_multiple_mode">进入多选模式</string>
     <string name="exit_multiple_mode">退出多选模式</string>
+    <string name="dialog_title_select_dir">请勾选你要使用的目录</string>
 
 </resources>
