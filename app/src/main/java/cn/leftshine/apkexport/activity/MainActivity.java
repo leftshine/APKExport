@@ -15,6 +15,8 @@ import android.os.Handler;
 import android.os.Message;
 import androidx.annotation.NonNull;
 import com.google.android.material.appbar.AppBarLayout;
+
+import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -69,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int FINISHED = 1;
     private static final int CLEAN_CACHE_DIR = 0;
     private static final int CLEAN_EXPORT_DIR = 1;
+    private static final int REQUEST_CODE_SETTING = 101;
+    public static final int RESULT_CODE_REFRESH_TAB = 201;
 
     AppFragment fragmentUserApp;
     AppFragment fragmentSystemApp;
@@ -91,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionMode mActionMode;
     private ActionModeCallbackMultiple mCallback;
     private Context mContext;
+    private boolean mLastShowLocalApk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -260,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 // 未获得权限
                 Settings.setShowLocalApk(false);
-                Toast.makeText(this,R.string.tip_local_apk_closed,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this,R.string.tip_local_apk_closed,Toast.LENGTH_SHORT).show();
                 //requestStoragePermissions(this);
             }
         }
@@ -468,6 +473,23 @@ public class MainActivity extends AppCompatActivity {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
+            case REQUEST_CODE_SETTING:
+                if (resultCode == RESULT_CODE_REFRESH_TAB) {
+                    if (mLastShowLocalApk != Settings.isShowLocalApk()) {
+                        recreate();
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
     //对返回键进行监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -545,7 +567,10 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(new Intent(MainActivity.this, SettingActivity.class));
+            //startActivity(new Intent(MainActivity.this, SettingActivity.class));
+            mLastShowLocalApk = Settings.isShowLocalApk();
+            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_SETTING);
             return true;
         }
 

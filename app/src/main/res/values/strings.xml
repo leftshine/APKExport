@@ -106,6 +106,7 @@
     <string name="setting_clean_export_dir_title">Clean up export directory</string>
     <string name="setting_clean_export_dir_summery">size: </string>
     <string name="setting_clean_export_dir_summery_clean_Running">Cleanup Running…</string>
+    <string name="setting_clean_export_dir_summery_clean_done">Cleared</string>
     <string name="setting_all_files_access_permission_title">Grant "All File Access" permissions</string>
     <string name="setting_all_files_access_permission_summary">Grant this permissions only export failed</string>
 

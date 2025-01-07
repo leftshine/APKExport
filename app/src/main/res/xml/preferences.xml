@@ -21,6 +21,21 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/setting_export_title">
 
+        <Preference
+            android:key="@string/key_custom_export_path"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/custom_export_path_summary"
+            android:title="@string/custom_export_path" />
+
+        <EditTextPreference
+            android:defaultValue="#N-#P-#V"
+            android:key="@string/key_custom_filename_format"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/custom_file_name_summary"
+            android:title="@string/custom_file_name" />
+
         <SwitchPreference
             android:id="@+id/pref_share_with_export"
             android:defaultValue="false"
@@ -29,54 +44,13 @@
             android:summaryOn="@string/setting_shareWithExport_summaryOn"
             android:title="@string/setting_shareWithExport_title" />
 
-        <EditTextPreference
-            android:defaultValue="#N-#P-#V"
-
-            android:key="@string/key_custom_filename_format"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:summary="@string/custom_file_name_summary"
-            android:title="@string/custom_file_name" />
-
-       <!--<EditTextPreference
-            android:defaultValue="/APKExport"
-            android:dialogLayout="@layout/custom_export_path_dialog"
-            android:key="@string/key_custom_export_path"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:summary="@string/custom_export_path_summary"
-            android:title="@string/custom_export_path" />-->
-
-<!--        <com.github.angads25.filepicker.view.FilePickerPreference-->
-<!--            xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--            android:key="@string/key_custom_export_path"-->
-<!--            android:title="@string/custom_export_path"-->
-<!--            android:summary="@string/custom_export_path_summary"-->
-<!--            android:defaultValue="/sdcard:/mnt"-->
-<!--            app:error_dir="/mnt"-->
-<!--            app:root_dir="/mnt"-->
-<!--            app:selection_mode="single_mode"-->
-<!--            app:selection_type="dir_select"-->
-<!--            app:extensions="apk"/>-->
         <Preference
-            android:key="@string/key_custom_export_path"
+            android:key="@string/key_clean_ExportDir"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:summary="@string/custom_export_path_summary"
-            android:title="@string/custom_export_path" />
+            android:summary="size: "
+            android:title="@string/setting_clean_export_dir_title" />
 
-        <!--<com.github.angads25.filepicker.view.FilePickerPreference
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:key="your_preference_key"
-            android:title="Pick a Directory"
-            android:summary="Just a Summary"
-            android:defaultValue="/sdcard:/mnt"
-            app:titleText="Select Directories"
-            app:error_dir="/mnt"
-            app:root_dir="/sdcard"
-            app:selection_mode="multi_mode"
-            app:selection_type="dir_select"
-            app:extensions="txt:pdf:"/>-->
         <SwitchPreference
             android:id="@+id/pref_auto_clean_exportDir"
             android:defaultValue="false"
@@ -84,8 +58,6 @@
             android:summaryOff="@string/setting_autoClean_summaryOff"
             android:summaryOn="@string/setting_autoClean_summaryOn"
             android:title="@string/setting_autoClean_title" />
-
-
 
     </PreferenceCategory>
 
@@ -116,19 +88,6 @@
             android:title="@string/setting_sort_order_title" />
     </PreferenceCategory>
 
-<!--    <PreferenceCategory android:title="@string/setting_autoClean_title">
-        <SwitchPreference
-            android:id="@+id/pref_auto_clean_cacheDir"
-            android:defaultValue="true"
-            android:key="@string/key_is_auto_clean_cacheDir"
-            android:title="@string/setting_autoClean_cacheDir_title" />
-        <SwitchPreference
-            android:id="@+id/pref_auto_clean_exportDir"
-            android:defaultValue="false"
-            android:key="@string/key_is_auto_clean_exportDir"
-            android:title="@string/setting_autoClean_exportDir_title" />
-    </PreferenceCategory>-->
-
     <PreferenceCategory android:title="@string/setting_advance_group_title"
         android:key="@string/key_advance">
 
@@ -138,13 +97,6 @@
             android:singleLine="true"
             android:summary="@string/setting_all_files_access_permission_summary"
             android:title="@string/setting_all_files_access_permission_title" />
-
-        <Preference
-            android:key="@string/key_clean_ExportDir"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:summary="size: "
-            android:title="@string/setting_clean_export_dir_title" />
 
         <Preference
             android:selectAllOnFocus="true"

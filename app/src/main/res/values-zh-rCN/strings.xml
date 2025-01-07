@@ -113,7 +113,8 @@
     <string name="setting_restore_default_settings_description">此操作会将所有设置恢复到默认状态，是否继续？</string>
     <string name="setting_clean_export_dir_title">清理导出目录</string>
     <string name="setting_clean_export_dir_summery">占用空间：</string>
-    <string name="setting_clean_export_dir_summery_clean_Running">清理进行中…请稍后返回查看</string>
+    <string name="setting_clean_export_dir_summery_clean_Running">清理进行中…</string>
+    <string name="setting_clean_export_dir_summery_clean_done">清理完成</string>
     <string name="setting_all_files_access_permission_title">授予「所有文件访问」权限</string>
     <string name="setting_all_files_access_permission_summary">导出异常时可尝试授予该权限</string>
     <string name="super_export">导出该应用的APK</string>

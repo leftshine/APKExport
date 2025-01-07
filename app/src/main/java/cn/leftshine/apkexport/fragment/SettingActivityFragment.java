@@ -36,6 +36,7 @@ import com.github.angads25.filepicker.view.FilePickerDialog;
 import java.io.File;
 
 import cn.leftshine.apkexport.R;
+import cn.leftshine.apkexport.activity.MainActivity;
 import cn.leftshine.apkexport.utils.AppUtils;
 import cn.leftshine.apkexport.utils.FileUtils;
 import cn.leftshine.apkexport.utils.Settings;
@@ -226,9 +227,10 @@ public class SettingActivityFragment extends PreferenceFragment {
                 if (verifyStoragePermissions(getActivity())) {
                     //已获得权限
                     //Toast.makeText(context,R.string.clean_running,Toast.LENGTH_SHORT);
+                    prefCleanExportDir.setSummary(R.string.setting_clean_export_dir_summery_clean_Running);
                     FileUtils.cleanExportDir(context);
                     FileUtils.cleanCacheDir(context);
-                    prefCleanExportDir.setSummary(R.string.setting_clean_export_dir_summery_clean_Running);
+                    prefCleanExportDir.setSummary(R.string.setting_clean_export_dir_summery_clean_done);
                 } else {
                     //Settings.setShowLocalApk(false);
                     // 未获得权限
@@ -358,6 +360,7 @@ public class SettingActivityFragment extends PreferenceFragment {
                if((Boolean)o) {
                    if (verifyStoragePermissions(getActivity())) {
                        //已获得权限
+                       getActivity().setResult(MainActivity.RESULT_CODE_REFRESH_TAB);
                        return true;
                    } else {
                        //Settings.setShowLocalApk(false);
@@ -366,6 +369,7 @@ public class SettingActivityFragment extends PreferenceFragment {
                        return false;
                    }
                }
+               getActivity().setResult(MainActivity.RESULT_CODE_REFRESH_TAB);
                return true;
            }else if(preference.getKey().equals(getResources().getString(R.string.key_is_auto_clean_exportDir))){
                if((Boolean)o) {

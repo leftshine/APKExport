@@ -14,6 +14,7 @@ import android.os.Message;
 import androidx.core.content.FileProvider;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import java.io.File;
@@ -21,6 +22,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.regex.Pattern;
 
 import cn.leftshine.apkexport.R;
@@ -63,6 +66,21 @@ public class FileUtils {
         }
     }
 
+    private void setFocus(View view) {
+        view.setFocusable(true);
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // 此处Context为对话框所在Activity类
+                InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+            }
+        }, 100);//这里的100是设置的延时时间毫秒值，可按需要自行更改
+    }
+
     //导出操作
     public void doExport(final Handler mHandler, final int mode, final String mCurrentAppPath, String customFileName){
         mCopyFileName = filenameFilter(customFileName);
@@ -79,7 +97,8 @@ public class FileUtils {
                 //重命名导出
                 //doRename();
                 txtFileName.setText(mCopyFileName);
-                txtFileName.setSelection(0,customFileName.length());
+                txtFileName.setSelection(0,customFileName.lastIndexOf("."));
+                setFocus(txtFileName);
                 new AlertDialog.Builder(mContext)
                         .setTitle(R.string.input_new_name)
                         .setView(dialog_edit)
@@ -102,7 +121,8 @@ public class FileUtils {
                 //导出、重命名后分享
                 //doRename();
                 txtFileName.setText(mCopyFileName);
-                txtFileName.setSelection(0,customFileName.length());
+                txtFileName.setSelection(0,customFileName.lastIndexOf("."));
+                setFocus(txtFileName);
                 new AlertDialog.Builder(mContext)
                         .setTitle(R.string.input_new_name)
                         .setView(dialog_edit)
