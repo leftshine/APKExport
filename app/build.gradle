@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('E:\\AndroidStudioProjects\\leftshine.jks')
+            storePassword SIGN_KEY_STORE_PASSWORD
+            keyAlias = 'key0'
+            keyPassword SIGN_KEY_PASSWORD
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "cn.leftshine.apkexport"

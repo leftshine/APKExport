@@ -1,5 +1,8 @@
 package cn.leftshine.apkexport.adapter;
 
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -15,6 +18,7 @@ import cn.leftshine.apkexport.fragment.AppFragment;
 public class ContentPagerAdapter extends FragmentPagerAdapter {
     private List<AppFragment> tabFragments;
     private List<String> tabIndicators;
+    private AppFragment mCurrentFragment;
 
     public ContentPagerAdapter(FragmentManager fm, List<AppFragment> tabFragments, List<String> tabIndicators) {
         super(fm);
@@ -35,5 +39,15 @@ public class ContentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return tabIndicators.get(position);
+    }
+
+    @Override
+    public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+        mCurrentFragment = (AppFragment) object;
+        super.setPrimaryItem(container, position, object);
+    }
+
+    public AppFragment getCurrentFragment(){
+        return mCurrentFragment;
     }
 }

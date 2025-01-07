@@ -26,6 +26,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -38,6 +40,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.leftshine.apkexport.BuildConfig;
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.adapter.ContentPagerAdapter;
 import cn.leftshine.apkexport.fragment.AppFragment;
@@ -60,6 +63,7 @@ import static cn.leftshine.apkexport.utils.PermisionUtils.verifyStoragePermissio
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final boolean DBG = BuildConfig.DEBUG;
     private static final String TAG = "MainActivity";
     private static final int STARTED = 0;
     private static final int FINISHED = 1;
@@ -69,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     AppFragment fragmentUserApp;
     AppFragment fragmentSystemApp;
     AppFragment fragmentLocalApp;
-    AppFragment currentFragment;
+
     public FloatingActionButton fab;
     boolean isExitSnackbarShown = false;
     private TabLayout mTabTl;
@@ -77,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<String> tabIndicators;
     private List<AppFragment> tabFragments;
-    private ContentPagerAdapter contentAdapter;
+    private ContentPagerAdapter mContentAdapter;
     int sortType = 0;
     private ScanSdFilesReceiver scanReceiver;
     private FileUtils fileUtils;
@@ -86,11 +90,13 @@ public class MainActivity extends AppCompatActivity {
     private ObjectAnimator animtor;
     private ActionMode mActionMode;
     private ActionModeCallbackMultiple mCallback;
-
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(DBG) Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
+        mContext = this;
         //verifyStoragePermissions(this);
         fileUtils =new FileUtils(this);
         setContentView(R.layout.activity_main);
@@ -108,15 +114,15 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!verifyInstalledAppsPermissions(currentFragment.getActivity())) {
-                    requestInstalledAppsPermissions(currentFragment.getActivity(), false);
+                if (!verifyInstalledAppsPermissions((Activity) mContext)) {
+                    requestInstalledAppsPermissions((Activity) mContext, false);
                 }
                 ObjectAnimator anim = ObjectAnimator.ofFloat(view, "rotation", 0f, 360f);
                 anim.setDuration(500);
                 anim.start();
                 //((AppFragment)fragmentManager.findFragmentById(R.id.layout_fragment)).refresh();
-                //currentFragment.refresh(true);
-                currentFragment.loadWaitUI(true,true);
+                //mContentAdapter.getCurrentFragment().refresh(true);
+                mContentAdapter.getCurrentFragment().loadWaitUI(true,true);
                 FileUtils.notifyMediaScan();
                 Snackbar.make(view, R.string.Refreshing, Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
@@ -143,6 +149,65 @@ public class MainActivity extends AppCompatActivity {
         scanReceiver = new ScanSdFilesReceiver();
         registerReceiver(scanReceiver, intentFilter);
         mCallback = new ActionModeCallbackMultiple(this,getSupportActionBar(),tabFragments);
+    }
+
+    @Override
+    protected void onStart() {
+        if(DBG) Log.d(TAG, "onStart: ");
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        if(DBG) Log.d(TAG, "onResume: ");
+        super.onResume();
+        if(Settings.isIsNeedLoad()){
+            //mContentAdapter.getCurrentFragment().refresh(true);
+            mContentAdapter.getCurrentFragment().loadWaitUI(true,false);
+            //allFragmentReload();
+        }
+        /*
+        //神秘代码复制到剪贴板
+        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if(!cm.hasPrimaryClip())
+        {
+            ClipData clipData = ClipData.newPlainText(null, ToolUtils.DEFAULT_COPY_DATA);
+            cm.setPrimaryClip(clipData);
+        }
+        */
+    }
+
+    @Override
+    protected void onPause() {
+        if(DBG) Log.d(TAG, "onPause: ");
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        if(DBG) Log.d(TAG, "onStop: ");
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(DBG) Log.d(TAG, "onDestroy: ");
+        if (scanReceiver != null) {
+            unregisterReceiver(scanReceiver);
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        if(DBG) Log.d(TAG, "onSaveInstanceState: ");
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        if(DBG) Log.d(TAG, "onRestoreInstanceState: ");
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     /*private void mediaScan(){
@@ -178,7 +243,6 @@ public class MainActivity extends AppCompatActivity {
 
         tabIndicators.add(getString(R.string.user_app));
         fragmentUserApp = AppFragment.newInstance(ToolUtils.TYPE_USER);
-
         tabFragments.add(fragmentUserApp);
         //fragmentUserApp.loadWaitUI(true,false);
 
@@ -201,11 +265,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        currentFragment = fragmentUserApp;
-
-        contentAdapter = new ContentPagerAdapter(getSupportFragmentManager(),tabFragments,tabIndicators);
-        mContentVp.setAdapter(contentAdapter);
-        mContentVp.setOffscreenPageLimit(2);// 设置缓存页面，当前页面的相邻N各页面都会被缓存
+        mContentAdapter = new ContentPagerAdapter(getSupportFragmentManager(),tabFragments,tabIndicators);
+        mContentVp.setAdapter(mContentAdapter);
+        mContentVp.setOffscreenPageLimit(mContentVp.getAdapter().getCount() - 1);// 设置缓存页面，当前页面的相邻N各页面都会被缓存
         mContentVp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -215,7 +277,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 mContentVp.setCurrentItem(position);
-                currentFragment = (AppFragment)contentAdapter.getItem(position);
+                AppFragment currentFragment = mContentAdapter.getCurrentFragment();
+                if(currentFragment ==null) return;
                 mCallback.setAdapter(currentFragment.getmAdapter());
                 if(GlobalData.isMultipleMode) {
                     currentFragment.getmAdapter().updateSelectedCount();
@@ -290,8 +353,12 @@ public class MainActivity extends AppCompatActivity {
                 // 授予权限，继续操作
                 //Toast.makeText(this,R.string.storage_permission_obtain_toast,Toast.LENGTH_SHORT).show();
                 if (requestCode == REQUEST_CODE_GET_INSTALLED_APPS_CURRENT) {
-                    currentFragment.loadWaitUI(true, true);
+                    mContentAdapter.getCurrentFragment().loadWaitUI(true, true);
                 } else {
+                    // todo：after recreate activity, tabFragments is not associated with the actual Fragment list
+                    // Reloading does not take effect. For example：grant permission after splitting screen
+                    // The probability is very small and the user can refresh manually
+                    // So, maybe fix it later
                     for (AppFragment fragment : tabFragments){
                         fragment.loadWaitUI(true, true);
                     }
@@ -446,31 +513,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if(Settings.isIsNeedLoad()){
-            //currentFragment.refresh(true);
-            currentFragment.loadWaitUI(true,false);
-            //allFragmentReload();
-        }
-        /*
-        //神秘代码复制到剪贴板
-        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        if(!cm.hasPrimaryClip())
-        {
-            ClipData clipData = ClipData.newPlainText(null, ToolUtils.DEFAULT_COPY_DATA);
-            cm.setPrimaryClip(clipData);
-        }
-        */
-    }
-
-    @Override
-    protected void onDestroy() {
-        unregisterReceiver(scanReceiver);
-        super.onDestroy();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -486,7 +528,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String queryText) {
-                currentFragment.doSearch(queryText);
+                mContentAdapter.getCurrentFragment().doSearch(queryText);
                 return true;
             }
         });
@@ -537,7 +579,7 @@ public class MainActivity extends AppCompatActivity {
                 getSupportActionBar().hide();
                 //getSupportActionBar().setCustomView(R.layout.actionbar_view_multiple);
 
-                mCallback.setAdapter(currentFragment.getmAdapter());
+                mCallback.setAdapter(mContentAdapter.getCurrentFragment().getmAdapter());
                 mActionMode = startSupportActionMode(mCallback);
 
                 GlobalData.setMultipleMode(true);
@@ -612,9 +654,9 @@ public class MainActivity extends AppCompatActivity {
                                     break;
                             }
                             Settings.setSortOrder("300");
-                            //currentFragment.refresh(true);
+                            //mContentAdapter.getCurrentFragment().refresh(true);
                             //allFragmentReload();
-                            currentFragment.loadWaitUI(true,false);
+                            mContentAdapter.getCurrentFragment().loadWaitUI(true,false);
                         }
                     })
                     .setPositiveButton(R.string.DES, new DialogInterface.OnClickListener() {
@@ -644,8 +686,8 @@ public class MainActivity extends AppCompatActivity {
                                     break;
                             }
                             Settings.setSortOrder("301");
-                            //currentFragment.refresh(true);
-                            currentFragment.loadWaitUI(true,false);
+                            //mContentAdapter.getCurrentFragment().refresh(true);
+                            mContentAdapter.getCurrentFragment().loadWaitUI(true,false);
                             //allFragmentReload();
                         }
                     })
@@ -687,8 +729,9 @@ public class MainActivity extends AppCompatActivity {
                 case FINISHED:
                     Log.i(TAG, "media scan finished");
                     //fragmentLocalApp.refresh(false);
-                    if(currentFragment == fragmentLocalApp)
-                        fragmentLocalApp.loadWaitUI(false,true);
+                    AppFragment currentFragment = mContentAdapter.getCurrentFragment();
+                    if(currentFragment.getmAdapter().getmType() == ToolUtils.TYPE_LOCAL);
+                        currentFragment.loadWaitUI(false,true);
                 default:
                     break;
             }

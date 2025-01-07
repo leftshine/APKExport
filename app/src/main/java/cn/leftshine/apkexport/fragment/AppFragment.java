@@ -9,6 +9,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.text.TextUtils;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.leftshine.apkexport.BuildConfig;
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.activity.MainActivity;
 import cn.leftshine.apkexport.adapter.AppInfoAdapter;
@@ -38,6 +41,7 @@ import cn.leftshine.apkexport.utils.ToolUtils;
  * A placeholder fragment containing a simple view.
  */
 public class AppFragment extends Fragment {
+    private static final Boolean DBG = BuildConfig.DEBUG;
     private static final String TAG = "AppFragment";
 
     private View root = null;
@@ -188,7 +192,20 @@ public class AppFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        Log.d(TAG, "onAttach");
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onDetach() {
+        Log.d(TAG, "onDetach");
+        super.onDetach();
+    }
+
+    @Override
     public void onCreate(Bundle arg0) {
+        if(DBG) Log.d(TAG, "onCreate");
         super.onCreate(arg0);
         type = getArguments().getInt(ToolUtils.TYPE);
         Log.i(TAG, "onCreate: type="+type);
@@ -201,6 +218,7 @@ public class AppFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if(DBG) Log.d(TAG, "onCreateView");
         root = inflater.inflate(R.layout.fragment_main, container, false);
         initView(root);
         //loadWaitUI(true,false);
@@ -209,13 +227,55 @@ public class AppFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        if(DBG) Log.d(TAG, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
         //initData();
         load(true,false);
         isUIReady = true;
     }
 
+    @Override
+    public void onStart() {
+        if(DBG) Log.d(TAG, "onStart");
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        if(DBG) Log.d(TAG, "onResume");
+        super.onResume();
+    }
+    @Override
+    public void onPause() {
+        if(DBG) Log.d(TAG, "onPause");
+        super.onPause();
+    }
+    @Override
+    public void onStop() {
+        if(DBG) Log.d(TAG, "onStop");
+        super.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        if(DBG) Log.d(TAG, "onSaveInstanceState");
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+    @Override
+    public void onDestroy() {
+        if(DBG) Log.d(TAG, "onDestroy");
+        getActivity().unregisterReceiver(mAppReceiver);
+        //mThread.quit();
+        super.onDestroy();
+    }
+
     private void initView(View root) {
+        if(DBG) Log.d(TAG, "initView: this="+this.hashCode());
         //fab = (FloatingActionButton) rfindViewById(R.id.fab);
         cloud = root.findViewById(R.id.cloud);
         ly_list_show = root.findViewById(R.id.ly_list_show);
@@ -325,24 +385,6 @@ public class AppFragment extends Fragment {
         getActivity().registerReceiver(mAppReceiver,filter);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-    @Override
-    public void onDestroy() {
-        getActivity().unregisterReceiver(mAppReceiver);
-        //mThread.quit();
-        super.onDestroy();
-    }
     public  void loadWaitUI(final boolean isShowLoadUI,final boolean isRefresh){
         if(isLoading)
             return;
@@ -460,6 +502,7 @@ public class AppFragment extends Fragment {
 
     //endregion
     public void doSearch(String queryText) {
+        if(DBG) Log.d(TAG, "doSearch: this="+this.hashCode());
         if (mAdapter == null) {
             Log.e(TAG, "mAdapter is null");
             return;
@@ -524,7 +567,7 @@ public void changeMultiSelectMode(boolean multipleMode){
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Log.d(TAG, "action = " + action);
+            if(DBG) Log.d(TAG, "action = " + action);
 
             if (TextUtils.equals(action, Intent.ACTION_PACKAGE_ADDED)
                     || TextUtils.equals(action, Intent.ACTION_PACKAGE_REPLACED)) {
@@ -536,7 +579,7 @@ public void changeMultiSelectMode(boolean multipleMode){
                     mHandler.sendMessage(msg);
                 }
             } else {
-                Log.d(TAG, "action = " + action);
+                if(DBG) Log.d(TAG, "action = " + action);
             }
         }
     }
