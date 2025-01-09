@@ -29,14 +29,15 @@ import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -44,9 +45,9 @@ import java.util.List;
 
 import cn.leftshine.apkexport.BuildConfig;
 import cn.leftshine.apkexport.R;
+import cn.leftshine.apkexport.adapter.AppInfoAdapter;
 import cn.leftshine.apkexport.adapter.ContentPagerAdapter;
 import cn.leftshine.apkexport.fragment.AppFragment;
-import cn.leftshine.apkexport.utils.ActionModeCallbackMultiple;
 import cn.leftshine.apkexport.utils.FileUtils;
 import cn.leftshine.apkexport.utils.GlobalData;
 import cn.leftshine.apkexport.utils.Settings;
@@ -74,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_SETTING = 101;
     public static final int RESULT_CODE_REFRESH_TAB = 201;
 
+    private static final String BUNDLE_KEY_FRAGMENT_INDEX= "FRAGMENT_INDEX";
+    private static final String BUNDLE_KEY_MULTIPLE_MODE = "MULTIPLE_MODE";
+    private static final String BUNDLE_KEY_SELECTED_COUNT= "SELECTED_COUNT";
+
     AppFragment fragmentUserApp;
     AppFragment fragmentSystemApp;
     AppFragment fragmentLocalApp;
@@ -82,9 +87,6 @@ public class MainActivity extends AppCompatActivity {
     boolean isExitSnackbarShown = false;
     private TabLayout mTabTl;
     private ViewPager mContentVp;
-
-    private List<String> tabIndicators;
-    private List<AppFragment> tabFragments;
     private ContentPagerAdapter mContentAdapter;
     int sortType = 0;
     private ScanSdFilesReceiver scanReceiver;
@@ -93,9 +95,9 @@ public class MainActivity extends AppCompatActivity {
     private AppBarLayout ly_app_bar;
     private ObjectAnimator animtor;
     private ActionMode mActionMode;
-    private ActionModeCallbackMultiple mCallback;
     private Context mContext;
     private boolean mLastShowLocalApk;
+    private ArrayList<ArrayList<String>> mRestoreSelectPackages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
         //FragmentManager fragmentManager = getSupportFragmentManager();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
         intentFilter.addDataScheme("file");
         scanReceiver = new ScanSdFilesReceiver();
         registerReceiver(scanReceiver, intentFilter);
-        mCallback = new ActionModeCallbackMultiple(this,getSupportActionBar(),tabFragments);
     }
 
     @Override
@@ -204,14 +204,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        if(DBG) Log.d(TAG, "onSaveInstanceState: ");
-        super.onSaveInstanceState(outState, outPersistentState);
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        Boolean isMultipleMode = GlobalData.isMultipleMode();
+        int fragmentIndex = mContentVp.getCurrentItem();
+        if(DBG) Log.d(TAG, "onSaveInstanceState: isMultipleMode=" + isMultipleMode
+                + ", fragmentIndex=" + fragmentIndex);
+        savedInstanceState.putBoolean(BUNDLE_KEY_MULTIPLE_MODE,isMultipleMode);
+        if (isMultipleMode){
+            savedInstanceState.putInt(BUNDLE_KEY_SELECTED_COUNT, mContentAdapter.getCurrentFragment().getmAdapter().getSelecteditemCount());
+        }
+        savedInstanceState.putInt(BUNDLE_KEY_FRAGMENT_INDEX, fragmentIndex);
+
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        if(DBG) Log.d(TAG, "onRestoreInstanceState: ");
+        if(DBG) Log.d(TAG, "onRestoreInstanceState: GlobalData.isMultipleMode()="+GlobalData.isMultipleMode());
+        Boolean isMultipleMode = savedInstanceState.getBoolean(BUNDLE_KEY_MULTIPLE_MODE);
+        int fragmentIndex = savedInstanceState.getInt(BUNDLE_KEY_FRAGMENT_INDEX);
+        if(DBG) Log.d(TAG, "onRestoreInstanceState: isMultipleMode=" + isMultipleMode
+                + ", fragmentIndex=" + fragmentIndex);
+        mContentVp.setCurrentItem(fragmentIndex);
+        if (isMultipleMode && mActionMode == null) {
+            switchMultipleMode(true);
+            int selectItemCount = savedInstanceState.getInt(BUNDLE_KEY_SELECTED_COUNT);
+            updateSelectedCount(selectItemCount);
+        }
         super.onRestoreInstanceState(savedInstanceState);
     }
 
@@ -243,8 +262,8 @@ public class MainActivity extends AppCompatActivity {
             requestInstalledAppsPermissions((Activity) this, true);
         }
 
-        tabIndicators = new ArrayList<>();
-        tabFragments = new ArrayList<>();
+        List<String> tabIndicators = new ArrayList<>();
+        List<AppFragment> tabFragments = new ArrayList<>();
 
         tabIndicators.add(getString(R.string.user_app));
         fragmentUserApp = AppFragment.newInstance(ToolUtils.TYPE_USER);
@@ -269,8 +288,8 @@ public class MainActivity extends AppCompatActivity {
                 //requestStoragePermissions(this);
             }
         }
-
-        mContentAdapter = new ContentPagerAdapter(getSupportFragmentManager(),tabFragments,tabIndicators);
+        ContentPagerAdapterCallback callback = new ContentPagerAdapterCallback();
+        mContentAdapter = new ContentPagerAdapter(getSupportFragmentManager(),tabFragments,tabIndicators, callback);
         mContentVp.setAdapter(mContentAdapter);
         mContentVp.setOffscreenPageLimit(mContentVp.getAdapter().getCount() - 1);// 设置缓存页面，当前页面的相邻N各页面都会被缓存
         mContentVp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -281,12 +300,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                mContentVp.setCurrentItem(position);
+                Log.d(TAG, "onPageSelected: position="+position);
+                //mContentVp.setCurrentItem(position);
                 AppFragment currentFragment = mContentAdapter.getCurrentFragment();
                 if(currentFragment ==null) return;
-                mCallback.setAdapter(currentFragment.getmAdapter());
-                if(GlobalData.isMultipleMode) {
-                    currentFragment.getmAdapter().updateSelectedCount();
+                Log.d(TAG, "onPageSelected: GlobalData.isMultipleMode="+GlobalData.isMultipleMode + "mActionMode=" +mActionMode);
+                if(GlobalData.isMultipleMode && mActionMode != null) {
+                    Log.d(TAG, "onPageSelected: type="+currentFragment.getType());
+                    updateSelectedCount(currentFragment.getmAdapter().getSelecteditemCount());
                     mActionMode.invalidate();
                 }
                 //currentFragment.getmAdapter().notifyDataSetChanged();
@@ -360,11 +381,7 @@ public class MainActivity extends AppCompatActivity {
                 if (requestCode == REQUEST_CODE_GET_INSTALLED_APPS_CURRENT) {
                     mContentAdapter.getCurrentFragment().loadWaitUI(true, true);
                 } else {
-                    // todo：after recreate activity, tabFragments is not associated with the actual Fragment list
-                    // Reloading does not take effect. For example：grant permission after splitting screen
-                    // The probability is very small and the user can refresh manually
-                    // So, maybe fix it later
-                    for (AppFragment fragment : tabFragments){
+                    for (AppFragment fragment : mContentAdapter.getAllFragment()){
                         fragment.loadWaitUI(true, true);
                     }
                 }
@@ -490,6 +507,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void switchMultipleMode(boolean on) {
+        Log.d(TAG, "switchMultipleMode: "+on);
+        if (on) {
+            //进入多选模式
+            ActionModeCallbackMultiple callback = new ActionModeCallbackMultiple();
+            mActionMode = startSupportActionMode(callback);
+        } else {
+            //退出多选模式
+            Log.d(TAG, "switchMultipleMode: 退出多选模式mActionMode="+mActionMode);
+            if(mActionMode != null) {
+                mActionMode.finish();
+                Log.d(TAG, "switchMultipleMode: mActionMode="+mActionMode);
+            }
+        }
+    }
+
+    private void updateSelectedCount(int count) {
+        if (mActionMode!= null) {
+            View actionBarView =mActionMode.getCustomView();
+            TextView selectedNum = (TextView) actionBarView.findViewById(R.id.selected_num);
+            selectedNum.setText(count + "");
+        }
+    }
+
     //对返回键进行监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -590,28 +631,13 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_multi_select) {
             if(GlobalData.isMultipleMode){
                 //退出多选模式
-                Toast.makeText(this,R.string.exit_multiple_mode,Toast.LENGTH_SHORT).show();
-                getSupportActionBar().show();
-                GlobalData.setMultipleMode(false);
-                for(int i=0;i<tabFragments.size();i++){
-                    if(tabFragments.get(i)!=null){
-                        tabFragments.get(i).changeMultiSelectMode(false);
-                    }
-                }
+                switchMultipleMode(false);
             }else {
                 //进入多选模式
-                Toast.makeText(this,R.string.enter_multiple_mode,Toast.LENGTH_SHORT).show();
-                getSupportActionBar().hide();
-                //getSupportActionBar().setCustomView(R.layout.actionbar_view_multiple);
-
-                mCallback.setAdapter(mContentAdapter.getCurrentFragment().getmAdapter());
-                mActionMode = startSupportActionMode(mCallback);
-
-                GlobalData.setMultipleMode(true);
-                for(int i=0;i<tabFragments.size();i++){
-                    if(tabFragments.get(i)!=null){
-                        tabFragments.get(i).changeMultiSelectMode(true);
-                    }
+                Toast.makeText(mContext, R.string.enter_multiple_mode,Toast.LENGTH_SHORT).show();
+                switchMultipleMode(true);
+                for (AppFragment fragment : mContentAdapter.getAllFragment()){
+                    fragment.changeMultiSelectMode(true);
                 }
             }
 
@@ -723,13 +749,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-/*    private void allFragmentReload() {
-        for(AppFragment fragment:tabFragments){
-            fragment.loadWaitUI(true,false);
-        }
-
-    }*/
-
     private class ScanSdFilesReceiver extends BroadcastReceiver {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -742,6 +761,95 @@ public class MainActivity extends AppCompatActivity {
                 scanHandler.sendEmptyMessage(FINISHED);
             }
         }
+    }
+
+    private class ContentPagerAdapterCallback implements cn.leftshine.apkexport.adapter.ContentPagerAdapter.Callback {
+
+        @Override
+        public void onInstantiateItem(int position, AppFragment appFragment) {
+            Log.d(TAG, "onInstantiateItem: "+position);
+        }
+
+        @Override
+        public void onSetPrimaryItem(int position, AppFragment curFragment, List<AppFragment> allFragments) {
+            Log.d(TAG, "onSetPrimaryItem: "+position);
+        }
+    }
+
+    private class ActionModeCallbackMultiple implements ActionMode.Callback{
+        View actionBarView;
+        TextView selectedNum;
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            // TODO Auto-generated method stub
+            getSupportActionBar().hide();
+            GlobalData.setMultipleMode(true);
+
+            if(mContentVp.getCurrentItem() == 2){
+                menu.findItem(R.id.multi_export).setVisible(false);
+            }else{
+                menu.findItem(R.id.multi_export).setVisible(true);
+            }
+            return true;
+        }
+
+        //退出多选模式时调用
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            // TODO Auto-generated method stub
+            Toast.makeText(mContext, R.string.exit_multiple_mode,Toast.LENGTH_SHORT).show();
+            GlobalData.setMultipleMode(false);
+            for (AppFragment fragment : mContentAdapter.getAllFragment()){
+                fragment.changeMultiSelectMode(false);
+            }
+            getSupportActionBar().show();
+        }
+
+        //进入多选模式调用，初始化ActionBar的菜单和布局
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // TODO Auto-generated method stub
+            ((Activity)mContext).getMenuInflater().inflate(R.menu.menu_multiple_mode, menu);
+            if(actionBarView == null) {
+                actionBarView = LayoutInflater.from(mContext).inflate(R.layout.actionbar_view_multiple, null);
+                selectedNum = (TextView)actionBarView.findViewById(R.id.selected_num);
+            }
+            mode.setCustomView(actionBarView);
+            GlobalData.setActionmode(mode);
+            return true;
+        }
+
+        //ActionBar上的菜单项被点击时调用
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            // TODO Auto-generated method stub
+            AppInfoAdapter adapter = mContentAdapter.getCurrentFragment().getmAdapter();
+            switch(item.getItemId()) {
+                case R.id.multi_export:
+                    adapter.multiExport(0);
+                    break;
+                case R.id.multi_share:
+                    if(ToolUtils.TYPE_LOCAL==adapter.getmType()) {
+                        adapter.multiShare();
+                    }else {
+                        adapter.multiExport(1);
+                    }
+                    break;
+                case R.id.select_all:
+                    adapter.selectAll();
+                    break;
+                case R.id.unselect_all:
+                    adapter.unSelectAll();
+                    break;
+                case R.id.exit_multi_mode:
+                    mode.finish();
+                    break;
+            }
+            return true;
+        }
+
+
     }
 
     private Handler scanHandler = new Handler() {

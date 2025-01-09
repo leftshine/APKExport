@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import cn.leftshine.apkexport.BuildConfig;
@@ -43,6 +44,8 @@ import cn.leftshine.apkexport.utils.ToolUtils;
 public class AppFragment extends Fragment {
     private static final Boolean DBG = BuildConfig.DEBUG;
     private static final String TAG = "AppFragment";
+
+    private static final String BUNDLE_KEY_SELECTED_PACKAGES = "SELECTED_PACKAGES";
 
     private View root = null;
     //private Toast mToast = null;
@@ -204,10 +207,17 @@ public class AppFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle arg0) {
+    public void onCreate(Bundle savedInstanceState) {
         if(DBG) Log.d(TAG, "onCreate");
-        super.onCreate(arg0);
+        super.onCreate(savedInstanceState);
         type = getArguments().getInt(ToolUtils.TYPE);
+        mAdapter = new AppInfoAdapter(getActivity(), mLists,type);
+        if (savedInstanceState != null) {
+            ArrayList<String> selectPackages = savedInstanceState.getStringArrayList(BUNDLE_KEY_SELECTED_PACKAGES);
+            logd("onCreate: selectPackagesUser"+selectPackages);
+            mAdapter.setRestoredPackage(selectPackages);
+        }
+
         Log.i(TAG, "onCreate: type="+type);
         //toolUtils = new ToolUtils(getActivity());
         toolUtils = new ToolUtils(getActivity());
@@ -257,9 +267,14 @@ public class AppFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         if(DBG) Log.d(TAG, "onSaveInstanceState");
-        super.onSaveInstanceState(outState);
+        super.onSaveInstanceState(savedInstanceState);
+        ArrayList<String> selectPackages = mAdapter.getSelectedPackage();
+        logd("onSaveInstanceState: selectPackages=" + selectPackages.toString());
+        if(selectPackages.size() > 0) {
+            savedInstanceState.putStringArrayList(BUNDLE_KEY_SELECTED_PACKAGES, selectPackages);
+        }
     }
 
     @Override
@@ -273,6 +288,15 @@ public class AppFragment extends Fragment {
         //mThread.quit();
         super.onDestroy();
     }
+
+    public int getType() {
+        return type;
+    }
+
+    private void logd(String str){
+        Log.d(TAG," ["+ type + "] " + str);
+    }
+
 
     private void initView(View root) {
         if(DBG) Log.d(TAG, "initView: this="+this.hashCode());
@@ -296,7 +320,7 @@ public class AppFragment extends Fragment {
          * 必须在setAdapter之前进行设置
          */
         //initHeadView();
-        mAdapter = new AppInfoAdapter(getActivity(), mLists,type);
+
         mAppListView.setAdapter(mAdapter);
         mAppListView.setOnScrollListener(new AbsListView.OnScrollListener(){
             private int oldVisibleItem = 0; //滑动开始前，列表第一个可见item序号
@@ -555,6 +579,9 @@ public void changeMultiSelectMode(boolean multipleMode){
         Toast.makeText(getActivity(),R.string.enter_multiple_mode,Toast.LENGTH_SHORT).show();
     }*/
     //mAdapter.notifyDataSetChanged();
+    if(mAdapter == null) {
+        Log.e(TAG, "changeMultiSelectMode: mAdapter is null");
+    }
     if(multipleMode){
         mAdapter.notifyDataSetChanged();
     }else{

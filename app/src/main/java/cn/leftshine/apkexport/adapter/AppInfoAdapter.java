@@ -49,7 +49,9 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 	//SortComparator localSortComparator;
 	private List<AppInfo> mLists = new ArrayList<AppInfo>();
 	private List<AppInfo> fullLists = new ArrayList<AppInfo>();
-	private List<AppInfo> selectedItems = new ArrayList<AppInfo>();
+	private List<AppInfo> mSelectedItems = new ArrayList<AppInfo>();
+	private ArrayList<String> mSelectedPackage = new ArrayList<String>();
+	private ArrayList<String> mRestoredPackage = new ArrayList<String>();
 	//private CharacterParser characterParser;
 	MyFilter mFilter;
 	Context mContext;
@@ -57,9 +59,6 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 	Handler multiFileHandler;
 	FileUtils fileUtils;
 	int mType;
-	//ActionMode actionmode;
-
-
 
 	public AppInfoAdapter(Context context, List<AppInfo> list, int type) {
 		// TODO Auto-generated constructor stub
@@ -76,6 +75,14 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 		fileUtils = new FileUtils(mContext);
 	}
 
+	public ArrayList<String> getSelectedPackage() {
+		return mSelectedPackage;
+	}
+
+	public void setRestoredPackage(ArrayList<String> restoredPackage) {
+		this.mRestoredPackage = restoredPackage;
+	}
+
 	public int getmType() {
 		return mType;
 	}
@@ -88,15 +95,23 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 	public void setDataList(List<AppInfo> list) {
 		mLists = list;
 		fullLists = mLists;
+		if(mRestoredPackage!=null){
+			select(mRestoredPackage);
+			mRestoredPackage = null;
+		}
+		getSelecteditemCount();
 		notifyDataSetChanged();
 	}
 	//顺便把选中的item存到selectedItems中
 	public int getSelecteditemCount(){
-		selectedItems.clear();
+		mSelectedItems.clear();
+		mSelectedPackage.clear();
 		int count=0;
 		for(int i = 0; i <getCount(); i++){
-			if (((AppInfo)getItem(i)).isSelect()){
-				selectedItems.add(((AppInfo)getItem(i)));
+			AppInfo appInfo = (AppInfo)getItem(i);
+			if (appInfo.isSelect()){
+				mSelectedItems.add(appInfo);
+				mSelectedPackage.add(appInfo.packageName);
 				count++;
 			}
 		}
@@ -105,10 +120,23 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 	public void updateSelectedCount() {
 		//int selectedCount = listView.getCheckedItemCount();
 		int selectedCount = getSelecteditemCount();
-		View actionBarView = GlobalData.getActionmode().getCustomView();
-		TextView selectedNum = (TextView)actionBarView.findViewById(R.id.selected_num);
-		selectedNum.setText(selectedCount + "");
+		if(GlobalData.getActionmode() != null) {
+			View actionBarView = GlobalData.getActionmode().getCustomView();
+			TextView selectedNum = (TextView) actionBarView.findViewById(R.id.selected_num);
+			selectedNum.setText(selectedCount + "");
+		}
 	}
+
+	public void select( ArrayList<String> selectPackages) {
+        Log.d(TAG, "select: selectPackages="+selectPackages);
+		for (int i = 0; i < getCount(); i++) {
+			AppInfo appInfo = (AppInfo)getItem(i);
+			if(selectPackages.contains(appInfo.packageName)) {
+				((AppInfo) getItem(i)).setSelect(true);
+			}
+		}
+	}
+
 	public void selectAll() {
 		for(int i = 0; i < getCount(); i++) {
 			((AppInfo)getItem(i)).setSelect(true);
@@ -124,11 +152,11 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 		notifyDataSetChanged();
 	}
 	public void multiExport(int thenShare) {
-		if(selectedItems.size()>0) {
+		if(mSelectedItems.size()>0) {
 			Log.i(TAG, "multi_copyFile start");
 			Message msgStart = Message.obtain();
 			msgStart.what = MessageCode.MSG_COPY_START;
-			msgStart.arg1 = selectedItems.size();
+			msgStart.arg1 = mSelectedItems.size();
 			msgStart.arg2 = thenShare;
 			int mode;
 			if(thenShare==0) {
@@ -140,8 +168,8 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 				msgStart.obj = mContext.getString(R.string.prepare_for_share);
 			}
 			multiFileHandler.sendMessage(msgStart);
-			for (int i = 0; i < selectedItems.size(); i++) {
-				AppInfo info = selectedItems.get(i);
+			for (int i = 0; i < mSelectedItems.size(); i++) {
+				AppInfo info = mSelectedItems.get(i);
 
 				String mCurrentPkgName = info.packageName;
 				String mCurrentAppName = info.appName;
@@ -157,11 +185,11 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 		}
 	}
 	public void multiShare(){
-		if(selectedItems.size()>0) {
+		if(mSelectedItems.size()>0) {
 			ArrayList<Uri> shareFiles = new ArrayList<Uri>();
 			ArrayList<Uri> shareFilesForO = new ArrayList<Uri>();
-			for (int i = 0; i < selectedItems.size(); i++) {
-				AppInfo info = selectedItems.get(i);
+			for (int i = 0; i < mSelectedItems.size(); i++) {
+				AppInfo info = mSelectedItems.get(i);
 				shareFiles.add(Uri.fromFile(new File(info.appSourcDir)));
 			}
 			fileUtils.startMultiShare(shareFiles, shareFilesForO);
