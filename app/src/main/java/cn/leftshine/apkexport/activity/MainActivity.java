@@ -302,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 Log.d(TAG, "onPageSelected: position="+position);
                 //mContentVp.setCurrentItem(position);
-                AppFragment currentFragment = mContentAdapter.getCurrentFragment();
+                AppFragment currentFragment = mContentAdapter.getFragment(position);
                 if(currentFragment ==null) return;
                 Log.d(TAG, "onPageSelected: GlobalData.isMultipleMode="+GlobalData.isMultipleMode + "mActionMode=" +mActionMode);
                 if(GlobalData.isMultipleMode && mActionMode != null) {

@@ -53,9 +53,9 @@ public class ContentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         Log.d(TAG, "setPrimaryItem: position="+position);
+        super.setPrimaryItem(container, position, object);
         mCurrentFragment = (AppFragment) object;
         callback.onSetPrimaryItem(position, mCurrentFragment, tabFragments);
-        super.setPrimaryItem(container, position, object);
     }
 
     // reference https://stackoverflow.com/questions/14035090/how-to-get-existing-fragments-when-using-fragmentpageradapter
@@ -82,7 +82,12 @@ public class ContentPagerAdapter extends FragmentPagerAdapter {
         return mCurrentFragment;
     }
 
+    public AppFragment getFragment(int position){
+        return tabFragments.get(position);
+    }
+
     public List<AppFragment> getAllFragment(){
         return tabFragments;
     }
+
 }
