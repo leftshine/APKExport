@@ -22,6 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.FileProvider;
+
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -190,7 +192,13 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 			ArrayList<Uri> shareFilesForO = new ArrayList<Uri>();
 			for (int i = 0; i < mSelectedItems.size(); i++) {
 				AppInfo info = mSelectedItems.get(i);
-				shareFiles.add(Uri.fromFile(new File(info.appSourcDir)));
+				File file = new File(info.appSourcDir);
+				shareFiles.add(Uri.fromFile(file));
+				Uri contentUri = FileProvider.getUriForFile(
+						mContext
+						, "cn.leftshine.apkexport.fileprovider"
+						, file);
+				shareFilesForO.add(contentUri);
 			}
 			fileUtils.startMultiShare(shareFiles, shareFilesForO);
 		}
@@ -618,6 +626,8 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 
 		private AppViewHolder(View view) {
 			mAppitem = (LinearLayout)view.findViewById(R.id.appInfo_item);
+			// todo: switch between LinearLayout and CardView
+			//mAppitem = (CardView)view.findViewById(R.id.appInfo_item);
 			mAppIcon = (ImageView) view.findViewById(R.id.appInfo_icon);
 			mPackageName = (TextView) view.findViewById(R.id.appInfo_packageName);
 			mAppName = (TextView) view.findViewById(R.id.appInfo_appName);
