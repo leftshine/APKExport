@@ -5,12 +5,14 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.MenuItem;
 
 import cn.leftshine.apkexport.R;
 import cn.leftshine.apkexport.fragment.SettingActivityFragment;
 
-public class SettingActivity extends AppCompatActivity {
+public class SettingActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +22,12 @@ public class SettingActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        try {
+            String label = getResources().getString(getPackageManager().getActivityInfo(getComponentName(), 0).labelRes);
+            getSupportActionBar().setTitle(label);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         final FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.layout_setting_fragment, new SettingActivityFragment());

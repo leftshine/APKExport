@@ -29,7 +29,7 @@ import mehdi.sakout.aboutpage.Element;
 
 import static cn.leftshine.apkexport.utils.PermisionUtils.requestStoragePermissions;
 
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends BaseActivity {
     private Context mContext;
 
     @Override
@@ -59,6 +59,13 @@ public class AboutActivity extends AppCompatActivity {
 
         setContentView(aboutPage);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        try {
+            String label = getResources().getString(getPackageManager().getActivityInfo(getComponentName(), 0).labelRes);
+            getSupportActionBar().setTitle(label);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         //setContentView(R.layout.activity_about);
     }
 

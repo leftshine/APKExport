@@ -90,6 +90,14 @@ public class Settings {
         return sharedPreferences.getString(mContext.getString(R.string.key_long_press_action),"103");
     }
 
+    public static String getDarkMode() {
+        return sharedPreferences.getString(mContext.getString(R.string.key_dark_mode),"1");
+    }
+
+    public static String getLanguage() {
+        return sharedPreferences.getString(mContext.getString(R.string.key_language),"1");
+    }
+
     public static String getSortType() {
         return sharedPreferences.getString(mContext.getString(R.string.key_sort_type),"200");
     }

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:title="Settings">
-    <PreferenceCategory android:title="@string/setting_general_title">
+    <PreferenceCategory android:title="@string/setting_title_ui">
 
         <SwitchPreference
             android:id="@+id/pref_show_local_apk"
@@ -12,6 +12,18 @@
             android:summaryOff="@string/setting_show_local_apk_summaryOff"
             android:summaryOn="@string/setting_show_local_apk_summaryOn"
             android:title="@string/setting_show_local_apk_title" />
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/dark_mode_actions_name"
+            android:entryValues="@array/dark_mode_actions_value"
+            android:key="@string/key_dark_mode"
+            android:title="@string/title_dark_mode" />
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/language_actions_name"
+            android:entryValues="@array/language_press_actions_value"
+            android:key="@string/key_language"
+            android:title="@string/title_language" />
         <ListPreference
             android:defaultValue="103"
             android:entries="@array/long_press_actions_name"

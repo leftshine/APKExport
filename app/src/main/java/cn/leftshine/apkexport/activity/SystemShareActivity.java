@@ -48,7 +48,7 @@ import static cn.leftshine.apkexport.utils.PermisionUtils.isNeverAskStoragePermi
 import static cn.leftshine.apkexport.utils.PermisionUtils.requestStoragePermissions;
 import static cn.leftshine.apkexport.utils.ToolUtils.DEFAULT_COPY_DATA;
 
-public class SystemShareActivity extends AppCompatActivity {
+public class SystemShareActivity extends BaseActivity {
 
     private Context mContext;
     private AppInfo appInfo;
@@ -84,6 +84,13 @@ public class SystemShareActivity extends AppCompatActivity {
             shareDirect();
         }
         //Log.i(TAG, "getCallingPackage: "+getCallingPackage());
+        try {
+            String label = getResources().getString(getPackageManager().getActivityInfo(getComponentName(), 0).labelRes);
+            getSupportActionBar().setTitle(label);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void shareDirect() {

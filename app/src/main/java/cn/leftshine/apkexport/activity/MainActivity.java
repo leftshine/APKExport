@@ -64,7 +64,7 @@ import static cn.leftshine.apkexport.utils.PermisionUtils.requestStoragePermissi
 import static cn.leftshine.apkexport.utils.PermisionUtils.verifyInstalledAppsPermissions;
 import static cn.leftshine.apkexport.utils.PermisionUtils.verifyStoragePermissions;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private static final boolean DBG = BuildConfig.DEBUG;
     private static final String TAG = "MainActivity";
@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int CLEAN_CACHE_DIR = 0;
     private static final int CLEAN_EXPORT_DIR = 1;
     private static final int REQUEST_CODE_SETTING = 101;
-    public static final int RESULT_CODE_REFRESH_TAB = 201;
 
     private static final String BUNDLE_KEY_FRAGMENT_INDEX= "FRAGMENT_INDEX";
     private static final String BUNDLE_KEY_MULTIPLE_MODE = "MULTIPLE_MODE";
@@ -97,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionMode mActionMode;
     private Context mContext;
     private boolean mLastShowLocalApk;
+    private String mLastCustomLanguage;
     private ArrayList<ArrayList<String>> mRestoreSelectPackages;
 
     @Override
@@ -116,6 +116,13 @@ public class MainActivity extends AppCompatActivity {
         //FragmentManager fragmentManager = getSupportFragmentManager();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        try {
+            String label = getResources().getString(getPackageManager().getActivityInfo(getComponentName(), 0).labelRes);
+            getSupportActionBar().setTitle(label);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -496,8 +503,11 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
             case REQUEST_CODE_SETTING:
-                if (resultCode == RESULT_CODE_REFRESH_TAB) {
+                if (resultCode == RESULT_OK) {
                     if (mLastShowLocalApk != Settings.isShowLocalApk()) {
+                        recreate();
+                    }
+                    if (mLastCustomLanguage !=null && !mLastCustomLanguage.equals(Settings.getLanguage())) {
                         recreate();
                     }
                 }
@@ -610,6 +620,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             //startActivity(new Intent(MainActivity.this, SettingActivity.class));
             mLastShowLocalApk = Settings.isShowLocalApk();
+            mLastCustomLanguage = Settings.getLanguage();
             Intent intent = new Intent(MainActivity.this, SettingActivity.class);
             startActivityForResult(intent, REQUEST_CODE_SETTING);
             return true;
@@ -793,6 +804,7 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         }
+
 
         //退出多选模式时调用
         @Override

@@ -43,6 +43,13 @@
         <item>103</item>
     </string-array>
 
+    <string-array name="dark_mode_actions_name">
+        <item>跟随系统</item>
+        <item>自动（根据时间判断）</item>
+        <item>启用</item>
+        <item>禁用</item>
+    </string-array>
+
     <string-array name="sort_type_name">
         <item>按应用名称</item>
         <item>按包名</item>

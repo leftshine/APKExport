@@ -1,5 +1,6 @@
 package cn.leftshine.apkexport.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -20,6 +21,8 @@ import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -35,13 +38,12 @@ import com.github.angads25.filepicker.view.FilePickerDialog;
 
 import java.io.File;
 
+import cn.leftshine.apkexport.MyApplication;
 import cn.leftshine.apkexport.R;
-import cn.leftshine.apkexport.activity.MainActivity;
 import cn.leftshine.apkexport.utils.AppUtils;
 import cn.leftshine.apkexport.utils.FileUtils;
 import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.view.ClearEditText;
-
 import static cn.leftshine.apkexport.utils.PermisionUtils.*;
 
 /**
@@ -50,11 +52,12 @@ import static cn.leftshine.apkexport.utils.PermisionUtils.*;
 public class SettingActivityFragment extends PreferenceFragment {
 
     private String TAG = "SettingActivityFragment";
+    private static final String BUNDLE_KEY_ACTIVITY_RESULT_CODE = "ACTIVITY_RESULT_CODE";
     private SwitchPreference prefIsAutoCleanExportDir,prefIsAutoCleanCacheDir,prefIsShowLocalApk;
     private EditTextPreference prefCustomFileNameformat;
     private Preference prefRestoreDefaultSettings,prefCleanExportDir,prefGrantAllFfilesAccessPermission;
     private PreferenceCategory prefCategoryAdvance;
-    private ListPreference prefLongPressAction;
+    private ListPreference prefLongPressAction, prefDarkMode, prefLanguage;
     private ListPreference sortType;
     private ListPreference sortOrder;
     private static Dialog dialogCustomFileNameformat,dialogCustomExportPath,dialogRestoreDefaultSettings;
@@ -73,6 +76,7 @@ public class SettingActivityFragment extends PreferenceFragment {
     private Fragment fragment;
     private Preference prefCustomExportPath;
     private FilePickerDialog mFilePickerDialog;
+    private int mResultCode = Activity.RESULT_CANCELED;
 
     public SettingActivityFragment() {
 
@@ -87,6 +91,21 @@ public class SettingActivityFragment extends PreferenceFragment {
         //getPreferenceManager().setSharedPreferencesName(Settings.SETTING_PREF_NAME);
         Settings.setIsNeedLoad(false);
         initViews();
+
+        if (savedInstanceState != null) {
+            setActivityResultCode(savedInstanceState.getInt(BUNDLE_KEY_ACTIVITY_RESULT_CODE));
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(BUNDLE_KEY_ACTIVITY_RESULT_CODE, mResultCode);
+    }
+
+    private void setActivityResultCode(int code){
+        mResultCode = code;
+        getActivity().setResult(mResultCode);
     }
 
     private void initViews() {
@@ -126,6 +145,14 @@ public class SettingActivityFragment extends PreferenceFragment {
         prefLongPressAction = (ListPreference)findPreference(getString(cn.leftshine.apkexport.R.string.key_long_press_action));
         prefLongPressAction.setOnPreferenceChangeListener(preferenceChangeListener);
         prefLongPressAction.setSummary(prefLongPressAction.getEntry());
+
+        prefDarkMode = (ListPreference)findPreference(getString(R.string.key_dark_mode));
+        prefDarkMode.setOnPreferenceChangeListener(preferenceChangeListener);
+        prefDarkMode.setSummary(prefDarkMode.getEntry());
+
+        prefLanguage = (ListPreference)findPreference(getString(R.string.key_language));
+        prefLanguage.setOnPreferenceChangeListener(preferenceChangeListener);
+        prefLanguage.setSummary(prefLanguage.getEntry());
 
         sortType = (ListPreference)findPreference(getString(cn.leftshine.apkexport.R.string.key_sort_type));
         sortType.setOnPreferenceChangeListener(preferenceChangeListener);
@@ -360,7 +387,7 @@ public class SettingActivityFragment extends PreferenceFragment {
                if((Boolean)o) {
                    if (verifyStoragePermissions(getActivity())) {
                        //已获得权限
-                       getActivity().setResult(MainActivity.RESULT_CODE_REFRESH_TAB);
+                       setActivityResultCode(Activity.RESULT_OK);
                        return true;
                    } else {
                        //Settings.setShowLocalApk(false);
@@ -369,7 +396,7 @@ public class SettingActivityFragment extends PreferenceFragment {
                        return false;
                    }
                }
-               getActivity().setResult(MainActivity.RESULT_CODE_REFRESH_TAB);
+               setActivityResultCode(Activity.RESULT_OK);
                return true;
            }else if(preference.getKey().equals(getResources().getString(R.string.key_is_auto_clean_exportDir))){
                if((Boolean)o) {
@@ -397,6 +424,20 @@ public class SettingActivityFragment extends PreferenceFragment {
            }else if(getString(R.string.key_long_press_action).equals(preference.getKey())){
                prefLongPressAction.setValue(o.toString());
                prefLongPressAction.setSummary(prefLongPressAction.getEntry());
+               return true;
+           }else if(getString(R.string.key_dark_mode).equals(preference.getKey())){
+               String darkMode = o.toString();
+               prefDarkMode.setValue(darkMode);
+               MyApplication.setDarkMode(darkMode);
+               prefDarkMode.setSummary(prefDarkMode.getEntry());
+               return true;
+           }else if(getString(R.string.key_language).equals(preference.getKey())){
+               prefLanguage.setValue(o.toString());
+               prefLanguage.setSummary(prefLanguage.getEntry());
+               // todo: update Appcompat to 1.6.0  for using AppCompatDelegate.setApplicationLocales(appLocale);
+               //   reference https://developer.android.com/guide/topics/resources/app-languages#use-localeconfig
+               setActivityResultCode(Activity.RESULT_OK);
+               ((Activity)context).recreate();
                return true;
            }else if(getString(R.string.key_sort_type).equals(preference.getKey())){
                sortType.setValue(o.toString());

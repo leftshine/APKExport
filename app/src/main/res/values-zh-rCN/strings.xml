@@ -49,7 +49,7 @@
 
     <!--设置页面-->
     <string name="title_activity_setting">设置</string>
-
+    <string name="setting_title_ui">界面与操作</string>
     <string name="setting_autoClean_title">自动清理</string>
     <string name="setting_autoClean_cacheDir_title">应用启动时自动清理缓存</string>
     <string name="setting_autoClean_exportDir_title">应用启动时自动清理导出目录</string>
@@ -60,8 +60,8 @@
     <string name="setting_shareWithExport_summaryOn">已开启，分享时将会同时导出文件</string>
 
     <string name="setting_show_local_apk_title">显示本地APK页</string>
-    <string name="setting_show_local_apk_summaryOff">隐藏(修改将在应用重启后生效)</string>
-    <string name="setting_show_local_apk_summaryOn">显示(修改将在应用重启后生效)</string>
+    <string name="setting_show_local_apk_summaryOff">隐藏</string>
+    <string name="setting_show_local_apk_summaryOn">显示</string>
 
     <string name="custom_file_name">自定义文件名格式</string>
     <string name="custom_file_name_summary">点击设置自定义文件名</string>
@@ -149,4 +149,6 @@
     <string name="exit_multiple_mode">退出多选模式</string>
     <string name="dialog_title_select_dir">请勾选你要使用的目录</string>
 
+    <string name="title_dark_mode">深色模式</string>
+    <string name="language_follow_system" translatable="false">跟随系统</string>
 </resources>

@@ -61,6 +61,7 @@
 
 
     <string name="title_activity_setting">Settings</string>
+    <string name="setting_title_ui">UI</string>
     <string name="setting_general_title">General</string>
     <string name="setting_export_title">Share&amp;Export</string>
     <string name="setting_export_open">Open</string>
@@ -81,8 +82,8 @@
 
 
     <string name="setting_show_local_apk_title">Show Local Apk Tab</string>
-    <string name="setting_show_local_apk_summaryOff">Hide (Modify will take effect until the next launch)</string>
-    <string name="setting_show_local_apk_summaryOn">Display (Modift will take effect until the next launch)</string>
+    <string name="setting_show_local_apk_summaryOff">Hide</string>
+    <string name="setting_show_local_apk_summaryOn">Display</string>
 
     <string name="custom_file_name">Custom File Name Format</string>
     <string name="custom_file_name_summary">Click to set the filename format</string>
@@ -118,6 +119,8 @@
     <string name="key_custom_filename_format" translatable="false">custom_filename_format</string>
     <string name="key_custom_export_path" translatable="false">custom_export_path</string>
     <string name="key_long_press_action" translatable="false">long_press_action</string>
+    <string name="key_dark_mode" translatable="false">dark_mode</string>
+    <string name="key_language" translatable="false">custom_language</string>
     <string name="key_sort_type" translatable="false">sort_type</string>
     <string name="key_sort_order" translatable="false">sort_order</string>
     <string name="key_advance" translatable="false">advance</string>
@@ -182,5 +185,9 @@
     <string name="enter_multiple_mode">enter multiple mode</string>
     <string name="exit_multiple_mode">exit multiplemode</string>
     <string name="dialog_title_select_dir">Select a Directory</string>
+
+    <string name="title_dark_mode">Dark Mode</string>
+    <string name="title_language" translatable="false">Language</string>
+    <string name="language_follow_system" translatable="false">Follow System</string>
 
 </resources>
