@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.angads25.filepicker.controller.DialogSelectionListener;
 import com.github.angads25.filepicker.model.DialogConfigs;
@@ -255,6 +256,7 @@ public class SettingActivityFragment extends PreferenceFragment {
                     //已获得权限
                     //Toast.makeText(context,R.string.clean_running,Toast.LENGTH_SHORT);
                     prefCleanExportDir.setSummary(R.string.setting_clean_export_dir_summery_clean_Running);
+                    Toast.makeText(context, R.string.setting_clean_export_dir_summery_clean_Running,Toast.LENGTH_SHORT).show();
                     FileUtils.cleanExportDir(context);
                     FileUtils.cleanCacheDir(context);
                     prefCleanExportDir.setSummary(R.string.setting_clean_export_dir_summery_clean_done);

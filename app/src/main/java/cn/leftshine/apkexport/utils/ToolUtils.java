@@ -264,18 +264,18 @@ public class ToolUtils {
 
     //升序比较器
     public static final Comparator<AppInfo> SORT_BY_APPNAME = new Comparator<AppInfo>() {
-        private Collator chinaCollator=Collator.getInstance(Locale.CHINA);
         @Override
         public int compare(AppInfo appInfo1, AppInfo appInfo2) {
+            Collator collator = Collator.getInstance(Settings.getCustomLocale());
             if(DBG) Log.d(TAG, "appName: " + appInfo1.appName+" VS "+appInfo2.appName);
-            return chinaCollator.compare(appInfo1.appName, appInfo2.appName);
+            return collator.compare(appInfo1.appName, appInfo2.appName);
         }
     };
     public static final Comparator<AppInfo> SORT_BY_PACKAGENAME = new Comparator<AppInfo>() {
-        private Collator chinaCollator=Collator.getInstance(Locale.CHINA);
         @Override
         public int compare(AppInfo appInfo1, AppInfo appInfo2) {
-            return chinaCollator.compare(appInfo1.packageName, appInfo2.packageName);
+            Collator collator = Collator.getInstance(Settings.getCustomLocale());
+            return collator.compare(appInfo1.packageName, appInfo2.packageName);
         }
     };
     public static final Comparator<AppInfo> SORT_BY_SIZE = new Comparator<AppInfo>() {
@@ -321,17 +321,17 @@ public class ToolUtils {
 
     //降序比较器
     public static final Comparator<AppInfo> SORT_BY_APPNAME_DES = new Comparator<AppInfo>() {
-        private Collator chinaCollator=Collator.getInstance(Locale.CHINA);
         @Override
         public int compare(AppInfo appInfo1, AppInfo appInfo2) {
-            return -chinaCollator.compare(appInfo1.appName, appInfo2.appName);
+            Collator collator = Collator.getInstance(Settings.getCustomLocale());
+            return -collator.compare(appInfo1.appName, appInfo2.appName);
         }
     };
     public static final Comparator<AppInfo> SORT_BY_PACKAGENAME_DES = new Comparator<AppInfo>() {
-        private Collator chinaCollator=Collator.getInstance(Locale.CHINA);
         @Override
         public int compare(AppInfo appInfo1, AppInfo appInfo2) {
-            return -chinaCollator.compare(appInfo1.packageName, appInfo2.packageName);
+            Collator collator = Collator.getInstance(Settings.getCustomLocale());
+            return -collator.compare(appInfo1.packageName, appInfo2.packageName);
         }
     };
     public static final Comparator<AppInfo> SORT_BY_SIZE_DES = new Comparator<AppInfo>() {

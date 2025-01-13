@@ -6,6 +6,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 
 import java.io.File;
+import java.util.Locale;
 
 import cn.leftshine.apkexport.R;
 
@@ -96,6 +97,23 @@ public class Settings {
 
     public static String getLanguage() {
         return sharedPreferences.getString(mContext.getString(R.string.key_language),"1");
+    }
+
+    public static Locale getCustomLocale() {
+        Locale locale = null;
+        String custom_language = sharedPreferences.getString(mContext.getString(R.string.key_language),"1");
+        switch (custom_language) {
+            case "2":
+                locale = Locale.SIMPLIFIED_CHINESE;
+                break;
+            case "3":
+                locale = Locale.ENGLISH;
+                break;
+            case "1":
+            default:
+                locale = Locale.getDefault();
+        }
+        return locale;
     }
 
     public static String getSortType() {

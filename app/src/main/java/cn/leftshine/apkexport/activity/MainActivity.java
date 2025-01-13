@@ -849,7 +849,11 @@ public class MainActivity extends BaseActivity {
                     }
                     break;
                 case R.id.select_all:
-                    adapter.selectAll();
+                    if (adapter.getSelecteditemCount() == adapter.getCount()) {
+                        adapter.unSelectAll();
+                    } else {
+                        adapter.selectAll();
+                    }
                     break;
                 case R.id.unselect_all:
                     adapter.unSelectAll();

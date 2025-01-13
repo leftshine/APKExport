@@ -137,12 +137,15 @@ public class LocalApkSearchUtils {
                 MediaStore.Files.FileColumns.DATA,
                 MediaStore.Files.FileColumns.SIZE
         };
+        String selection = MediaStore.Files.FileColumns.DATA + " like ?"
+                + " or " + MediaStore.Files.FileColumns.DATA + " like ?";
+        String[] selectionArgs = new String[]{"%.apk", "%.apk.1"};
         Cursor cursor = context.getContentResolver().query(
                 Uri.parse("content://media/external/file"),
                 //Uri.parse(Environment.getExternalStorageDirectory().toString()),
                 projection,
-                MediaStore.Files.FileColumns.DATA + " like ?",
-                new String[]{"%.apk"},
+                selection,
+                selectionArgs,
                 null);
 
         if (cursor != null) {
