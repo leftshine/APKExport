@@ -19,6 +19,16 @@ public class SettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         //addPreferencesFromResource(R.xml.preferences);
+        initToolbar();
+
+        final FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.layout_setting_fragment, new SettingActivityFragment());
+        //transaction.add
+        transaction.commit();
+    }
+
+    private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -28,12 +38,8 @@ public class SettingActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        final FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.layout_setting_fragment, new SettingActivityFragment());
-        //transaction.add
-        transaction.commit();
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

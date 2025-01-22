@@ -90,4 +90,11 @@ public class ContentPagerAdapter extends FragmentPagerAdapter {
         return tabFragments;
     }
 
+    public int getCurrentItemCount(){
+        if (mCurrentFragment == null)  return 0;
+        AppInfoAdapter adapter =  mCurrentFragment.getmAdapter();
+        if (adapter == null) return 0;
+        return adapter.getCount();
+    }
+
 }

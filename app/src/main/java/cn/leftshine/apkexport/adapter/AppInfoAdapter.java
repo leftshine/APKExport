@@ -122,10 +122,11 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 	public void updateSelectedCount() {
 		//int selectedCount = listView.getCheckedItemCount();
 		int selectedCount = getSelecteditemCount();
+		int allCount = getCount();
 		if(GlobalData.getActionmode() != null) {
 			View actionBarView = GlobalData.getActionmode().getCustomView();
 			TextView selectedNum = (TextView) actionBarView.findViewById(R.id.selected_num);
-			selectedNum.setText(selectedCount + "");
+			selectedNum.setText(selectedCount + "/" + allCount);
 		}
 	}
 

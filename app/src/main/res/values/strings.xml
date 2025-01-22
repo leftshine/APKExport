@@ -176,7 +176,7 @@
     <string name="tip_auto_clean_closed">No storage permission,auto clean for export directory closed</string>
     <string name="tip_local_apk_closed">No storage permission,Local Apk Tab Hidden</string>
 
-    <string name="multi_select_num">Count: </string>
+    <string name="multi_select_num">Selected: </string>
     <string name="multi_export">Export</string>
     <string name="multi_share">Share</string>
     <string name="multi_select_all">All</string>

@@ -77,6 +77,7 @@ public class MainActivity extends BaseActivity {
     private static final String BUNDLE_KEY_FRAGMENT_INDEX= "FRAGMENT_INDEX";
     private static final String BUNDLE_KEY_MULTIPLE_MODE = "MULTIPLE_MODE";
     private static final String BUNDLE_KEY_SELECTED_COUNT= "SELECTED_COUNT";
+    private static final String BUNDLE_KEY_ALL_COUNT= "ALL_COUNT";
 
     AppFragment fragmentUserApp;
     AppFragment fragmentSystemApp;
@@ -114,32 +115,9 @@ public class MainActivity extends BaseActivity {
         initContent();
         initTab();
         //FragmentManager fragmentManager = getSupportFragmentManager();
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        try {
-            String label = getResources().getString(getPackageManager().getActivityInfo(getComponentName(), 0).labelRes);
-            getSupportActionBar().setTitle(label);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        initToolbar();
+        initFloatingActionButton();
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!verifyInstalledAppsPermissions((Activity) mContext)) {
-                    requestInstalledAppsPermissions((Activity) mContext, false);
-                }
-                ObjectAnimator anim = ObjectAnimator.ofFloat(view, "rotation", 0f, 360f);
-                anim.setDuration(500);
-                anim.start();
-                //((AppFragment)fragmentManager.findFragmentById(R.id.layout_fragment)).refresh();
-                //mContentAdapter.getCurrentFragment().refresh(true);
-                mContentAdapter.getCurrentFragment().loadWaitUI(true,true);
-                FileUtils.notifyMediaScan();
-                Snackbar.make(view, R.string.Refreshing, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-            }
-        });
 
         deleteCache();
         //getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -219,6 +197,7 @@ public class MainActivity extends BaseActivity {
         savedInstanceState.putBoolean(BUNDLE_KEY_MULTIPLE_MODE,isMultipleMode);
         if (isMultipleMode){
             savedInstanceState.putInt(BUNDLE_KEY_SELECTED_COUNT, mContentAdapter.getCurrentFragment().getmAdapter().getSelecteditemCount());
+            savedInstanceState.putInt(BUNDLE_KEY_ALL_COUNT, mContentAdapter.getCurrentFragment().getmAdapter().getCount());
         }
         savedInstanceState.putInt(BUNDLE_KEY_FRAGMENT_INDEX, fragmentIndex);
 
@@ -236,7 +215,8 @@ public class MainActivity extends BaseActivity {
         if (isMultipleMode && mActionMode == null) {
             switchMultipleMode(true);
             int selectItemCount = savedInstanceState.getInt(BUNDLE_KEY_SELECTED_COUNT);
-            updateSelectedCount(selectItemCount);
+            int allItemCount = savedInstanceState.getInt(BUNDLE_KEY_ALL_COUNT);
+            updateSelectedCount(selectItemCount, allItemCount);
         }
         super.onRestoreInstanceState(savedInstanceState);
     }
@@ -255,6 +235,27 @@ public class MainActivity extends BaseActivity {
 
         //sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
     }*/
+
+    private void initToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        AppBarLayout.LayoutParams params =
+                (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        if(Settings.isToolbarFixed()) {
+            params.setScrollFlags(0);
+        } else {
+            params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                    | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+        }
+        toolbar.setLayoutParams(params);
+        setSupportActionBar(toolbar);
+        try {
+            // for update title when change language in time
+            String label = getResources().getString(getPackageManager().getActivityInfo(getComponentName(), 0).labelRes);
+            getSupportActionBar().setTitle(label);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void initTab(){
         mTabTl.setTabMode(TabLayout.MODE_FIXED);
@@ -314,7 +315,7 @@ public class MainActivity extends BaseActivity {
                 Log.d(TAG, "onPageSelected: GlobalData.isMultipleMode="+GlobalData.isMultipleMode + "mActionMode=" +mActionMode);
                 if(GlobalData.isMultipleMode && mActionMode != null) {
                     Log.d(TAG, "onPageSelected: type="+currentFragment.getType());
-                    updateSelectedCount(currentFragment.getmAdapter().getSelecteditemCount());
+                    updateSelectedCount(currentFragment.getmAdapter().getSelecteditemCount(), currentFragment.getmAdapter().getCount());
                     mActionMode.invalidate();
                 }
                 //currentFragment.getmAdapter().notifyDataSetChanged();
@@ -325,6 +326,26 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
 
+            }
+        });
+    }
+
+    private void initFloatingActionButton(){
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!verifyInstalledAppsPermissions((Activity) mContext)) {
+                    requestInstalledAppsPermissions((Activity) mContext, false);
+                }
+                ObjectAnimator anim = ObjectAnimator.ofFloat(view, "rotation", 0f, 360f);
+                anim.setDuration(500);
+                anim.start();
+                //((AppFragment)fragmentManager.findFragmentById(R.id.layout_fragment)).refresh();
+                //mContentAdapter.getCurrentFragment().refresh(true);
+                mContentAdapter.getCurrentFragment().loadWaitUI(true,true);
+                FileUtils.notifyMediaScan();
+                Snackbar.make(view, R.string.Refreshing, Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
     }
@@ -533,11 +554,11 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void updateSelectedCount(int count) {
+    private void updateSelectedCount(int count, int all) {
         if (mActionMode!= null) {
             View actionBarView =mActionMode.getCustomView();
             TextView selectedNum = (TextView) actionBarView.findViewById(R.id.selected_num);
-            selectedNum.setText(count + "");
+            selectedNum.setText(count + "/" +all);
         }
     }
 
@@ -647,6 +668,10 @@ public class MainActivity extends BaseActivity {
                 //进入多选模式
                 Toast.makeText(mContext, R.string.enter_multiple_mode,Toast.LENGTH_SHORT).show();
                 switchMultipleMode(true);
+                if (mContentAdapter.getCurrentFragment() !=null && mContentAdapter.getCurrentFragment().getmAdapter() != null) {
+                    AppInfoAdapter adapter = mContentAdapter.getCurrentFragment().getmAdapter();
+                    updateSelectedCount(adapter.getSelecteditemCount(), adapter.getCount());
+                }
                 for (AppFragment fragment : mContentAdapter.getAllFragment()){
                     fragment.changeMultiSelectMode(true);
                 }
