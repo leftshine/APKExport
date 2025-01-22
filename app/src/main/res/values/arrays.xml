@@ -71,8 +71,8 @@
         <item>By App Name</item>
         <item>By Package Name</item>
         <item>By App Size</item>
-        <item>By Install Time(Not Applicable For local APK)</item>
-        <item>By Last Update/Modify Time</item>
+        <item>By Install Time(Not Applicable for Local APKs)</item>
+        <item>By Last Updated/Modified Time</item>
         <!--<item>Recent Use</item>-->
     </string-array>
     <string-array name="sort_type_value">

@@ -28,13 +28,13 @@
     <string name="share_to">Share %1$s to...</string>
 
     <string name="copy_right" translatable="false">Copyrights © %1$d</string>
-    <string name="about_page_description">APKExport is an app that you can use to export apks form apps installed in the phone.\\nThe unique “Super Export” feature allows you to export other app’s apk when the apps share content to APKExport.</string>
-    <string name="about_feedback_title">QQ Group#1: %1$s</string>
-    <string name="about_feedback_title2">QQ Group#2: %1$s</string>
+    <string name="about_page_description">APKExport is an app that you can use to export apks form apps installed in the phone.\\nThe unique “Super Export” feature allows you to export other app’s apk when the apps share contents to APKExport.</string>
+    <string name="about_feedback_title">QQ group#1: %1$s</string>
+    <string name="about_feedback_title2">QQ group: %1$s</string>
     <string name="about_feedback_tips">QQ group number has been copied to clipboard!</string>
     <string name="about_no_QQ_app">Can not Launch QQ App</string>
 
-    <string name="about_email_contact">Contact Us: leftshine@foxmail.com</string>
+    <string name="about_email_contact">Contact us: leftshine@foxmail.com</string>
     <string name="about_email_contact_subject">Feed back of %1$s</string>
     <string name="about_email_contact_text">I just want to say：</string>
 
@@ -42,7 +42,7 @@
     <string name="about_donate_title">Want to offer us a cup of coffee?</string>
 
     <string name="about_version_title">Version: %1$s</string>
-    <string name="about_open_source_licenses_title">Open Source Licenses</string>
+    <string name="about_open_source_licenses_title">Open source licenses</string>
     <string name="about_open_source_licenses_content" translatable="false">
         android-about-page: <a href="https://github.com/medyo/android-about-page">MIT</a>
 
@@ -68,20 +68,19 @@
     <string name="custom_export_path">Custom Export Path</string>
     <string name="setting_autoClean_title">Auto Clean</string>
     <string name="setting_autoClean_cacheDir_title">Clean up cache when launch</string>
-    <string name="setting_autoClean_exportDir_title">Clean up export directory  when launch</string>
-    <string name="setting_autoClean_summaryOff">The apks exported will not be deleted</string>
-    <string name="setting_autoClean_summaryOn">The apks exported will be deleted the next time you open the app</string>
+    <string name="setting_autoClean_exportDir_title">Clean up export directory when launch</string>
+    <string name="setting_autoClean_summaryOff">APKs exported will not be deleted</string>
+    <string name="setting_autoClean_summaryOn">APKs exported will be deleted the next time you open the app</string>
     <string name="setting_shareWithExport_title">Share with Export</string>
-    <string name="setting_shareWithExport_summaryOff">The Apk will not be exported when share</string>
-    <string name="setting_shareWithExport_summaryOn">The Apk will be exported when share</string>
+    <string name="setting_shareWithExport_summaryOff">The APK will not be exported when share</string>
+    <string name="setting_shareWithExport_summaryOn">The APK will be exported when share</string>
 
     <string name="setting_super_export_title">Super Export</string>
     <string name="setting_export_direct_title">Direct Mode</string>
     <string name="setting_export_direct_summaryOff">Use full-mode for super export</string>
     <string name="setting_export_direct_summaryOn">Use direct-mode for super export </string>
 
-
-    <string name="setting_show_local_apk_title">Show Local Apk Tab</string>
+    <string name="setting_show_local_apk_title">Show \'LOCAL APK\' Tab</string>
     <string name="setting_show_local_apk_summaryOff">Hide</string>
     <string name="setting_show_local_apk_summaryOn">Display</string>
 
@@ -108,11 +107,11 @@
     <string name="setting_advance_group_title">Advance</string>
     <string name="setting_restore_default_settings_title">Restore Default Settings</string>
     <string name="setting_restore_default_settings_description">Ensure to Restore Default Settings?</string>
-    <string name="setting_clean_export_dir_title">Clean up export directory</string>
+    <string name="setting_clean_export_dir_title">Clean up Export Directory</string>
     <string name="setting_clean_export_dir_summery">size: </string>
     <string name="setting_clean_export_dir_summery_clean_Running">Cleanup Running…</string>
     <string name="setting_clean_export_dir_summery_clean_done">Cleared</string>
-    <string name="setting_all_files_access_permission_title">Grant "All File Access" permissions</string>
+    <string name="setting_all_files_access_permission_title">Grant \'All File Access\' Permissions</string>
     <string name="setting_all_files_access_permission_summary">Grant this permissions only export failed</string>
 
     <string name="key_is_export_direct" translatable="false">is_export_direct</string>
@@ -185,7 +184,7 @@
     <string name="multi_export">Export</string>
     <string name="multi_share">Share</string>
     <string name="multi_select_all">All</string>
-    <string name="multi_unselect_all">Clear</string>
+    <string name="multi_unselect_all">Clear Selection</string>
     <string name="multi_exit">Exit Multiple Mode</string>
     <string name="enter_multiple_mode">enter multiple mode</string>
     <string name="exit_multiple_mode">exit multiplemode</string>
