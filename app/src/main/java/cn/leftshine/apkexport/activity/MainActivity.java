@@ -98,6 +98,7 @@ public class MainActivity extends BaseActivity {
     private Context mContext;
     private boolean mLastShowLocalApk;
     private String mLastCustomLanguage;
+    private boolean mLastFixedToolbar;
     private ArrayList<ArrayList<String>> mRestoreSelectPackages;
 
     @Override
@@ -531,6 +532,9 @@ public class MainActivity extends BaseActivity {
                     if (mLastCustomLanguage !=null && !mLastCustomLanguage.equals(Settings.getLanguage())) {
                         recreate();
                     }
+                    if (mLastFixedToolbar != Settings.isToolbarFixed()) {
+                        recreate();
+                    }
                 }
                 break;
             default:
@@ -642,6 +646,7 @@ public class MainActivity extends BaseActivity {
             //startActivity(new Intent(MainActivity.this, SettingActivity.class));
             mLastShowLocalApk = Settings.isShowLocalApk();
             mLastCustomLanguage = Settings.getLanguage();
+            mLastFixedToolbar = Settings.isToolbarFixed();
             Intent intent = new Intent(MainActivity.this, SettingActivity.class);
             startActivityForResult(intent, REQUEST_CODE_SETTING);
             return true;

@@ -85,6 +85,10 @@
     <string name="setting_show_local_apk_summaryOff">Hide</string>
     <string name="setting_show_local_apk_summaryOn">Display</string>
 
+    <string name="setting_toolbar_fixed_title">Fixed Toolbar</string>
+    <string name="setting_toolbar_fixed_summaryOff">Scrollable</string>
+    <string name="setting_toolbar_fixed_summaryOn">Fixed</string>
+
     <string name="custom_file_name">Custom File Name Format</string>
     <string name="custom_file_name_summary">Click to set the filename format</string>
     <string name="custom_file_name_description">#N as App Name\n#P as Package Name\n#V as Version Name\n#C as Version Code</string>
@@ -116,6 +120,7 @@
     <string name="key_is_auto_clean_exportDir" translatable="false">is_auto_clean_exportDir</string>
     <string name="key_is_share_with_export" translatable="false">is_share_with_export</string>
     <string name="key_is_show_local_apk" translatable="false">is_show_local_apk</string>
+    <string name="key_is_toolbar_fixed" translatable="false">is_toolbar_fixed</string>
     <string name="key_custom_filename_format" translatable="false">custom_filename_format</string>
     <string name="key_custom_export_path" translatable="false">custom_export_path</string>
     <string name="key_long_press_action" translatable="false">long_press_action</string>

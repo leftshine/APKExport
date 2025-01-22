@@ -54,7 +54,7 @@ public class SettingActivityFragment extends PreferenceFragment {
 
     private String TAG = "SettingActivityFragment";
     private static final String BUNDLE_KEY_ACTIVITY_RESULT_CODE = "ACTIVITY_RESULT_CODE";
-    private SwitchPreference prefIsAutoCleanExportDir,prefIsAutoCleanCacheDir,prefIsShowLocalApk;
+    private SwitchPreference prefIsAutoCleanExportDir,prefIsAutoCleanCacheDir,prefIsShowLocalApk,prefIsToolbarFixed;
     private EditTextPreference prefCustomFileNameformat;
     private Preference prefRestoreDefaultSettings,prefCleanExportDir,prefGrantAllFfilesAccessPermission;
     private PreferenceCategory prefCategoryAdvance;
@@ -105,6 +105,7 @@ public class SettingActivityFragment extends PreferenceFragment {
     }
 
     private void setActivityResultCode(int code){
+        Log.i(TAG, "setActivityResultCode: "+code);
         mResultCode = code;
         getActivity().setResult(mResultCode);
     }
@@ -112,6 +113,8 @@ public class SettingActivityFragment extends PreferenceFragment {
     private void initViews() {
         prefIsShowLocalApk =  (SwitchPreference)findPreference(getString(R.string.key_is_show_local_apk));
         prefIsShowLocalApk.setOnPreferenceChangeListener(preferenceChangeListener);
+        prefIsToolbarFixed =  (SwitchPreference)findPreference(getString(R.string.key_is_toolbar_fixed));
+        prefIsToolbarFixed.setOnPreferenceChangeListener(preferenceChangeListener);
         prefIsAutoCleanExportDir = (SwitchPreference)findPreference(getString(R.string.key_is_auto_clean_exportDir));
         prefIsAutoCleanExportDir.setOnPreferenceChangeListener(preferenceChangeListener);
         prefIsAutoCleanCacheDir = (SwitchPreference)findPreference(getString(R.string.key_is_auto_clean_exportDir));
@@ -375,7 +378,7 @@ public class SettingActivityFragment extends PreferenceFragment {
     Preference.OnPreferenceChangeListener preferenceChangeListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object o) {
-
+            Log.i(TAG, "onPreferenceChange: "+ preference.getKey() + ":" + o);
            if(getString(R.string.key_custom_filename_format).equals(preference.getKey())) {
                String otr = o.toString();
                str_custom_filename_format = txt_custom_filename_format.getText().toString();
@@ -398,6 +401,9 @@ public class SettingActivityFragment extends PreferenceFragment {
                        return false;
                    }
                }
+               setActivityResultCode(Activity.RESULT_OK);
+               return true;
+           }else if(preference.getKey().equals(getResources().getString(R.string.key_is_toolbar_fixed))){
                setActivityResultCode(Activity.RESULT_OK);
                return true;
            }else if(preference.getKey().equals(getResources().getString(R.string.key_is_auto_clean_exportDir))){

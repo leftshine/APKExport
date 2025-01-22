@@ -72,6 +72,14 @@ public class Settings {
         sharedPreferences.edit().putBoolean(mContext.getString(R.string.key_is_show_local_apk), showLocalApk).apply();
     }
 
+    public static boolean isToolbarFixed(){
+        return sharedPreferences.getBoolean(mContext.getString(R.string.key_is_toolbar_fixed), false);
+    }
+
+    public static void setToolbarFixed(boolean fixed) {
+        sharedPreferences.edit().putBoolean(mContext.getString(R.string.key_is_toolbar_fixed), fixed).apply();
+    }
+
     public static String getCustomFileNameFormat() {
         return sharedPreferences.getString(mContext.getString(R.string.key_custom_filename_format),"#N-#P-#V");
     }
