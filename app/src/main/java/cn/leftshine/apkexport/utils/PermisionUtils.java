@@ -86,6 +86,7 @@ public class PermisionUtils {
         return false;
     }
 
+    // todo：当前target API不需要该权限
     // Android_R版本上谷歌新增特性，限制第三方应用直接获取系统安装应用列表:android.permission.QUERY_ALL_PACKAGES
     // QUERY_ALL_PACKAGES是谷歌权限要求，GET_INSTALLED_APPS为国内工信部要求
     // 原生安卓不需要 GET_INSTALLED_APPS 权限, 不用请求该权限
@@ -97,23 +98,23 @@ public class PermisionUtils {
             return false;
         }
 
-        if (Build.VERSION.SDK_INT < 30 /*Android R 11.0*/) {
-            return false;
-        }
-        if (android.provider.Settings.Secure.getInt(context.getContentResolver(),"oem_installed_apps_runtime_permission_enable", 0) > 0) {
-            Log.d(TAG,"vivo 系统支持动态申请 GET_INSTALLED_APPS 权限");
-            return true;
-        }
-
-        try {
-            PermissionInfo permissionInfo =  context.getPackageManager().getPermissionInfo("com.android.permission.GET_INSTALLED_APPS", 0);
-            if (permissionInfo != null && permissionInfo.packageName.equals("com.lbe.security.miui")) {
-                Log.d(TAG,"xiaomi 系统支持动态申请 GET_INSTALLED_APPS 权限");
-                return true;
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+//        if (Build.VERSION.SDK_INT < 30 /*Android R 11.0*/) {
+//            return false;
+//        }
+//        if (android.provider.Settings.Secure.getInt(context.getContentResolver(),"oem_installed_apps_runtime_permission_enable", 0) > 0) {
+//            Log.d(TAG,"vivo 系统支持动态申请 GET_INSTALLED_APPS 权限");
+//            return true;
+//        }
+//
+//        try {
+//            PermissionInfo permissionInfo =  context.getPackageManager().getPermissionInfo("com.android.permission.GET_INSTALLED_APPS", 0);
+//            if (permissionInfo != null && permissionInfo.packageName.equals("com.lbe.security.miui")) {
+//                Log.d(TAG,"xiaomi 系统支持动态申请 GET_INSTALLED_APPS 权限");
+//                return true;
+//            }
+//        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+//        }
 
         return false;
     }
