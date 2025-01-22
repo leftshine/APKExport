@@ -15,7 +15,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 23     //只要 targetSdkVersion 值小于 24，File URI 的使用依旧可以出现在 7.0 及以上版本的设备中。不过需要注意的是，调用系统裁剪功能比较特殊，可能会出现一些问题。
         versionCode 233
-        versionName "2.33"
+        versionName "2.34-beta"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
