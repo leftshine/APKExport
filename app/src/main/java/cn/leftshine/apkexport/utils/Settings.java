@@ -36,7 +36,12 @@ public class Settings {
         //sharedPreferences = mContext.getSharedPreferences(Context.MODE_PRIVATE);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         // /storage/emulated/0/Android/data/cn.leftshine.apkexport/cache/
-        mDefaultExportPath = FileUtils.getDiskCacheDir(mContext);
+
+        if (PermisionUtils.verifyStoragePermissions(mContext)) {
+            mDefaultExportPath = FileUtils.getFilePickerRecommendedDir();
+        } else {
+            mDefaultExportPath = FileUtils.getDiskCacheDir(mContext);
+        }
     }
 
     public static boolean isAutoCleanCacheDir() {

@@ -10,6 +10,7 @@ import android.os.Build;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class PermisionUtils {
     private static final String TAG = "PermisionUtils";
@@ -45,6 +46,15 @@ public class PermisionUtils {
             return true;
         }
     }
+
+    public static boolean verifyStoragePermissions(Context context){
+        if (ContextCompat.checkSelfPermission(context,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+            return true;
+        }
+        return false;
+    }
+
     public static void requestStoragePermissions(Fragment fragment) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             fragment.requestPermissions(PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
