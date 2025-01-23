@@ -306,6 +306,7 @@ public class AppFragment extends Fragment {
         mAppStatus = (TextView) root.findViewById(R.id.have_app);
         mAppListView = (ListView) root.findViewById(R.id.app_listView);
         mAppListView.setTextFilterEnabled(true);
+        mAppListView.setItemsCanFocus(true);
         /*
         mAppListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         callback = new ModeCallback();
