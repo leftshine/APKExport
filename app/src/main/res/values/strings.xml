@@ -4,6 +4,7 @@
     <string name="action_main">Open APKExport</string>
     <string name="action_multi_select">Mutlit Select</string>
     <string name="action_search">Search</string>
+    <string name="action_refresh">Refresh</string>
     <string name="action_sort">Sort</string>
     <string name="app_installed_not">"No installed applications"</string>
     <string name="packagename">"PackageName"</string>

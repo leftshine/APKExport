@@ -66,7 +66,7 @@ import static cn.leftshine.apkexport.utils.PermisionUtils.verifyStoragePermissio
 
 public class MainActivity extends BaseActivity {
 
-    private static final boolean DBG = BuildConfig.DEBUG;
+    private static final boolean DBG = Settings.isDebug();
     private static final String TAG = "MainActivity";
     private static final int STARTED = 0;
     private static final int FINISHED = 1;
@@ -349,6 +349,10 @@ public class MainActivity extends BaseActivity {
                 Snackbar.make(view, R.string.Refreshing, Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN)) {
+            Log.i(TAG, "initFloatingActionButton: no FEATURE_TOUCHSCREEN");
+            fab.hide();
+        }
     }
 
     //清除缓存
@@ -613,7 +617,12 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN)) {
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_main_no_touchscreen, menu);
+        }
+
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -785,6 +794,11 @@ public class MainActivity extends BaseActivity {
                     })
                     .show();
             return true;
+        }
+        if(id == R.id.action_refresh) {
+            mContentAdapter.getCurrentFragment().loadWaitUI(true,true);
+            FileUtils.notifyMediaScan();
+            Snackbar.make(fab, R.string.Refreshing, Snackbar.LENGTH_LONG).setAction("Action", null).show();
         }
 
         return super.onOptionsItemSelected(item);

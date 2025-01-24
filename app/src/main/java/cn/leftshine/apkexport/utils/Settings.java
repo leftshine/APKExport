@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import java.io.File;
 import java.util.Locale;
 
+import cn.leftshine.apkexport.BuildConfig;
 import cn.leftshine.apkexport.R;
 
 /**
@@ -20,6 +21,10 @@ public class Settings {
     private static Context mContext;
     private static SharedPreferences sharedPreferences;
     private static boolean isNeedLoad = false;
+
+    public static boolean isDebug() {
+        return BuildConfig.DEBUG;
+    }
 
     public static boolean isIsNeedLoad() {
         return isNeedLoad;

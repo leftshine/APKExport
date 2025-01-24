@@ -27,6 +27,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,9 +36,13 @@ import android.widget.Toast;
 import com.github.angads25.filepicker.controller.DialogSelectionListener;
 import com.github.angads25.filepicker.model.DialogConfigs;
 import com.github.angads25.filepicker.model.DialogProperties;
+import com.github.angads25.filepicker.model.FileListItem;
+import com.github.angads25.filepicker.model.MarkedItemList;
 import com.github.angads25.filepicker.view.FilePickerDialog;
+import com.github.angads25.filepicker.widget.MaterialCheckbox;
 
 import java.io.File;
+import java.util.Arrays;
 
 import cn.leftshine.apkexport.MyApplication;
 import cn.leftshine.apkexport.R;
@@ -52,6 +57,7 @@ import static cn.leftshine.apkexport.utils.PermisionUtils.*;
  */
 public class SettingActivityFragment extends PreferenceFragment {
 
+    private static final boolean DBG = Settings.isDebug();
     private String TAG = "SettingActivityFragment";
     private static final String BUNDLE_KEY_ACTIVITY_RESULT_CODE = "ACTIVITY_RESULT_CODE";
     private SwitchPreference prefIsAutoCleanExportDir,prefIsAutoCleanCacheDir,prefIsShowLocalApk,prefIsToolbarFixed;
@@ -281,14 +287,82 @@ public class SettingActivityFragment extends PreferenceFragment {
             }*/
             if(preference.getKey().equals(getResources().getString(R.string.key_custom_export_path)))
             {
+                final boolean hasTouchScreen =  context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN);
                 DialogProperties properties = new DialogProperties();
                 properties.selection_mode = DialogConfigs.SINGLE_MODE;
                 properties.selection_type = DialogConfigs.DIR_SELECT;
                 properties.root = new File(FileUtils.getFilePickerParentDir());
                 properties.error_dir = new File(DialogConfigs.DEFAULT_DIR);
-                //properties.offset = FileUtils.getFilePickerRecommendedDir();
+                //properties.offset =  new File(FileUtils.getFilePickerRecommendedDir());
                 properties.extensions = new String[]{"apk", "apk.1"};
-                FilePickerDialog dialog = new FilePickerDialog(context, properties);
+                FilePickerDialog dialog = new FilePickerDialog(context, properties){
+                    File parentFile = new File(FileUtils.getFilePickerParentDir());
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        super.onItemClick(adapterView, view, i, l);
+                        if(!hasTouchScreen) {
+                            MaterialCheckbox fmark = (MaterialCheckbox) view.findViewById(R.id.file_mark);
+                            fmark.performClick();
+                            if (DBG) Log.d(TAG, "onItemClick: "+ Arrays.toString( MarkedItemList.getSelectedPaths()));
+                            parentFile = new File(MarkedItemList.getSelectedPaths()[0]).getParentFile();
+                        }
+                    }
+
+                    @Override
+                    protected void onCreate(Bundle savedInstanceState) {
+                        super.onCreate(savedInstanceState);
+                        if (!hasTouchScreen) {
+                            final Button select = (Button) findViewById(R.id.select);
+                            Button cancel = (Button) findViewById(R.id.cancel);
+                            select.setBackground(new Button(context).getBackground());
+                            cancel.setBackground(new Button(context).getBackground());
+                            markFiles(Arrays.asList(FileUtils.getFilePickerParentDir()));
+                            select.setEnabled(true);
+                            int color;
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                                color = context.getResources().getColor(R.color.colorAccent, context.getTheme());
+                            }
+                            else {
+                                color = context.getResources().getColor(R.color.colorAccent);
+                            }
+                            select.setTextColor(color);
+                            // do not add count on button
+                            select.addTextChangedListener(new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                }
+
+                                @Override
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                    String choose_button_label = context.getResources().getString(R.string.choose_button_label);
+                                    if(!s.toString().equals(choose_button_label)) {
+                                        select.setText(choose_button_label);
+                                    }
+                                }
+
+                                @Override
+                                public void afterTextChanged(Editable s) {
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onBackPressed() {
+                        super.onBackPressed();
+                        if(!hasTouchScreen && parentFile != null && parentFile.exists() && parentFile.isDirectory()) {
+                            FileListItem item = new FileListItem();
+                            item.setFilename(parentFile.getName());
+                            item.setDirectory(parentFile.isDirectory());
+                            item.setMarked(true);
+                            item.setTime(parentFile.lastModified());
+                            item.setLocation(parentFile.getAbsolutePath());
+                            MarkedItemList.clearSelectionList();
+                            MarkedItemList.addSelectedItem(item);
+                        }
+                    }
+                };
                 dialog.setTitle(R.string.dialog_title_select_dir);
                 dialog.setDialogSelectionListener(new DialogSelectionListener() {
                     @Override
@@ -712,4 +786,5 @@ public class SettingActivityFragment extends PreferenceFragment {
             mEditText.getText().delete(getEditTextCursorIndex(mEditText)-1, getEditTextCursorIndex(mEditText));
         }
     }*/
+
 }

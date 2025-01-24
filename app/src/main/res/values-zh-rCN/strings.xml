@@ -87,6 +87,7 @@
     <string name="DES">降序</string>
     <string name="action_multi_select">多选</string>
     <string name="action_search">搜索</string>
+    <string name="action_refresh">刷新</string>
     <string name="action_sort">排序</string>
     <string name="setting_general_title">通用</string>
     <string name="setting_export_title">分享与导出</string>
