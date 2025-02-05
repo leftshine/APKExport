@@ -34,6 +34,7 @@ import cn.leftshine.apkexport.activity.MainActivity;
 import cn.leftshine.apkexport.adapter.AppInfoAdapter;
 import cn.leftshine.apkexport.utils.AppInfo;
 import cn.leftshine.apkexport.utils.MessageCode;
+import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.utils.ToolUtils;
 
 //import android.support.v4.app.Fragment;
@@ -74,6 +75,7 @@ public class AppFragment extends Fragment {
     private ObjectAnimator animtor;
     private MainActivity mainActivity;
     private boolean isLoaded;
+    private String lastSortType, lastSortOrder;
     //ModeCallback callback;
 
     public AppInfoAdapter getmAdapter() {
@@ -254,7 +256,9 @@ public class AppFragment extends Fragment {
     public void onResume() {
         if(DBG) Log.d(TAG, "onResume");
         super.onResume();
-        if(!isLoaded) {
+        if(!isLoaded
+                || !Settings.getSortType().equals(lastSortType)
+                || !Settings.getSortOrder().equals(lastSortOrder)) {
             //initData();
             load(true, false);
             isLoaded = true;
@@ -264,6 +268,8 @@ public class AppFragment extends Fragment {
     public void onPause() {
         if(DBG) Log.d(TAG, "onPause");
         super.onPause();
+        lastSortType = Settings.getSortType();
+        lastSortOrder = Settings.getSortOrder();
     }
     @Override
     public void onStop() {
