@@ -545,6 +545,7 @@ public class SettingActivityFragment extends PreferenceFragment {
                 // 授予权限，继续操作
                 //Settings.setShowLocalApk(true);
                 prefIsShowLocalApk.setChecked(true);
+                setActivityResultCode(Activity.RESULT_OK);
             } else {
                 if(isNeverAskStoragePermissions(this)){
                     //权限被拒绝，并勾选不再提示

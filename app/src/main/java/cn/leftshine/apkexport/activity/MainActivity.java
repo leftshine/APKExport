@@ -527,9 +527,10 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
+        Log.d(TAG, "onActivityResult: "+resultCode);
+        switch (requestCode) {
             case REQUEST_CODE_SETTING:
-                if (resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
                     if (mLastShowLocalApk != Settings.isShowLocalApk()) {
                         recreate();
                     }
