@@ -43,7 +43,7 @@ import cn.leftshine.apkexport.utils.ToolUtils;
  */
 public class AppFragment extends Fragment {
     private static final Boolean DBG = BuildConfig.DEBUG;
-    private static final String TAG = "AppFragment";
+    private String TAG = "AppFragment";
 
     private static final String BUNDLE_KEY_SELECTED_PACKAGES = "SELECTED_PACKAGES";
 
@@ -73,6 +73,7 @@ public class AppFragment extends Fragment {
     //private Toolbar toolbar;
     private ObjectAnimator animtor;
     private MainActivity mainActivity;
+    private boolean isLoaded;
     //ModeCallback callback;
 
     public AppInfoAdapter getmAdapter() {
@@ -196,6 +197,8 @@ public class AppFragment extends Fragment {
 
     @Override
     public void onAttach(@NonNull Context context) {
+        type = getArguments().getInt(ToolUtils.TYPE);
+        TAG = TAG + type;
         Log.d(TAG, "onAttach");
         super.onAttach(context);
     }
@@ -210,7 +213,6 @@ public class AppFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         if(DBG) Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        type = getArguments().getInt(ToolUtils.TYPE);
         mAdapter = new AppInfoAdapter(getActivity(), mLists,type);
         if (savedInstanceState != null) {
             ArrayList<String> selectPackages = savedInstanceState.getStringArrayList(BUNDLE_KEY_SELECTED_PACKAGES);
@@ -239,8 +241,6 @@ public class AppFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         if(DBG) Log.d(TAG, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
-        //initData();
-        load(true,false);
         isUIReady = true;
     }
 
@@ -254,6 +254,11 @@ public class AppFragment extends Fragment {
     public void onResume() {
         if(DBG) Log.d(TAG, "onResume");
         super.onResume();
+        if(!isLoaded) {
+            //initData();
+            load(true, false);
+            isLoaded = true;
+        }
     }
     @Override
     public void onPause() {
