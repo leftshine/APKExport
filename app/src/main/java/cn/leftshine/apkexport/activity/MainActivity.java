@@ -41,7 +41,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import cn.leftshine.apkexport.BuildConfig;
@@ -715,12 +714,6 @@ public class MainActivity extends BaseActivity {
                     sortType = 4;
                     break;
             }
-            String[] sortTypes = getResources().getStringArray(R.array.sort_type_name);
-            if (mContentAdapter.getCurrentFragment().getType()==ToolUtils.TYPE_LOCAL){
-                List<String> sortTypesList = new ArrayList<String>(Arrays.asList(sortTypes));
-                sortTypesList.remove(3);
-                sortTypes = sortTypesList.toArray(new String[sortTypesList.size()]);
-            }
             new AlertDialog.Builder(this)
                     .setTitle(R.string.choose_sort_type)
                     /*.setItems(R.array.sort_type_name, new DialogInterface.OnClickListener() {
@@ -729,7 +722,7 @@ public class MainActivity extends BaseActivity {
                             sortType= i;
                         }
                     })*/
-                    .setSingleChoiceItems(sortTypes, sortType, new DialogInterface.OnClickListener() {
+                    .setSingleChoiceItems(R.array.sort_type_name, sortType, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             sortType = i;
