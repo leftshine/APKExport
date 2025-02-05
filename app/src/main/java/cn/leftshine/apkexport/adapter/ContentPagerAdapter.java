@@ -29,7 +29,16 @@ public class ContentPagerAdapter extends FragmentPagerAdapter {
     }
 
     public ContentPagerAdapter(FragmentManager fm, List<AppFragment> tabFragments, List<String> tabIndicators, Callback callback) {
-        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        super(fm);
+        this.tabFragments = tabFragments;
+        this.tabIndicators = tabIndicators;
+        this.callback = callback;
+    }
+
+    public ContentPagerAdapter(FragmentManager fm, List<AppFragment> tabFragments, List<String> tabIndicators, Callback callback, int behavior) {
+        //super(fm, BEHAVIOR_SET_USER_VISIBLE_HINT); // defaut
+        //super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT); //lazy load
+        super(fm, behavior);
         this.tabFragments = tabFragments;
         this.tabIndicators = tabIndicators;
         this.callback = callback;

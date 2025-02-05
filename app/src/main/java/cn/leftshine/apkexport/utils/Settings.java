@@ -157,4 +157,13 @@ public class Settings {
         sharedPreferences.edit().putBoolean(mContext.getString(R.string.key_is_share_with_export),b).apply();
     }
 
+    public static Boolean isFragmentLazyLoad() {
+        return false;
+    }
+    public static void setFragmentLazyLoad(Boolean b) {
+        // fragment显示时才加载数据
+        // 低性能你设备建议开启
+
+    }
+
 }

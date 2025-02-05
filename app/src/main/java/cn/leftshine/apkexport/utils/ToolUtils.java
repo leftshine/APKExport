@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.io.File;
@@ -50,6 +51,14 @@ public class ToolUtils {
 /*        Message msg = Message.obtain();
         msg.what =MessageCode.MSG_SHOW_LOAD_UI;
         mHandler.sendMessage(msg);*/
+        long startTime = SystemClock.elapsedRealtime(); //起始时间
+        if(!Settings.isFragmentLazyLoad()) {
+            try {
+                Thread.sleep(200); // wait loading UI animation done
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         Log.i(TAG, "loadApp-isRefresh: "+isRefresh);
         Message msg = Message.obtain();
         msg.what =MessageCode.MSG_GET_APP_COMPLETED;
@@ -86,6 +95,17 @@ public class ToolUtils {
                 msg.obj = localAppInfoList;
                 break;
         }
+        long endTime = SystemClock.elapsedRealtime(); //结束时间
+        long runTime = endTime - startTime;
+        Log.d(TAG, "loadApp: runTime="+runTime);
+        if(runTime < 200) {
+            try {
+                Thread.sleep(200 - runTime); // wait loading UI animation done
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        Log.d(TAG, "loadApp: total runTime =" + (SystemClock.elapsedRealtime() - startTime));
         mHandler.sendMessage(msg);
 
     }

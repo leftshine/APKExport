@@ -54,6 +54,7 @@ import cn.leftshine.apkexport.utils.Settings;
 import cn.leftshine.apkexport.utils.ToolUtils;
 import cn.leftshine.apkexport.view.ZoomOutPageTransformer;
 
+import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 import static cn.leftshine.apkexport.utils.PermisionUtils.REQUEST_CODE_GET_INSTALLED_APPS;
 import static cn.leftshine.apkexport.utils.PermisionUtils.REQUEST_CODE_GET_INSTALLED_APPS_CURRENT;
 import static cn.leftshine.apkexport.utils.PermisionUtils.REQUEST_EXTERNAL_STORAGE;
@@ -298,7 +299,11 @@ public class MainActivity extends BaseActivity {
             }
         }
         ContentPagerAdapterCallback callback = new ContentPagerAdapterCallback();
-        mContentAdapter = new ContentPagerAdapter(getSupportFragmentManager(),tabFragments,tabIndicators, callback);
+        if(Settings.isFragmentLazyLoad()) {
+            mContentAdapter = new ContentPagerAdapter(getSupportFragmentManager(),tabFragments,tabIndicators, callback, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        } else {
+            mContentAdapter = new ContentPagerAdapter(getSupportFragmentManager(), tabFragments, tabIndicators, callback);
+        }
         mContentVp.setAdapter(mContentAdapter);
         mContentVp.setOffscreenPageLimit(mContentVp.getAdapter().getCount() - 1);// 设置缓存页面，当前页面的相邻N各页面都会被缓存
         mContentVp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
