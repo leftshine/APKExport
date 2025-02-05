@@ -758,7 +758,7 @@ public class MainActivity extends BaseActivity {
                             Settings.setSortOrder("300");
                             //mContentAdapter.getCurrentFragment().refresh(true);
                             //allFragmentReload();
-                            mContentAdapter.getCurrentFragment().loadWaitUI(true,false);
+                            mContentAdapter.getCurrentFragment().loadWaitUI(true,true);
                         }
                     })
                     .setPositiveButton(R.string.DES, new DialogInterface.OnClickListener() {
@@ -789,7 +789,7 @@ public class MainActivity extends BaseActivity {
                             }
                             Settings.setSortOrder("301");
                             //mContentAdapter.getCurrentFragment().refresh(true);
-                            mContentAdapter.getCurrentFragment().loadWaitUI(true,false);
+                            mContentAdapter.getCurrentFragment().loadWaitUI(true,true);
                             //allFragmentReload();
                         }
                     })

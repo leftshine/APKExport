@@ -51,43 +51,42 @@ public class ToolUtils {
         msg.what =MessageCode.MSG_SHOW_LOAD_UI;
         mHandler.sendMessage(msg);*/
         Log.i(TAG, "loadApp-isRefresh: "+isRefresh);
+        Message msg = Message.obtain();
+        msg.what =MessageCode.MSG_GET_APP_COMPLETED;
         switch (type) {
             case TYPE_USER:
-                if(isRefresh||userAppInfoList==null||userAppInfoList.isEmpty()) {
-                    getApp(mHandler, type);
-                }else {
-                    Message msg1 = Message.obtain();
-                    Log.i(TAG, "TYPE_USER getApp:"+"completed");
-                    msg1.what =MessageCode.MSG_GET_APP_COMPLETED;
-                    msg1.obj = sort(userAppInfoList);
-                    //Log.i(TAG, "loadApp-userAppInfoList: "+userAppInfoList);
-                    mHandler.sendMessage(msg1);
+                if(isRefresh) {
+                    userAppInfoList.clear();
                 }
+                if(userAppInfoList==null||userAppInfoList.isEmpty()) {
+                    getApp(mHandler, type);
+                }
+                Log.i(TAG, "TYPE_USER getApp:"+"completed");
+                msg.obj = userAppInfoList;
+                //Log.i(TAG, "loadApp-userAppInfoList: "+userAppInfoList);
                 break;
             case TYPE_SYSTEM:
-                if(isRefresh||systemAppInfoList==null||systemAppInfoList.isEmpty()) {
-                    getApp(mHandler, type);
-                }else{
-
-                    Message msg2 = Message.obtain();
-                    Log.i(TAG, "TYPE_SYSTEM getApp:"+"completed");
-                    msg2.what =MessageCode.MSG_GET_APP_COMPLETED;
-                    msg2.obj = sort(systemAppInfoList);
-                    mHandler.sendMessage(msg2);
+                if(isRefresh) {
+                    systemAppInfoList.clear();
                 }
+                if(systemAppInfoList==null||systemAppInfoList.isEmpty()) {
+                    getApp(mHandler, type);
+                }
+                Log.i(TAG, "TYPE_SYSTEM getApp:"+"completed");
+                msg.obj = systemAppInfoList;
                 break;
             case TYPE_LOCAL:
-                if(isRefresh||localAppInfoList==null||localAppInfoList.isEmpty()) {
-                    getApp(mHandler, type);
-                }else{
-                    Message msg3 = Message.obtain();
-                    Log.i(TAG, "TYPE_LOCAL getApp:"+"completed");
-                    msg3.what =MessageCode.MSG_GET_APP_COMPLETED;
-                    msg3.obj = sort(localAppInfoList);
-                    mHandler.sendMessage(msg3);
+                if(isRefresh) {
+                    localAppInfoList.clear();
                 }
+                if(localAppInfoList==null||localAppInfoList.isEmpty()) {
+                    getApp(mHandler, type);
+                }
+                Log.i(TAG, "TYPE_LOCAL getApp:"+"completed");
+                msg.obj = localAppInfoList;
                 break;
         }
+        mHandler.sendMessage(msg);
 
     }
     public  void getApp(Handler mHandler, int type) {
@@ -95,12 +94,10 @@ public class ToolUtils {
         Log.i(TAG, "TYPE_USER getApp:"+"completed");
         msg.what =MessageCode.MSG_SHOW_LOAD_UI;
         mHandler.sendMessage(msg);*/
-
         List<?> localList = mContext.getPackageManager().getInstalledPackages(0);
         Log.i(TAG, "getApp: type="+type);
         switch (type){
             case TYPE_USER:
-                userAppInfoList.clear();
                 for (int i = 0; i < localList.size(); i++) {
                     try {
                         PackageInfo localPackageInfo = (PackageInfo) localList.get(i);
@@ -137,15 +134,8 @@ public class ToolUtils {
                     }
                 }
                 userAppInfoList = sort(userAppInfoList);
-                Message msg1 = Message.obtain();
-                Log.i(TAG, "TYPE_USER getApp:"+"completed");
-                msg1.what =MessageCode.MSG_GET_APP_COMPLETED;
-                msg1.obj = userAppInfoList;
-                //Log.i(TAG, "getApp-userAppInfoList: "+userAppInfoList);
-                mHandler.sendMessage(msg1);
                 break;
             case TYPE_SYSTEM:
-                systemAppInfoList.clear();
                 for (int i = 0; i < localList.size(); i++) {
                     try {
                         PackageInfo localPackageInfo = (PackageInfo) localList.get(i);
@@ -180,25 +170,14 @@ public class ToolUtils {
                     }
                 }
                 systemAppInfoList = sort(systemAppInfoList);
-                Message msg2 = Message.obtain();
-                Log.i(TAG, "TYPE_SYSTEM getApp:"+"completed");
-                msg2.what =MessageCode.MSG_GET_APP_COMPLETED;
-                msg2.obj = systemAppInfoList;
-                mHandler.sendMessage(msg2);
                 break;
             case TYPE_LOCAL:
-                localAppInfoList.clear();
                 Log.i(TAG, "getApp:TYPE_LOCAL ");
                 LocalApkSearchUtils localApkSearchUtils = new LocalApkSearchUtils(mContext);
                 //localApkSearchUtils.FindAllAPKFile(Environment.getDataDirectory());
                 localApkSearchUtils.FindAllAPKFile(Environment.getExternalStorageDirectory());
                 localAppInfoList = localApkSearchUtils.getAppInfo();
                 localAppInfoList = sort(localAppInfoList);
-                Message msg3 = Message.obtain();
-                Log.i(TAG, "TYPE_LOCAL getApp:"+"completed");
-                msg3.what =MessageCode.MSG_GET_APP_COMPLETED;
-                msg3.obj = localAppInfoList;
-                mHandler.sendMessage(msg3);
                 break;
         }
 

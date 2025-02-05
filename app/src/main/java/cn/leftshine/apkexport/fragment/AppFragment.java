@@ -260,7 +260,7 @@ public class AppFragment extends Fragment {
                 || !Settings.getSortType().equals(lastSortType)
                 || !Settings.getSortOrder().equals(lastSortOrder)) {
             //initData();
-            load(true, false);
+            load(true, true);
             isLoaded = true;
         }
     }
@@ -463,11 +463,6 @@ public class AppFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 toolUtils.loadApp(mHandler, type, isRefresh);
             }
         }).start();
