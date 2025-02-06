@@ -60,7 +60,7 @@ public class SettingActivityFragment extends PreferenceFragment {
     private static final boolean DBG = Settings.isDebug();
     private String TAG = "SettingActivityFragment";
     private static final String BUNDLE_KEY_ACTIVITY_RESULT_CODE = "ACTIVITY_RESULT_CODE";
-    private SwitchPreference prefIsAutoCleanExportDir,prefIsAutoCleanCacheDir,prefIsShowLocalApk,prefIsToolbarFixed;
+    private SwitchPreference prefIsAutoCleanExportDir,prefIsAutoCleanCacheDir,prefIsShowLocalApk,prefIsToolbarFixed,prefIsUXOpt;
     private EditTextPreference prefCustomFileNameformat;
     private Preference prefRestoreDefaultSettings,prefCleanExportDir,prefGrantAllFfilesAccessPermission;
     private PreferenceCategory prefCategoryAdvance;
@@ -121,6 +121,9 @@ public class SettingActivityFragment extends PreferenceFragment {
         prefIsShowLocalApk.setOnPreferenceChangeListener(preferenceChangeListener);
         prefIsToolbarFixed =  (SwitchPreference)findPreference(getString(R.string.key_is_toolbar_fixed));
         prefIsToolbarFixed.setOnPreferenceChangeListener(preferenceChangeListener);
+        prefIsUXOpt =  (SwitchPreference)findPreference(getString(R.string.key_is_ux_opt));
+        prefIsUXOpt.setChecked(Settings.isUXOpt()); // do not set defaultValue in xml
+        prefIsUXOpt.setOnPreferenceChangeListener(preferenceChangeListener);
         prefIsAutoCleanExportDir = (SwitchPreference)findPreference(getString(R.string.key_is_auto_clean_exportDir));
         prefIsAutoCleanExportDir.setOnPreferenceChangeListener(preferenceChangeListener);
         prefIsAutoCleanCacheDir = (SwitchPreference)findPreference(getString(R.string.key_is_auto_clean_exportDir));
@@ -478,6 +481,9 @@ public class SettingActivityFragment extends PreferenceFragment {
                setActivityResultCode(Activity.RESULT_OK);
                return true;
            }else if(preference.getKey().equals(getResources().getString(R.string.key_is_toolbar_fixed))){
+               setActivityResultCode(Activity.RESULT_OK);
+               return true;
+           }else if(preference.getKey().equals(getResources().getString(R.string.key_is_ux_opt))){
                setActivityResultCode(Activity.RESULT_OK);
                return true;
            }else if(preference.getKey().equals(getResources().getString(R.string.key_is_auto_clean_exportDir))){

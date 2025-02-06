@@ -101,7 +101,7 @@ public class MainActivity extends BaseActivity {
     private Context mContext;
     private boolean mLastShowLocalApk;
     private String mLastCustomLanguage;
-    private boolean mLastFixedToolbar;
+    private boolean mLastFixedToolbar, mLastUXOpt;
     private ArrayList<ArrayList<String>> mRestoreSelectPackages;
 
     @Override
@@ -539,13 +539,15 @@ public class MainActivity extends BaseActivity {
         switch (requestCode) {
             case REQUEST_CODE_SETTING:
                 if (resultCode == RESULT_OK) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
-                    if (mLastShowLocalApk != Settings.isShowLocalApk()) {
-                        recreate();
-                    }
-                    if (mLastCustomLanguage !=null && !mLastCustomLanguage.equals(Settings.getLanguage())) {
-                        recreate();
-                    }
-                    if (mLastFixedToolbar != Settings.isToolbarFixed()) {
+                    if (mLastUXOpt != Settings.isUXOpt()){
+                        Log.d(TAG, "restart");
+                        //restart activity and force it to reload everything.
+                        finish();
+                        startActivity(getIntent());
+                    } else if (mLastShowLocalApk != Settings.isShowLocalApk()
+                            || mLastCustomLanguage !=null && !mLastCustomLanguage.equals(Settings.getLanguage())
+                            || mLastFixedToolbar != Settings.isToolbarFixed()) {
+                        Log.d(TAG, "recreate");
                         recreate();
                     }
                 }
@@ -665,6 +667,7 @@ public class MainActivity extends BaseActivity {
             mLastShowLocalApk = Settings.isShowLocalApk();
             mLastCustomLanguage = Settings.getLanguage();
             mLastFixedToolbar = Settings.isToolbarFixed();
+            mLastUXOpt = Settings.isUXOpt();
             Intent intent = new Intent(MainActivity.this, SettingActivity.class);
             startActivityForResult(intent, REQUEST_CODE_SETTING);
             return true;

@@ -62,9 +62,9 @@
 
 
     <string name="title_activity_setting">Settings</string>
-    <string name="setting_title_ui">UI</string>
+    <string name="setting_title_ui">UI &amp; UX</string>
     <string name="setting_general_title">General</string>
-    <string name="setting_export_title">Share&amp;Export</string>
+    <string name="setting_export_title">Share &amp; Export</string>
     <string name="setting_export_open">Open</string>
     <string name="custom_export_path">Custom Export Path</string>
     <string name="setting_autoClean_title">Auto Clean</string>
@@ -88,6 +88,11 @@
     <string name="setting_toolbar_fixed_title">Fixed Toolbar</string>
     <string name="setting_toolbar_fixed_summaryOff">Scrollable</string>
     <string name="setting_toolbar_fixed_summaryOn">Fixed</string>
+
+    <string name="setting_ux_opt_title">UX Optimization</string>
+    <string name="setting_ux_opt_summaryOff">Efficiency First</string>
+    <string name="setting_ux_opt_summaryOn">Experience First, High-Performance Devices Recommended to be Enabled</string>
+
 
     <string name="custom_file_name">Custom File Name Format</string>
     <string name="custom_file_name_summary">Click to set the filename format</string>
@@ -121,6 +126,7 @@
     <string name="key_is_share_with_export" translatable="false">is_share_with_export</string>
     <string name="key_is_show_local_apk" translatable="false">is_show_local_apk</string>
     <string name="key_is_toolbar_fixed" translatable="false">is_toolbar_fixed</string>
+    <string name="key_is_ux_opt" translatable="false">key_is_ux_opt</string>
     <string name="key_custom_filename_format" translatable="false">custom_filename_format</string>
     <string name="key_custom_export_path" translatable="false">custom_export_path</string>
     <string name="key_long_press_action" translatable="false">long_press_action</string>

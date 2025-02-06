@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.cardview.widget.CardView;
 import androidx.core.content.FileProvider;
 
 import java.io.File;
@@ -61,6 +62,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 	Handler multiFileHandler;
 	FileUtils fileUtils;
 	int mType;
+	boolean mUXOpt;
 
 	public AppInfoAdapter(Context context, List<AppInfo> list, int type) {
 		// TODO Auto-generated constructor stub
@@ -75,6 +77,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 		mHandler = new FileHandler(mContext);
 		multiFileHandler =new MultiFileHandler(mContext);
 		fileUtils = new FileUtils(mContext);
+		mUXOpt =  Settings.isUXOpt();
 	}
 
 	public ArrayList<String> getSelectedPackage() {
@@ -547,7 +550,11 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 		// TODO Auto-generated method stub
 			AppViewHolder holder = null;
 			if (convertView == null || convertView.getTag() == null) {
-				convertView = mInflater.inflate(R.layout.app_infolist_item, null);
+				int resId = R.layout.app_infolist_item;
+				if(mUXOpt){
+					resId = R.layout.app_infolist_item_card;
+				}
+				convertView = mInflater.inflate(resId, null);
 				holder = new AppViewHolder(convertView);
 				convertView.setTag(holder);
 			} else {
@@ -623,7 +630,7 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 
 
 	private class AppViewHolder {
-		private LinearLayout mAppitem;
+		private View mAppitem;
 		private ImageView mAppIcon;
 		private TextView mPackageName;
 		private TextView mAppName;
@@ -634,9 +641,12 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 		private TextView mMemSize;*/
 
 		private AppViewHolder(View view) {
-			mAppitem = (LinearLayout)view.findViewById(R.id.appInfo_item);
 			// todo: switch between LinearLayout and CardView
-			//mAppitem = (CardView)view.findViewById(R.id.appInfo_item);
+			if(mUXOpt) {
+				mAppitem = (CardView)view.findViewById(R.id.appInfo_item);
+			} else {
+				mAppitem = (LinearLayout)view.findViewById(R.id.appInfo_item);
+			}
 			mAppIcon = (ImageView) view.findViewById(R.id.appInfo_icon);
 			mPackageName = (TextView) view.findViewById(R.id.appInfo_packageName);
 			mAppName = (TextView) view.findViewById(R.id.appInfo_appName);

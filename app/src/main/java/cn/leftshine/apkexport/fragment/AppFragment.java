@@ -327,6 +327,9 @@ public class AppFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mAppListView.setNestedScrollingEnabled(true);
         }
+        if(Settings.isUXOpt()) {
+            mAppListView.setDivider(null);
+        }
         /**
          * 添加一个HeadView避免第一个Item被ToolBar遮挡
          * 必须在setAdapter之前进行设置

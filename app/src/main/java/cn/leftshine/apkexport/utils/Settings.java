@@ -1,9 +1,12 @@
 package cn.leftshine.apkexport.utils;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.io.File;
 import java.util.Locale;
@@ -21,6 +24,7 @@ public class Settings {
     private static Context mContext;
     private static SharedPreferences sharedPreferences;
     private static boolean isNeedLoad = false;
+    private static boolean mDefaultUXOpt = false;
 
     public static boolean isDebug() {
         return BuildConfig.DEBUG;
@@ -47,6 +51,7 @@ public class Settings {
         } else {
             mDefaultExportPath = FileUtils.getDiskCacheDir(mContext);
         }
+        mDefaultUXOpt = getDevicePerformance() > 1;
     }
 
     public static boolean isAutoCleanCacheDir() {
@@ -88,6 +93,14 @@ public class Settings {
 
     public static void setToolbarFixed(boolean fixed) {
         sharedPreferences.edit().putBoolean(mContext.getString(R.string.key_is_toolbar_fixed), fixed).apply();
+    }
+
+    public static boolean isUXOpt(){
+        return sharedPreferences.getBoolean(mContext.getString(R.string.key_is_ux_opt), mDefaultUXOpt);
+    }
+
+    public static void setUXOpt(boolean fixed) {
+        sharedPreferences.edit().putBoolean(mContext.getString(R.string.key_is_ux_opt), fixed).apply();
     }
 
     public static String getCustomFileNameFormat() {
@@ -158,12 +171,41 @@ public class Settings {
     }
 
     public static Boolean isFragmentLazyLoad() {
-        return false;
+        return !isUXOpt();
     }
     public static void setFragmentLazyLoad(Boolean b) {
         // fragment显示时才加载数据
         // 低性能你设备建议开启
 
     }
+
+    public static int getDevicePerformance() {
+        boolean is64BitABI = false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // 使用 Build.SUPPORTED_ABIS（Android 5.0 及以上）
+            String[] supportedAbis = Build.SUPPORTED_ABIS;
+            for (String abi : supportedAbis) {
+                if (abi.contains("64")) {
+                    is64BitABI = true;
+                    break;
+                }
+            }
+        } else {
+            // 使用 Build.CPU_ABI 和 Build.CPU_ABI2（Android 4.4 及以下）
+            String abi = Build.CPU_ABI;
+            if (abi.contains("64")) {
+                is64BitABI = true;
+            }
+        }
+
+        if (is64BitABI) {
+            // High Performance
+            return 2;
+        } else {
+            // Low Performance
+            return 1;
+        }
+    }
+
 
 }

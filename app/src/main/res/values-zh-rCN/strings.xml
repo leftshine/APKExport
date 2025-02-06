@@ -67,6 +67,10 @@
     <string name="setting_toolbar_fixed_summaryOff">顶栏跟随列表滚动</string>
     <string name="setting_toolbar_fixed_summaryOn">顶栏不滚动</string>
 
+    <string name="setting_ux_opt_title">交互优化</string>
+    <string name="setting_ux_opt_summaryOff">效率优先</string>
+    <string name="setting_ux_opt_summaryOn">体验优先，高性能设备建议开启</string>
+
     <string name="custom_file_name">自定义文件名格式</string>
     <string name="custom_file_name_summary">点击设置自定义文件名</string>
     <string name="custom_file_name_description">#N 代表应用名称\n#P 代表包名\n#V 代表版本号\n#C 代表内部版本号</string>
