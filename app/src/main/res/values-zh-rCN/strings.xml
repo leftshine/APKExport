@@ -138,6 +138,7 @@
     <string name="storage_permission_obtain_toast">成功取得文件访问权限，请重新执行相关操作</string>
 
     <string name="tip_copy_failed">导出过程异常：</string>
+    <string name="tip_file_not_exist">文件不存在</string>
     <string name="tip_share_failed">分享过程异常，请重试</string>
     <string name="tip_export_success">导出完成，文件保存在:</string>
     <string name="tip_multi_export_success">批量导出完成，文件保存在:</string>

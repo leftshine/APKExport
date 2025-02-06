@@ -178,7 +178,8 @@
     <string name="storage_permission_custom_export_path_dialog_content">Can not custom path without the storage permission</string>
     <string name="installed_permission_dialog_content">To display the list of installed apps, the app requires permission to access the application list. If this permission is not granted, the installed apps cannot be displayed properly.</string>
     <string name="storage_permission_obtain_toast">Storage permission granted. Now you can go on.</string>
-    <string name="tip_copy_failed">copy failed:</string>
+    <string name="tip_copy_failed">Copy failed: </string>
+    <string name="tip_file_not_exist">file is not exist</string>
     <string name="tip_share_failed">share failed</string>
     <string name="tip_export_success">Export complete，file save at: </string>
     <string name="tip_multi_export_success">Multi export complete，file save at: </string>

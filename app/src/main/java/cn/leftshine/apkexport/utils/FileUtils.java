@@ -227,6 +227,12 @@ public class FileUtils {
                 msgComplete.what = MessageCode.MSG_COPY_COMPLETE;
                 msgComplete.obj = newFile;
                 mHandler.sendMessage(msgComplete);
+            } else {
+                Log.e(TAG,"复制文件出错: 文件不存在\noldPath="+oldPath+"\nnewPath="+newPath+"\n:");
+                Message msgError = Message.obtain();
+                msgError.what = MessageCode.MSG_COPY_ERROR;
+                msgError.obj = mContext.getString(R.string.tip_file_not_exist);
+                mHandler.sendMessage(msgError);
             }
         }
         catch (Exception e) {
