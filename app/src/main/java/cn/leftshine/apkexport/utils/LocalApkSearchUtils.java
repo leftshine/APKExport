@@ -170,10 +170,11 @@ public class LocalApkSearchUtils {
                     PackageManager pm = context.getPackageManager();
                     PackageInfo localPackageInfo = pm.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
                     File localFile1 = new File(path);
-                    final AppInfo localAppInfo = new AppInfo();
+                    final AppInfo localAppInfo = new AppInfo(ToolUtils.TYPE_LOCAL);
                     try {
                         localAppInfo.appSourcDir = path;
-                        localAppInfo.appName = localFile1.getName();
+                        localAppInfo.fileName = localFile1.getName();
+                        localAppInfo.appName = localPackageInfo.applicationInfo.loadLabel(context.getPackageManager()).toString();
                         Log.i(TAG, "FindAllAPKFile: path="+path);
                         if (localFile1 != null)
                             localAppInfo.appSize = (int) (localFile1.length());

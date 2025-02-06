@@ -251,6 +251,279 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 		}
 	}*/
 
+	private void showClickDialogApp(final int position){
+		final AppInfo info = (AppInfo) getItem(position);
+		new AlertDialog.Builder(mContext)
+				.setTitle(R.string.choose_next_action)
+				.setItems(R.array.copy_actions, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						/*
+						 *<item>导出</item>
+						 *<item>以自定义文件名导出</item>
+						 *<item>分享</item>
+						 *<item>以自定义文件名分享</item>
+						 * */
+						int mode = i;
+						switch (i) {
+							case 0:
+								mode = FileUtils.MODE_ONLY_EXPORT;
+								break;
+							case 1:
+								mode = FileUtils.MODE_ONLY_EXPORT_RENAME;
+								break;
+							case 2:
+								mode = FileUtils.MODE_EXPORT_SHARE;
+								break;
+							case 3:
+								mode = FileUtils.MODE_EXPORT_RENAME_SHARE;
+								break;
+						}
+						String mCurrentPkgName = info.packageName;
+						String mCurrentAppName = info.appName;
+						String mCurrentAppPath = info.appSourcDir;
+						String mCurrentVersionName = info.getVersionName();
+						String mCurrentVersionCode = String.valueOf(info.versionCode);
+						String customFileNameFormat = Settings.getCustomFileNameFormat();
+						String customFileName = customFileNameFormat.replace("#N", mCurrentAppName).replace("#P", mCurrentPkgName).replace("#V", mCurrentVersionName).replace("#C", mCurrentVersionCode) + ".apk";
+						fileUtils.doExport(mHandler, mode, mCurrentAppPath, customFileName);
+
+					}
+				})
+				.show();
+	}
+	private void showClickDialogApk(final int position){
+		final AppInfo info = (AppInfo) getItem(position);
+		new AlertDialog.Builder(mContext)
+				.setTitle(R.string.choose_next_action)
+				.setItems(R.array.localAPK_actions, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+                                /*<item>Share</item>
+                                <item>Install</item>
+                                <item>Rename</item>
+                                <item>Delete</item>*/
+						//int mode = i + MODE_LOCAL_SHARE;
+						switch (i) {
+							case 0:
+								//mode = MODE_LOCAL_SHARE;
+								fileUtils.startShare(info.appSourcDir);
+								break;
+							case 1:
+								//mode = MODE_LOCAL_INSTALL;
+								fileUtils.install(info.appSourcDir, mContext);
+								break;
+							case 2:
+								//mode = MODE_LOCAL_RENAME;
+								final String oldName = info.appName;
+								fileUtils.rename(info.appSourcDir, new FileUtils.OnListDataChangedListener() {
+									@Override
+									public void OnListDataChanged(String newPath) {
+										File newFile = new File(newPath);
+										String newName = newFile.getName();
+										if (oldName != newName) {
+											AppInfo newInfo = info;
+											newInfo.appName = newName;
+											info.setAppName(newName);
+											info.setAppSourcDir(newPath);
+											mLists.remove(position);
+											mLists.add(position, newInfo);
+											notifyDataSetChanged();
+
+										}
+									}
+								});
+
+								break;
+							case 3:
+								//mode = MODE_LOCAL_DELETE;
+								fileUtils.delete(info.appSourcDir, new FileUtils.OnListDataChangedListener() {
+									@Override
+									public void OnListDataChanged(String newPath) {
+										mLists.remove(position);
+										notifyDataSetChanged();
+									}
+								});
+								break;
+						}
+						//FileUtils.doLocalApk(context,mHandler,mode,info);
+					}
+				})
+				.show();
+	}
+	private boolean handleLongClickApp(final int position){
+		final AppInfo info = (AppInfo) getItem(position);
+		String long_click_action = Settings.getLongPressAction();
+		Log.i(TAG, "onLongClick: long_click_action=" + long_click_action);
+		if (long_click_action.equals("103")) {
+			//复制应用信息
+			new AlertDialog.Builder(mContext)
+					.setTitle(R.string.choose_next_action)
+					.setItems(R.array.copy_info_actions, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialogInterface, int i) {
+							/*
+							<item>复制应用名称</item>
+							<item>复制包名</item>
+							<item>复制版本号</item>
+							<item>复制内部版本号</item>
+							 */
+							//ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+							//ClipData clipData = ClipData.newPlainText(null, "");
+							String copy_str = DEFAULT_COPY_DATA;
+							switch (i) {
+								case 0:
+									copy_str = info.getAppName();
+									//clipData = ClipData.newPlainText(null, info.getAppName());
+									break;
+								case 1:
+									copy_str = info.getPackageName();
+									//clipData = ClipData.newPlainText(null, info.getPackageName());
+									break;
+								case 2:
+									copy_str = info.getVersionName();
+									//clipData = ClipData.newPlainText(null, info.getVersionName());
+									break;
+								case 3:
+									copy_str = String.valueOf(info.getVersionCode());
+									break;
+								case 4:
+									String appNameUrl = info.getAppName();
+									try {
+										appNameUrl= URLEncoder.encode(appNameUrl,"utf-8");
+									} catch (UnsupportedEncodingException e) {
+										e.printStackTrace();
+										Log.i(TAG, "URLEncode fail",e );
+									}
+									copy_str = "https://leftshine.gitlab.io/apkexport/share/market.html?appName="+appNameUrl+"&packageName="+info.getPackageName();
+
+									break;
+							}
+							Log.i(TAG, "copy_str"+copy_str);
+							ClipData clipData = ClipData.newPlainText(null, copy_str);
+							ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+							if (cm != null) {
+								cm.setPrimaryClip(clipData);
+
+								Toast.makeText(mContext,mContext.getString(R.string.copy_success, copy_str),Toast.LENGTH_SHORT).show();
+							}
+						}
+					})
+					.show();
+		} else {
+			//导出操作
+			int mode = FileUtils.MODE_ONLY_EXPORT;
+			switch (long_click_action) {
+				case "100":
+					mode = FileUtils.MODE_ONLY_EXPORT;
+					break;
+				case "104":
+					mode = FileUtils.MODE_ONLY_EXPORT_RENAME;
+					break;
+				case "101":
+					mode = FileUtils.MODE_EXPORT_SHARE;
+					break;
+				case "102":
+					mode = FileUtils.MODE_EXPORT_RENAME_SHARE;
+					break;
+			}
+			String mCurrentPkgName = info.packageName;
+			String mCurrentAppName = info.appName;
+			String mCurrentAppPath = info.appSourcDir;
+			String mCurrentVersionName = info.getVersionName();
+			String mCurrentVersionCode = String.valueOf(info.versionCode);
+			String customFileNameFormat  = Settings.getCustomFileNameFormat();
+			String customFileName = customFileNameFormat.replace("#N",mCurrentAppName).replace("#P",mCurrentPkgName).replace("#V",mCurrentVersionName).replace("#C",mCurrentVersionCode)+".apk";
+			fileUtils.doExport(mHandler, mode,mCurrentAppPath, customFileName);
+		}
+		//FileUtils.copyInfo(mContext,mHandler,info);
+		return true;
+	}
+	private boolean handleLongClickApk(final int position){
+		final AppInfo info = (AppInfo) getItem(position);
+					/*String long_click_action = Settings.getLongPressAction();
+					Log.i(TAG, "onLongClick: long_click_action="+long_click_action);
+					if (long_click_action.equals("103")) {*/
+		//复制应用信息
+		new AlertDialog.Builder(mContext)
+				.setTitle(R.string.choose_next_action)
+				.setItems(R.array.localAPK_copy_info_actions, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						/*
+						<item>复制应用名称</item>
+						<item>复制包名</item>
+						<item>复制版本号</item>
+						<item>复制内部版本号</item>
+						<item>复制应用商店链接</item>
+						<item>复制文件名</item>
+						<item>复制文件路径</item>
+						*/
+						//ClipData clipData = ClipData.newPlainText(null, "");
+						String copy_str = DEFAULT_COPY_DATA;
+						switch (i) {
+							case 0:
+								copy_str = info.getAppName();
+								//clipData = ClipData.newPlainText(null, info.getAppName());
+								break;
+							case 1:
+								copy_str = info.getPackageName();
+								//clipData = ClipData.newPlainText(null, info.getPackageName());
+								break;
+							case 2:
+								copy_str = info.getVersionName();
+								//clipData = ClipData.newPlainText(null, info.getVersionName());
+								break;
+							case 3:
+								copy_str = String.valueOf(info.getVersionCode());
+								break;
+							case 4:
+								String appNameUrl = info.getAppName();
+								try {
+									appNameUrl= URLEncoder.encode(appNameUrl,"utf-8");
+								} catch (UnsupportedEncodingException e) {
+									e.printStackTrace();
+									Log.i(TAG, "URLEncode fail",e );
+								}
+								copy_str = "https://leftshine.gitlab.io/apkexport/share/market.html?appName="+appNameUrl+"&packageName="+info.getPackageName();
+
+								break;
+							case 5:
+								copy_str=info.getFileName();
+								//clipData = ClipData.newPlainText(null, info.getAppName());
+								break;
+							case 6:
+								copy_str = info.getAppSourcDir();
+								//clipData = ClipData.newPlainText(null, info.getAppSourcDir());
+								break;
+						}
+						ClipData clipData = ClipData.newPlainText(null, copy_str);
+						ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+						cm.setPrimaryClip(clipData);
+						Toast.makeText(mContext,mContext.getString(R.string.copy_success, copy_str),Toast.LENGTH_LONG).show();
+					}
+				})
+				.show();
+					/*}else{
+						//导出操作
+						int mode = MODE_ONLY_EXPORT;
+						switch (long_click_action){
+							case "100":
+								mode = MODE_ONLY_EXPORT;
+								break;
+							case "101":
+								mode = MODE_EXPORT_SHARE;
+								break;
+							case "102":
+								mode = MODE_EXPORT_RENAME_SHARE;
+								break;
+						}
+						fileUtils.doExport(mHandler,mode,info);
+					}*/
+		//FileUtils.copyInfo(context,mHandler,info);
+		return true;
+	}
+
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
@@ -272,8 +545,6 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-
-		if(ToolUtils.TYPE_USER == mType || ToolUtils.TYPE_SYSTEM == mType) {
 			AppViewHolder holder = null;
 			if (convertView == null || convertView.getTag() == null) {
 				convertView = mInflater.inflate(R.layout.app_infolist_item, null);
@@ -287,6 +558,9 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 			holder.mAppIcon.setImageDrawable(info.getAppIcon());
 			holder.mPackageName.setText(info.getPackageName());
 			holder.mAppName.setText(info.getAppName());
+			if(ToolUtils.TYPE_LOCAL == mType) {
+				holder.mAppName.setText(info.getFileName());
+			}
 			holder.mAppSize.setText(FileUtils.FormatFileSize(info.getAppSize()));
 			//Log.i(TAG, "showSize: appName="+info.getAppName()+"appSize="+info.appSize+"showSize="+FileUtils.FormatFileSize(info.getAppSize()));
 			holder.mAppVersionName.setText(info.getVersionName());
@@ -315,290 +589,24 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 						notifyDataSetChanged();
 						updateSelectedCount();
 					} else {
-						new AlertDialog.Builder(mContext)
-								.setTitle(R.string.choose_next_action)
-								.setItems(R.array.copy_actions, new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialogInterface, int i) {
-										/*
-										*<item>导出</item>
-										*<item>以自定义文件名导出</item>
-										*<item>分享</item>
-										*<item>以自定义文件名分享</item>
-										* */
-										int mode = i;
-										switch (i) {
-											case 0:
-												mode = FileUtils.MODE_ONLY_EXPORT;
-												break;
-											case 1:
-												mode = FileUtils.MODE_ONLY_EXPORT_RENAME;
-												break;
-											case 2:
-												mode = FileUtils.MODE_EXPORT_SHARE;
-												break;
-											case 3:
-												mode = FileUtils.MODE_EXPORT_RENAME_SHARE;
-												break;
-										}
-										String mCurrentPkgName = info.packageName;
-										String mCurrentAppName = info.appName;
-										String mCurrentAppPath = info.appSourcDir;
-										String mCurrentVersionName = info.getVersionName();
-										String mCurrentVersionCode = String.valueOf(info.versionCode);
-										String customFileNameFormat = Settings.getCustomFileNameFormat();
-										String customFileName = customFileNameFormat.replace("#N", mCurrentAppName).replace("#P", mCurrentPkgName).replace("#V", mCurrentVersionName).replace("#C", mCurrentVersionCode) + ".apk";
-										fileUtils.doExport(mHandler, mode, mCurrentAppPath, customFileName);
-
-									}
-								})
-								.show();
+						if(ToolUtils.TYPE_LOCAL == mType){
+							showClickDialogApk(position);
+						}else {
+							showClickDialogApp(position);
+						}
 					}
 				}
 			});
 			holder.mAppitem.setOnLongClickListener(new View.OnLongClickListener() {
 				@Override
 				public boolean onLongClick(View view) {
-					String long_click_action = Settings.getLongPressAction();
-					Log.i(TAG, "onLongClick: long_click_action=" + long_click_action);
-					if (long_click_action.equals("103")) {
-						//复制应用信息
-						new AlertDialog.Builder(mContext)
-								.setTitle(R.string.choose_next_action)
-								.setItems(R.array.copy_info_actions, new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialogInterface, int i) {
-								/*
-								<item>复制应用名称</item>
-        						<item>复制包名</item>
-        						<item>复制版本号</item>
-        						<item>复制内部版本号</item>
-								 */
-										//ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-										//ClipData clipData = ClipData.newPlainText(null, "");
-										String copy_str = DEFAULT_COPY_DATA;
-										switch (i) {
-											case 0:
-												copy_str = info.getAppName();
-												//clipData = ClipData.newPlainText(null, info.getAppName());
-												break;
-											case 1:
-												copy_str = info.getPackageName();
-												//clipData = ClipData.newPlainText(null, info.getPackageName());
-												break;
-											case 2:
-												copy_str = info.getVersionName();
-												//clipData = ClipData.newPlainText(null, info.getVersionName());
-												break;
-											case 3:
-												copy_str = String.valueOf(info.getVersionCode());
-												break;
-											case 4:
-												String appNameUrl = info.getAppName();
-												try {
-													appNameUrl= URLEncoder.encode(appNameUrl,"utf-8");
-												} catch (UnsupportedEncodingException e) {
-													e.printStackTrace();
-													Log.i(TAG, "URLEncode fail",e );
-												}
-												copy_str = "https://leftshine.gitlab.io/apkexport/share/market.html?appName="+appNameUrl+"&packageName="+info.getPackageName();
-
-												break;
-										}
-										Log.i(TAG, "copy_str"+copy_str);
-										ClipData clipData = ClipData.newPlainText(null, copy_str);
-										ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-										if (cm != null) {
-											cm.setPrimaryClip(clipData);
-
-											Toast.makeText(mContext,mContext.getString(R.string.copy_success, copy_str),Toast.LENGTH_SHORT).show();
-										}
-									}
-								})
-								.show();
+					if(ToolUtils.TYPE_LOCAL == mType){
+						return handleLongClickApk(position);
 					} else {
-						//导出操作
-						int mode = FileUtils.MODE_ONLY_EXPORT;
-						switch (long_click_action) {
-							case "100":
-								mode = FileUtils.MODE_ONLY_EXPORT;
-								break;
-							case "104":
-								mode = FileUtils.MODE_ONLY_EXPORT_RENAME;
-								break;
-							case "101":
-								mode = FileUtils.MODE_EXPORT_SHARE;
-								break;
-							case "102":
-								mode = FileUtils.MODE_EXPORT_RENAME_SHARE;
-								break;
-						}
-						String mCurrentPkgName = info.packageName;
-						String mCurrentAppName = info.appName;
-						String mCurrentAppPath = info.appSourcDir;
-						String mCurrentVersionName = info.getVersionName();
-						String mCurrentVersionCode = String.valueOf(info.versionCode);
-						String customFileNameFormat  = Settings.getCustomFileNameFormat();
-						String customFileName = customFileNameFormat.replace("#N",mCurrentAppName).replace("#P",mCurrentPkgName).replace("#V",mCurrentVersionName).replace("#C",mCurrentVersionCode)+".apk";
-						fileUtils.doExport(mHandler, mode,mCurrentAppPath, customFileName);
-					}
-					//FileUtils.copyInfo(mContext,mHandler,info);
-					return true;
-				}
-			});
-		}else{
-			ApkViewHolder holder = null;
-			if (convertView == null || convertView.getTag() == null) {
-				convertView = mInflater.inflate(R.layout.local_apk_infolist_item, null);
-				holder = new ApkViewHolder(convertView);
-				convertView.setTag(holder);
-			} else {
-				holder = (ApkViewHolder) convertView.getTag();
-			}
-			final AppInfo info = (AppInfo) getItem(position);
-			//final AppInfo info = (AppInfo) mLists.get(position);
-			//Log.i(TAG, "getItem:"+info1.getAppName()+"mLists.get(position):"+info.getAppName());
-			holder.LocalApkIcon.setImageDrawable(info.getAppIcon());
-			holder.LocalApkName.setText(info.getAppName());
-			holder.LocalApkSize.setText(FileUtils.FormatFileSize(info.getAppSize()));
-			String timeFormat = new SimpleDateFormat("MM-dd hh:mm").format(new Date(info.getLastUpdateTime()));
-			holder.LocalApkdate.setText(timeFormat);
-			if(GlobalData.isMultipleMode){
-				holder.LocalApkCheckBox.setVisibility(View.VISIBLE);
-			}else{
-				holder.LocalApkCheckBox.setVisibility(View.GONE);
-			}
-			holder.LocalApkCheckBox.setChecked(info.isSelect());
-			holder.LocalApkitem.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-
-					Log.i(TAG, "LocalApkitem onClick: ");
-					if (GlobalData.isMultipleMode) {
-						info.setSelect(!info.isSelect());
-						notifyDataSetChanged();
-						updateSelectedCount();
-					} else {
-						new AlertDialog.Builder(mContext)
-								.setTitle(R.string.choose_next_action)
-								.setItems(R.array.localAPK_actions, new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialogInterface, int i) {
-                                /*<item>Share</item>
-                                <item>Install</item>
-                                <item>Rename</item>
-                                <item>Delete</item>*/
-										//int mode = i + MODE_LOCAL_SHARE;
-										switch (i) {
-											case 0:
-												//mode = MODE_LOCAL_SHARE;
-												fileUtils.startShare(info.appSourcDir);
-												break;
-											case 1:
-												//mode = MODE_LOCAL_INSTALL;
-												fileUtils.install(info.appSourcDir, mContext);
-												break;
-											case 2:
-												//mode = MODE_LOCAL_RENAME;
-												final String oldName = info.appName;
-												fileUtils.rename(info.appSourcDir, new FileUtils.OnListDataChangedListener() {
-													@Override
-													public void OnListDataChanged(String newPath) {
-														File newFile = new File(newPath);
-														String newName = newFile.getName();
-														if (oldName != newName) {
-															AppInfo newInfo = info;
-															newInfo.appName = newName;
-															info.setAppName(newName);
-															info.setAppSourcDir(newPath);
-															mLists.remove(position);
-															mLists.add(position, newInfo);
-															notifyDataSetChanged();
-
-														}
-													}
-												});
-
-												break;
-											case 3:
-												//mode = MODE_LOCAL_DELETE;
-												fileUtils.delete(info.appSourcDir, new FileUtils.OnListDataChangedListener() {
-													@Override
-													public void OnListDataChanged(String newPath) {
-														mLists.remove(position);
-														notifyDataSetChanged();
-													}
-												});
-												break;
-										}
-										//FileUtils.doLocalApk(context,mHandler,mode,info);
-									}
-								})
-								.show();
+						return handleLongClickApp(position);
 					}
 				}
 			});
-			holder.LocalApkitem.setOnLongClickListener(new View.OnLongClickListener() {
-				@Override
-				public boolean onLongClick(View view) {
-					/*String long_click_action = Settings.getLongPressAction();
-					Log.i(TAG, "onLongClick: long_click_action="+long_click_action);
-					if (long_click_action.equals("103")) {*/
-						//复制应用信息
-						new AlertDialog.Builder(mContext)
-								.setTitle(R.string.choose_next_action)
-								.setItems(R.array.localAPK_copy_info_actions, new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialogInterface, int i) {
-								/*
-								<item>复制文件名</item>
-        						<item>复制包名</item>
-        						<item>复制文件路径</item>
-								 */
-										//ClipData clipData = ClipData.newPlainText(null, "");
-										String copy_str = DEFAULT_COPY_DATA;
-										switch (i) {
-											case 0:
-												copy_str=info.getAppName();
-												//clipData = ClipData.newPlainText(null, info.getAppName());
-												break;
-											case 1:
-												copy_str = info.getPackageName();
-												//clipData = ClipData.newPlainText(null, info.getPackageName());
-												break;
-											case 2:
-												copy_str = info.getAppSourcDir();
-												//clipData = ClipData.newPlainText(null, info.getAppSourcDir());
-												break;
-										}
-										ClipData clipData = ClipData.newPlainText(null, copy_str);
-										ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-										cm.setPrimaryClip(clipData);
-										Toast.makeText(mContext,mContext.getString(R.string.copy_success, copy_str),Toast.LENGTH_LONG).show();
-									}
-								})
-								.show();
-					/*}else{
-						//导出操作
-						int mode = MODE_ONLY_EXPORT;
-						switch (long_click_action){
-							case "100":
-								mode = MODE_ONLY_EXPORT;
-								break;
-							case "101":
-								mode = MODE_EXPORT_SHARE;
-								break;
-							case "102":
-								mode = MODE_EXPORT_RENAME_SHARE;
-								break;
-						}
-						fileUtils.doExport(mHandler,mode,info);
-					}*/
-					//FileUtils.copyInfo(context,mHandler,info);
-					return true;
-				}
-			});
-		}
 		/*if(isMultipleMode){
 			convertView.findViewById(R.id.appInfo_checkbox).setVisibility(View.VISIBLE);
 		}else{

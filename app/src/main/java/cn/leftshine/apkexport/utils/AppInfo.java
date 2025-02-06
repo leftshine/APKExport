@@ -3,10 +3,11 @@ package cn.leftshine.apkexport.utils;
 import android.graphics.drawable.Drawable;
 
 public class AppInfo {
-	
+	private final int type;
 	public long appCache = 0;
 	public Drawable appIcon = null;
 	public String appName = "";
+	public String fileName = "";
 	public String appSourcDir = "";
 	public long appSize = 0;
 	public Boolean isSelected = Boolean.valueOf(false);
@@ -22,6 +23,10 @@ public class AppInfo {
 	private int installed =1;
 	private boolean isSelect;
 	private boolean isShowCheckBox;
+
+	public AppInfo(int type) {
+		this.type = type;
+	}
 	//private String fileLastModifyTime;
 /*
 
@@ -33,6 +38,10 @@ public class AppInfo {
 		this.fileLastModifyTime = fileLastModifyTime;
 	}
 */
+
+	public int getType() {
+		return type;
+	}
 
 	public long getFirstInstallTime() {
 		return firstInstallTime;
@@ -65,6 +74,10 @@ public class AppInfo {
 	public String getAppName() { return appName;	}
 	public void setAppName(String appName) {
 		this.appName = appName;
+	}
+	public String getFileName() { return fileName;	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 	public String getAppSourcDir() { return appSourcDir;}
 	public void setAppSourcDir(String appSourcDir) { this.appSourcDir = appSourcDir;}

@@ -12,12 +12,10 @@ import android.util.Log;
 
 import java.io.File;
 import java.text.Collator;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 public class ToolUtils {
     final static boolean DBG = false;
@@ -123,7 +121,7 @@ public class ToolUtils {
                         PackageInfo localPackageInfo = (PackageInfo) localList.get(i);
                         if ((ApplicationInfo.FLAG_SYSTEM &
                                 localPackageInfo.applicationInfo.flags) == 0) {
-                            final AppInfo localAppInfo = new AppInfo();
+                            final AppInfo localAppInfo = new AppInfo(type);
                             localAppInfo.appName = localPackageInfo.applicationInfo.loadLabel(mContext.getPackageManager()).toString();
                             localAppInfo.appSourcDir = localPackageInfo.applicationInfo.publicSourceDir;
                             localAppInfo.appSize = 0;
@@ -161,7 +159,7 @@ public class ToolUtils {
                         PackageInfo localPackageInfo = (PackageInfo) localList.get(i);
                         if ((ApplicationInfo.FLAG_SYSTEM &
                                 localPackageInfo.applicationInfo.flags) > 0) {
-                            final AppInfo localAppInfo = new AppInfo();
+                            final AppInfo localAppInfo = new AppInfo(type);
                             localAppInfo.appName = localPackageInfo.applicationInfo.loadLabel(mContext.getPackageManager()).toString();
                             localAppInfo.appSourcDir = localPackageInfo.applicationInfo.publicSourceDir;
                             localAppInfo.appSize = 0;

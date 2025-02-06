@@ -23,8 +23,12 @@
     </string-array>
 
     <string-array name="localAPK_copy_info_actions">
-        <item>Copy File Name</item>
+        <item>Copy App Name</item>
         <item>Copy Package Name</item>
+        <item>Copy Version Name</item>
+        <item>Copy Version Code</item>
+        <item>Copy AppStore Link</item>
+        <item>Copy File Name</item>
         <item>Copy File Path</item>
     </string-array>
 

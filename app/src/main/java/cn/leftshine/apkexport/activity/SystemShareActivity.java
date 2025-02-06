@@ -14,11 +14,8 @@ import android.net.Uri;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
-import androidx.core.view.MenuItemCompat;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.appcompat.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +38,7 @@ import cn.leftshine.apkexport.handler.FileHandler;
 import cn.leftshine.apkexport.utils.AppInfo;
 import cn.leftshine.apkexport.utils.FileUtils;
 import cn.leftshine.apkexport.utils.Settings;
+import cn.leftshine.apkexport.utils.ToolUtils;
 import cn.leftshine.apkexport.view.ClearEditText;
 
 import static cn.leftshine.apkexport.utils.PermisionUtils.REQUEST_EXTERNAL_STORAGE;
@@ -271,7 +269,12 @@ public class SystemShareActivity extends BaseActivity {
         ApplicationInfo applicationInfo = null;
         try {
             applicationInfo = pm.getApplicationInfo(callingPackageName, 0);
-            appInfo = new AppInfo();
+            int type = ToolUtils.TYPE_USER;
+            if ((ApplicationInfo.FLAG_SYSTEM &
+                    applicationInfo.flags) == 0) {
+                type = ToolUtils.TYPE_SYSTEM;
+            }
+            appInfo = new AppInfo(type);
             appInfo.appSourcDir = applicationInfo.publicSourceDir;
             appInfo.appIcon = applicationInfo.loadIcon(pm);
             appInfo.appName = applicationInfo.loadLabel(pm).toString();
