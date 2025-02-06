@@ -80,6 +80,8 @@ public class MainActivity extends BaseActivity {
     private static final String BUNDLE_KEY_SELECTED_COUNT= "SELECTED_COUNT";
     private static final String BUNDLE_KEY_ALL_COUNT= "ALL_COUNT";
 
+    private static boolean mLazyLoad;
+
     AppFragment fragmentUserApp;
     AppFragment fragmentSystemApp;
     AppFragment fragmentLocalApp;
@@ -107,6 +109,7 @@ public class MainActivity extends BaseActivity {
         if(DBG) Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         mContext = this;
+        mLazyLoad = Settings.isFragmentLazyLoad();
         //verifyStoragePermissions(this);
         fileUtils =new FileUtils(this);
         setContentView(R.layout.activity_main);
@@ -299,7 +302,7 @@ public class MainActivity extends BaseActivity {
             }
         }
         ContentPagerAdapterCallback callback = new ContentPagerAdapterCallback();
-        if(Settings.isFragmentLazyLoad()) {
+        if(mLazyLoad) {
             mContentAdapter = new ContentPagerAdapter(getSupportFragmentManager(),tabFragments,tabIndicators, callback, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         } else {
             mContentAdapter = new ContentPagerAdapter(getSupportFragmentManager(), tabFragments, tabIndicators, callback);
@@ -763,7 +766,13 @@ public class MainActivity extends BaseActivity {
                             Settings.setSortOrder("300");
                             //mContentAdapter.getCurrentFragment().refresh(true);
                             //allFragmentReload();
-                            mContentAdapter.getCurrentFragment().loadWaitUI(true,true);
+                            if(!mLazyLoad){
+                                for (AppFragment fragment : mContentAdapter.getAllFragment()){
+                                    fragment.loadWaitUI(true,true);
+                                }
+                            } else {
+                                mContentAdapter.getCurrentFragment().loadWaitUI(true, true);
+                            }
                         }
                     })
                     .setPositiveButton(R.string.DES, new DialogInterface.OnClickListener() {
@@ -793,9 +802,13 @@ public class MainActivity extends BaseActivity {
                                     break;
                             }
                             Settings.setSortOrder("301");
-                            //mContentAdapter.getCurrentFragment().refresh(true);
-                            mContentAdapter.getCurrentFragment().loadWaitUI(true,true);
-                            //allFragmentReload();
+                            if(!mLazyLoad){
+                                for (AppFragment fragment : mContentAdapter.getAllFragment()){
+                                    fragment.loadWaitUI(true,true);
+                                }
+                            } else {
+                                mContentAdapter.getCurrentFragment().loadWaitUI(true, true);
+                            }
                         }
                     })
                     .show();
