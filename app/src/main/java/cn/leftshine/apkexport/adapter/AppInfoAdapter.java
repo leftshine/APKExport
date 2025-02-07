@@ -257,7 +257,8 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 	private void showClickDialogApp(final int position){
 		final AppInfo info = (AppInfo) getItem(position);
 		new AlertDialog.Builder(mContext)
-				.setTitle(R.string.choose_next_action)
+				.setTitle(info.getAppName())
+				.setIcon(info.getAppIcon())
 				.setItems(R.array.copy_actions, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
@@ -298,7 +299,8 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 	private void showClickDialogApk(final int position){
 		final AppInfo info = (AppInfo) getItem(position);
 		new AlertDialog.Builder(mContext)
-				.setTitle(R.string.choose_next_action)
+				.setTitle(info.getFileName())
+				.setIcon(info.getAppIcon())
 				.setItems(R.array.localAPK_actions, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
@@ -361,7 +363,8 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 		if (long_click_action.equals("103")) {
 			//复制应用信息
 			new AlertDialog.Builder(mContext)
-					.setTitle(R.string.choose_next_action)
+					.setTitle(info.getAppName())
+					.setIcon(info.getAppIcon())
 					.setItems(R.array.copy_info_actions, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialogInterface, int i) {
@@ -449,7 +452,8 @@ public class AppInfoAdapter extends BaseAdapter implements Filterable{
 					if (long_click_action.equals("103")) {*/
 		//复制应用信息
 		new AlertDialog.Builder(mContext)
-				.setTitle(R.string.choose_next_action)
+				.setTitle(info.getFileName())
+				.setIcon(info.getAppIcon())
 				.setItems(R.array.localAPK_copy_info_actions, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
